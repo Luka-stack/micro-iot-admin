@@ -1,0 +1,6 @@
+export const MACHINE_STATUSES = {
+  IDLE: 'IDLE',
+  WORKING: 'WORKING',
+  MAINTENANCE: 'MAINTENANCE',
+  BROKEN: 'BROKEN',
+} as const;
