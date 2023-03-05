@@ -72,7 +72,7 @@ export const BasePagination = ({ pagination, loading, changePage }: Props) => {
               disabled={currentPage === pageNumber}
               className={clsx(
                 'flex items-center justify-center px-3 py-1 space-x-2 bg-blue-900 rounded-md shadow-md text-slate-200 hover:bg-blue-800 shadow-black',
-                currentPage === pageNumber && 'bg-blue-700 hover:bg-blue-700'
+                currentPage === pageNumber && 'bg-blue-600 hover:bg-blue-600'
               )}
             >
               {pageNumber}

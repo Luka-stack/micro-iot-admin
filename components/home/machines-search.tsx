@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useState } from 'react';
+import DatePicker from 'react-datepicker';
 
 import { MACHINE_STATUSES } from '@/common/constants';
 import { createFilterUrl } from '@/common/helpers';
@@ -11,6 +12,19 @@ import {
   TypeFilter,
 } from '@/types';
 import { BaseSelect } from '../ui/base-select';
+import { BaseLoadingButton } from '../ui/base-loading-button';
+import { EqFilterSelect } from '../ui/eq-filter-select';
+
+const eqFilters = [
+  {
+    name: '=',
+    value: 'equals',
+  },
+  { name: '>', value: 'gt' },
+  { name: '≥', value: 'gte' },
+  { name: '<', value: 'lt' },
+  { name: '≤', value: 'lte' },
+];
 
 const machineStatus = Object.keys(MACHINE_STATUSES).map((status) => ({
   name: status,
@@ -24,7 +38,7 @@ type Props = {
 
 export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
   const serialNumberRef = useRef<HTMLInputElement>(null);
-  const productionRateRef = useRef<HTMLInputElement>(null);
+  const rateRef = useRef<HTMLInputElement>(null);
 
   const [machineTypes, setMachineTypes] = useState<TypeFilter[]>(filters.types);
   const [machineModels, setMachineModels] = useState<ModelFilter[]>(
@@ -38,6 +52,15 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
   const [selectedStatus, setSelectedStatus] = useState<SelectedFilter | null>(
     null
   );
+  const [rateFilter, setRateFilter] = useState<{
+    name: string;
+    value: string;
+  }>(eqFilters[0]);
+  const [startDateFilter, setStartDateFilter] = useState<{
+    name: string;
+    value: string;
+  }>(eqFilters[0]);
+  const [startDate, setStartDate] = useState<Date | null>(null);
 
   const onProducentChange = (producent: ProducentFilter | null) => {
     setSelectedProducent(producent);
@@ -85,7 +108,14 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
       types: selectedType,
       models: selectedModel,
       status: selectedStatus,
-      rate: productionRateRef.current?.value,
+      rate: {
+        filter: rateFilter.value,
+        value: rateRef.current?.value,
+      },
+      startDate: {
+        filter: startDateFilter.value,
+        value: startDate,
+      },
     } as any);
 
     filterData(filterUrl);
@@ -139,50 +169,43 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
           setSelected={setSelectedStatus}
         />
 
-        <div className="flex flex-col">
+        <div className="flex rounded-lg shadow-md shadow-black">
+          <EqFilterSelect
+            selectables={eqFilters}
+            selected={rateFilter}
+            setSelected={setRateFilter}
+          />
           <input
-            ref={productionRateRef}
+            ref={rateRef}
             type="number"
             id="productionRate"
             name="productionRate"
             placeholder="Production rate [s]"
-            className="px-2 py-2 text-sm rounded-lg shadow-md bg-slate-800 placeholder:text-slate-500 focus:outline-none shadow-black hover:bg-slate-700"
+            className="px-2 py-2 text-sm rounded-r-lg bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700"
+          />
+        </div>
+
+        <div className="flex rounded-lg shadow-md shadow-black">
+          <EqFilterSelect
+            selectables={eqFilters}
+            selected={startDateFilter}
+            setSelected={setStartDateFilter}
+          />
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date!)}
+            placeholderText="Start date"
+            isClearable
           />
         </div>
       </div>
 
-      <button
+      <BaseLoadingButton
+        loading={loading}
+        style="bg-blue-900 text-slate-200 py-1.5 rounded-md hover:bg-blue-800 flex justify-center space-x-2 items-center shadow-md shadow-black"
+        text="Search"
         onClick={fetchSearchData}
-        className="bg-blue-900 text-slate-200 py-1.5 rounded-md hover:bg-blue-800 flex justify-center space-x-2 items-center shadow-md shadow-black"
-      >
-        {loading ? (
-          <>
-            <svg
-              className="w-4 h-4 text-white animate-spin"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span>Loading...</span>
-          </>
-        ) : (
-          'Search'
-        )}
-      </button>
+      />
     </main>
   );
 };

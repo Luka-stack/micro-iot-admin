@@ -1,28 +1,22 @@
 import { MachinesView } from '@/components/home/machines-view';
-import { SidebarNavigation } from '@/components/home/sidebar-navigation';
 
-async function getData() {
-  const machines = await fetch('http://localhost:5000/api/machines?limit=10', {
-    next: { revalidate: 60 },
+async function getMachines() {
+  const res = await fetch('http://localhost:5000/api/machines?limit=10', {
+    cache: 'no-store',
   });
-  const filters = await fetch('http://localhost:5000/api/misc/filters');
+  return res.json();
+}
 
-  const [machinesResponse, producentsResponse] = await Promise.all([
-    machines,
-    filters,
-  ]);
-
-  return Promise.all([machinesResponse.json(), producentsResponse.json()]);
+async function getFilters() {
+  const res = await fetch('http://localhost:5000/api/misc/filters');
+  return res.json();
 }
 
 export default async function Home() {
-  const [machines, filters] = await getData();
+  const machinesData = getMachines();
+  const filtersData = getFilters();
 
-  return (
-    <main className="flex h-full">
-      <SidebarNavigation />
+  const [machines, filters] = await Promise.all([machinesData, filtersData]);
 
-      <MachinesView data={machines} filters={filters.data} />
-    </main>
-  );
+  return <MachinesView data={machines} filters={filters.data} />;
 }

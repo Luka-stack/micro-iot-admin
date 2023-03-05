@@ -23,8 +23,14 @@ export function createFilterUrl(filters: SelectedFilters): string {
     query.set('status', filters.status.name);
   }
 
-  if (filters.rate) {
-    query.set('rate', filters.rate + '');
+  if (filters.rate.value) {
+    query.set('rate', filters.rate.value + '');
+    query.set('rateFilter', filters.rate.filter);
+  }
+
+  if (filters.startDate.value) {
+    query.set('startedAt', filters.startDate.value.toISOString().split('T')[0]);
+    query.set('startedAtFilter', filters.startDate.filter);
   }
 
   return query.toString();

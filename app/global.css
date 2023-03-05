@@ -12,3 +12,70 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+.react-datepicker {
+  @apply bg-transparent border-none;
+}
+
+.react-datepicker__input-container input {
+  @apply px-2 py-2 text-sm rounded-r-lg bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700;
+}
+
+.react-datepicker__month-container {
+  @apply rounded-md bg-slate-800 text-slate-400;
+}
+
+.react-datepicker__header {
+  @apply border-b bg-slate-800 text-slate-400 border-slate-700;
+}
+
+.react-datepicker__current-month {
+  @apply text-slate-400;
+}
+
+.react-datepicker__day-name {
+  @apply text-slate-400;
+}
+
+.react-datepicker__day,
+.react-datepicker__time-name {
+  @apply text-slate-400 hover:bg-blue-800 hover:text-slate-200;
+}
+
+.react-datepicker__day--outside-month {
+  @apply text-slate-600;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-blue-900 text-slate-200 hover:bg-blue-800 hover:text-slate-200;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply bg-slate-800;
+}
+
+.react-datepicker__navigation {
+  padding-top: 12px;
+}
+
+.datepicker__navigation-icon::before {
+  border-color: rgb(226 232 240);
+}
+
+.react-datepicker__navigation:hover *::before {
+  border-color: rgb(29 78 219);
+}
+
+.react-datepicker-popper[data-placement^='bottom']
+  .react-datepicker__triangle::after {
+  border-bottom-color: rgb(30 41 59);
+}
+
+.react-datepicker-popper[data-placement^='bottom']
+  .react-datepicker__triangle::before {
+  border-bottom-color: rgb(30 41 59);
+}
+
+.react-datepicker__close-icon {
+  @apply mr-1 after:pb-1 after:text-sm after:bg-transparent after:rounded-full after:content-['🗙'] after:hover:bg-slate-700 after:text-slate-400;
+}

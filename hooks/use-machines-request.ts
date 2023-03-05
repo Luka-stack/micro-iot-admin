@@ -1,15 +1,15 @@
-import { Machine, MachinesResponse } from '@/types';
+import { useMachineStore } from '@/store';
 import { useCallback, useState } from 'react';
 
 const machineUrl = 'http://localhost:5000/api/machines';
 
-export function useMachinesRequest(data: MachinesResponse): {
-  machines: MachinesResponse;
+export function useMachinesRequest(): {
   loading: boolean;
   changePage: (paginationUrl: string) => Promise<void>;
   filterData: (filterUrl: string) => Promise<void>;
 } {
-  const [machines, setMachines] = useState(data);
+  const setMachines = useMachineStore((state) => state.setMachines);
+
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState('');
 
@@ -49,7 +49,6 @@ export function useMachinesRequest(data: MachinesResponse): {
   };
 
   return {
-    machines,
     loading,
     changePage,
     filterData,

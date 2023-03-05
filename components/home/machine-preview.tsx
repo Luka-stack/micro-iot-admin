@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 import { StatusToggle } from '../ui/status-toggle';
 import { Machine } from '@/types';
+import Link from 'next/link';
 
 type Props = {
   machine: Machine;
@@ -11,7 +11,7 @@ type Props = {
 
 export const MachinePreview = ({ machine, close }: Props) => {
   return (
-    <main className="flex-none border border-r-0 rounded-l-lg shadow-md w-72 h-fit shadow-black border-slate-800">
+    <main className="flex-none h-full border border-r-0 rounded-l-lg shadow-md w-72 shadow-black border-slate-800">
       <div className="flex flex-col items-center">
         <button
           onClick={close}
@@ -22,19 +22,22 @@ export const MachinePreview = ({ machine, close }: Props) => {
 
         <h3 className="mt-4 space-x-2 font-bold">
           Machine:{' '}
-          <span className="underline cursor-pointer underline-offset-4 hover:text-slate-500">
+          <Link
+            href={`/machines/${machine.serialNumber}`}
+            className="underline cursor-pointer underline-offset-4 hover:text-slate-500"
+          >
             {machine.serialNumber.substring(0, 18)}
-          </span>
+          </Link>
         </h3>
 
         <h3 className="mt-2 space-x-2 font-bold">Model: {machine.model}</h3>
 
-        <div className="p-3 mt-5 border shadow-md border-slate-800 rounded-xl w-fit shadow-black">
+        <div className="p-3 mt-5 border shadow-md border-slate-800 rounded-xl shadow-black">
           <Image
-            src="/machine.png"
+            src={`/${machine.imageUrl}`}
             alt="Machine Image"
             width={160}
-            height={140}
+            height={160}
           />
         </div>
 
@@ -54,7 +57,7 @@ export const MachinePreview = ({ machine, close }: Props) => {
         </section>
 
         <section className="px-4 mb-10">
-          <StatusToggle isWorking={machine.status !== 'IDLE'} />
+          <StatusToggle machine={machine} />
         </section>
       </div>
     </main>

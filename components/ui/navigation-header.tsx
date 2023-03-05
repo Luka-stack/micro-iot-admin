@@ -2,16 +2,16 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 
 export const NavigationHeader = () => {
   return (
-    <header className="flex justify-between shadow-sm shadow-slate-700 py-3 items-center px-4">
+    <header className="flex items-center justify-between flex-none px-4 py-3 shadow-sm shadow-slate-700">
       <div>
         <Bars3Icon className="h-9" />
       </div>
 
-      <div className="flex space-x-10 items-center">
+      <div className="flex items-center space-x-10">
         <h4 className="text-lg">
           Hello, <b>John</b>
         </h4>
-        <button className="bg-slate-800 rounded-md py-1 px-4 text-slate-400 text-sm hover:bg-slate-700">
+        <button className="px-4 py-1 text-sm rounded-md bg-slate-800 text-slate-400 hover:bg-slate-700">
           Log Out
         </button>
       </div>

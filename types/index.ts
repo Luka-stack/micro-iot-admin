@@ -42,7 +42,14 @@ export type SelectedFilters = {
   types?: SelectedFilter;
   models?: SelectedFilter;
   status?: SelectedFilter;
-  rate?: number;
+  rate: {
+    filter: string;
+    value?: number;
+  };
+  startDate: {
+    filter: string;
+    value?: Date;
+  };
 };
 
 export type Pagination = {
