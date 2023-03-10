@@ -6,6 +6,10 @@ import { SidebarNavigation } from '@/components/home/sidebar-navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const metadata = {
+  title: 'Micro IoT',
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -13,11 +17,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.className}>
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <head />
       <body className="flex flex-col h-screen bg-slate-900 text-slate-400">
         <NavigationHeader />
         <main className="flex h-full">

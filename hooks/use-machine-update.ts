@@ -6,7 +6,10 @@ export function useMachineUpdate() {
   const [loading, setLoading] = useState(false);
 
   const doRequest = useCallback(
-    async (serialNumber: string, newData: { status: string }) => {
+    async (
+      serialNumber: string,
+      newData: { status?: string; productionRate?: number }
+    ) => {
       setLoading(true);
 
       try {

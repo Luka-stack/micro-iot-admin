@@ -181,7 +181,7 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
             id="productionRate"
             name="productionRate"
             placeholder="Production rate [s]"
-            className="px-2 py-2 text-sm rounded-r-lg bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700"
+            className="w-full px-2 py-2 text-sm rounded-r-lg bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700"
           />
         </div>
 
@@ -195,6 +195,7 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
             selected={startDate}
             onChange={(date) => setStartDate(date!)}
             placeholderText="Start date"
+            className="w-full"
             isClearable
           />
         </div>
