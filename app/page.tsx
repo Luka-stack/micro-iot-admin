@@ -1,4 +1,4 @@
-import { MachinesView } from '@/components/home/machines-view';
+import MachinesView from '@/components/home/machines-view';
 
 async function getMachines() {
   const res = await fetch('http://localhost:5000/api/machines?limit=10', {

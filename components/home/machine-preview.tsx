@@ -1,8 +1,9 @@
+import Link from 'next/link';
 import Image from 'next/image';
 
-import { StatusToggle } from '../ui/status-toggle';
 import { Machine } from '@/types';
-import Link from 'next/link';
+import StatusToggle from '../ui/status-toggle';
+import { differenceInHoursAndMin } from '@/common/helpers';
 
 type Props = {
   machine: Machine;
@@ -10,6 +11,19 @@ type Props = {
 };
 
 export const MachinePreview = ({ machine, close }: Props) => {
+  const hoursLabel = () => {
+    const [hours, minutes] = differenceInHoursAndMin(
+      new Date(machine.lastStatusUpdate)
+    );
+
+    return (
+      <>
+        <b>{machine.status === 'WORKING' ? 'Working' : 'Idle'} hours:</b>{' '}
+        {hours}[h] {minutes}[min]
+      </>
+    );
+  };
+
   return (
     <main className="flex-none h-full border border-r-0 rounded-l-lg shadow-md w-72 shadow-black border-slate-800">
       <div className="flex flex-col items-center">
@@ -30,11 +44,13 @@ export const MachinePreview = ({ machine, close }: Props) => {
           </Link>
         </h3>
 
-        <h3 className="mt-2 space-x-2 font-bold">Model: {machine.model}</h3>
+        <h3 className="mt-2 space-x-2 font-bold">
+          Model: {machine.model.name}
+        </h3>
 
         <div className="p-3 mt-5 border shadow-md border-slate-800 rounded-xl shadow-black">
           <Image
-            src={`/${machine.imageUrl}`}
+            src={`/${machine.type.imageUrl}`}
             alt="Machine Image"
             width={160}
             height={160}
@@ -46,14 +62,12 @@ export const MachinePreview = ({ machine, close }: Props) => {
             <b>Producent:</b> {machine.producent}
           </p>
           <p>
-            <b>Type:</b> {machine.type}
+            <b>Type:</b> {machine.type.name}
           </p>
           <p>
             <b>Production Rate:</b> {machine.productionRate} [s]
           </p>
-          <p>
-            <b>Working hours:</b> 48 [h]
-          </p>
+          <p>{hoursLabel()}</p>
         </section>
 
         <section className="px-4 mb-10">

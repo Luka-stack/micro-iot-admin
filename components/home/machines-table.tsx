@@ -49,7 +49,7 @@ export const MachinesTable = ({
               >
                 <td>
                   <Image
-                    src={`/${machine.imageUrl}`}
+                    src={`/${machine.type.imageUrl}`}
                     alt="Machine Image"
                     width={40}
                     height={40}
@@ -57,8 +57,8 @@ export const MachinesTable = ({
                 </td>
                 <td>{machine.serialNumber}</td>
                 <td>{machine.producent}</td>
-                <td>{machine.type}</td>
-                <td>{machine.model}</td>
+                <td>{machine.type.name}</td>
+                <td>{machine.model.name}</td>
                 <td>{machine.productionRate}</td>
                 <td>{machine.status}</td>
               </tr>

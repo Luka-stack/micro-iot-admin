@@ -13,6 +13,19 @@ export function useMachinesRequest(): {
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState('');
 
+  const fetchData = async (query: string) => {
+    const response = await fetch(query);
+
+    try {
+      const data = await response.json();
+      setMachines(data);
+    } catch (err) {
+      console.error(err);
+    }
+
+    setLoading(false);
+  };
+
   const changePage = useCallback(
     async (paginationUrl: string) => {
       setLoading(true);
@@ -34,19 +47,6 @@ export function useMachinesRequest(): {
 
     await fetchData(query);
   }, []);
-
-  const fetchData = async (query: string) => {
-    const response = await fetch(query);
-
-    try {
-      const data = await response.json();
-      setMachines(data);
-    } catch (err) {
-      console.error(err);
-    }
-
-    setLoading(false);
-  };
 
   return {
     loading,

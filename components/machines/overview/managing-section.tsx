@@ -15,11 +15,7 @@ type Props = {
   productionRate: number;
 };
 
-export const ManagingSection = ({
-  serialNumber,
-  status,
-  productionRate,
-}: Props) => {
+const ManagingSection = ({ serialNumber, status, productionRate }: Props) => {
   const router = useRouter();
   const { loading, doRequest } = useMachineUpdate();
   const [open, setOpen] = useState(false);
@@ -94,3 +90,5 @@ export const ManagingSection = ({
     </>
   );
 };
+
+export default ManagingSection;

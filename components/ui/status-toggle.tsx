@@ -6,12 +6,14 @@ import { Machine } from '@/types';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { BaseLoadingButton } from './base-loading-button';
+import { ProductionRateButton } from '../shared/production-rate-button';
 
 type Props = {
   machine: Machine;
+  direction?: 'col' | 'row';
 };
 
-export const StatusToggle = ({ machine }: Props) => {
+const StatusToggle = ({ machine, direction = 'col' }: Props) => {
   const addMachine = useMachineStore((state) => state.addMachine);
   const { loading, doRequest } = useMachineUpdate();
 
@@ -25,7 +27,12 @@ export const StatusToggle = ({ machine }: Props) => {
   const isWorking = useMemo(() => machine.status === 'WORKING', [machine]);
 
   return (
-    <div className="flex flex-col mt-8 space-y-5">
+    <div
+      className={clsx(
+        'mt-8 flex',
+        direction === 'col' ? 'flex-col space-y-4' : 'space-x-4'
+      )}
+    >
       <BaseLoadingButton
         onClick={onStatusChange}
         loading={loading}
@@ -39,9 +46,13 @@ export const StatusToggle = ({ machine }: Props) => {
         loadingText={false}
       />
 
-      <button className="w-40 py-2 text-sm border rounded-md shadow-md border-slate-400 text-slate-400 bg-slate-600/10 hover:bg-slate-600/30">
-        Production rate
-      </button>
+      <ProductionRateButton
+        serialNumber={machine.serialNumber}
+        productionRate={machine.productionRate}
+        defaultRate={machine.model.defaultRate}
+        maxRate={machine.model.maxRate}
+        minRate={machine.model.minRate}
+      />
 
       <button className="w-40 py-2 text-sm border rounded-md shadow-md border-slate-400 text-slate-400 bg-slate-600/10 hover:bg-slate-600/30">
         Report Defect
@@ -53,3 +64,5 @@ export const StatusToggle = ({ machine }: Props) => {
     </div>
   );
 };
+
+export default StatusToggle;

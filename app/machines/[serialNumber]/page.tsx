@@ -1,12 +1,15 @@
+import {
+  differenceInHoursAndMin,
+  getProductionRateLevel,
+} from '@/common/helpers';
+import StatusToggle from '@/components/ui/status-toggle';
+import { Machine } from '@/types';
 import Image from 'next/image';
-
-import { ManagingSection } from '@/components/machines/overview/managing-section';
-import { PropertyTable } from '@/components/machines/overview/property-table';
 import { notFound } from 'next/navigation';
 
 export const dynamicParams = true;
 
-async function getMachine(serialNumber: string) {
+async function getMachine(serialNumber: string): Promise<{ data: Machine }> {
   const res = await fetch(
     `http://localhost:5000/api/machines/${serialNumber}`,
     {
@@ -24,39 +27,94 @@ export default async function Machines({
 }) {
   const { data } = await getMachine(params.serialNumber);
 
-  if (!data || !data.serialNumber) {
+  if (!data) {
     return notFound();
   }
 
+  const hoursLabel = () => {
+    const [hours, minutes] = differenceInHoursAndMin(
+      new Date(data.lastStatusUpdate)
+    );
+
+    return (
+      <>
+        <b>{data.status === 'WORKING' ? 'Working' : 'Idle'} hours:</b> {hours}
+        [h] {minutes}[min]
+      </>
+    );
+  };
+
   return (
-    <main className="flex flex-col w-full p-4">
-      <div className="flex justify-evenly">
-        <section className="w-1/4 max-w-xs">
-          <div className="w-full p-5 border rounded-md shadow-md h-72 shadow-black border-slate-800">
-            <div className="relative w-full h-full">
-              <Image src={`/${data.imageUrl}`} alt="Machine Image" fill />
-            </div>
+    <main className="w-full p-5 border border-black rounded-md shadow-sm shadow-black">
+      <div className="flex">
+        <section className="flex flex-col w-1/5 space-y-5 border-r border-black">
+          <div className="relative self-center w-60 h-72">
+            <Image src={`/${data.type.imageUrl}`} alt="Machine" fill />
+          </div>
+
+          <div className="space-y-2">
+            <p>
+              <b>Machine:</b> {data.serialNumber}
+            </p>
+            <p>
+              <b>Producent:</b> {data.producent}
+            </p>
+            <p>
+              <b>Type:</b> {data.type.name}
+            </p>
+            <p>
+              <b>Model:</b> {data.model.name}
+            </p>
           </div>
         </section>
 
-        <PropertyTable
-          serialNumber={data.serialNumber}
-          producent={data.producent}
-          model={data.model}
-          type={data.type}
-          status={data.status}
-          startedAt={data.startedAt}
-          productionRate={data.productionRate}
-        />
+        <div className="flex flex-col w-4/5 justify-evenly">
+          <section className="flex h-60 justify-evenly">
+            <div className="px-10 py-4 space-y-2 border border-black rounded-md bg-black/10">
+              <p>
+                <b>Status:</b> {data.status}
+              </p>
+              <p>
+                <b>Production Rate:</b> {data.productionRate} [s]
+              </p>
+              <p>
+                <b>Production Rate:</b> Level{' '}
+                {getProductionRateLevel(
+                  data.productionRate,
+                  data.model.defaultRate,
+                  data.model.maxRate
+                )}
+                .
+              </p>
+              <p>{hoursLabel()}</p>
+            </div>
+            <div className="px-10 py-4 space-y-2 border border-black rounded-md bg-black/10">
+              <p>
+                <b>Fault Rate:</b> {data.model.faultRate}
+              </p>
+              <p>
+                <b>Work Rate:</b> {data.model.workBase}
+              </p>
+              <p>
+                <b>Work Rate Range:</b> +/- {data.model.workRange}
+              </p>
+              <p>
+                <b>Def Production Rate:</b> {data.model.defaultRate} [s]
+              </p>
+              <p>
+                <b>Min Production Rate</b> {data.model.minRate} [s]
+              </p>
+              <p>
+                <b>Max Production Rate</b> {data.model.maxRate} [s]
+              </p>
+            </div>
+          </section>
+
+          <section className="mx-auto">
+            <StatusToggle machine={data} direction="row" />
+          </section>
+        </div>
       </div>
-
-      <div className="w-full h-0.5 bg-slate-800 my-14"></div>
-
-      <ManagingSection
-        serialNumber={data.serialNumber}
-        status={data.status}
-        productionRate={data.productionRate}
-      />
     </main>
   );
 }

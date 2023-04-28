@@ -35,3 +35,33 @@ export function createFilterUrl(filters: SelectedFilters): string {
 
   return query.toString();
 }
+
+export function differenceInHoursAndMin(date: Date): [number, number] {
+  const diffMs = Math.abs(new Date().getTime() - date.getTime());
+  const hours = Math.floor(diffMs / 1000 / 60 / 60);
+  const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+
+  return [hours, minutes];
+}
+
+export function getProductionRateLevel(
+  rate: number,
+  defaultRate: number,
+  maxRate: number
+): number {
+  if (rate > defaultRate) {
+    return 0;
+  }
+
+  if (rate === defaultRate) {
+    return 1;
+  }
+
+  const level2Rate = defaultRate / 2 < maxRate ? maxRate : defaultRate / 2;
+
+  if (rate === level2Rate) {
+    return 2;
+  }
+
+  return 3;
+}

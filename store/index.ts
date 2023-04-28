@@ -27,8 +27,6 @@ export const useMachineStore = create<MachineStore>((set) => ({
         ...state.machines.slice(index + 1),
       ];
 
-      console.log(newMachines);
-
       return { machines: newMachines };
     }),
 }));

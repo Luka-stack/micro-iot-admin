@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useLayoutEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { useMachinesRequest } from '@/hooks/use-machines-request';
 import { Filters, Machine, MachinesResponse } from '@/types';
@@ -15,7 +15,7 @@ type Props = {
   filters: Filters;
 };
 
-export const MachinesView = ({ data, filters }: Props) => {
+const MachinesView = ({ data, filters }: Props) => {
   const [machines, pagination, initialLoad, setMachines] = useMachineStore(
     (state) => [
       state.machines,
@@ -83,3 +83,5 @@ export const MachinesView = ({ data, filters }: Props) => {
     </main>
   );
 };
+
+export default MachinesView;

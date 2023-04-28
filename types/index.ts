@@ -2,12 +2,22 @@ import { MACHINE_STATUSES } from '@/common/constants';
 
 export type Machine = {
   serialNumber: string;
-  imageUrl: string;
   producent: string;
-  type: string;
-  model: string;
+  type: {
+    name: string;
+    imageUrl: string;
+  };
+  model: {
+    name: string;
+    workBase: number;
+    workRange: number;
+    faultRate: number;
+    maxRate: number;
+    minRate: number;
+    defaultRate: number;
+  };
   status: string;
-  startedAt: string;
+  lastStatusUpdate: string;
   productionRate: number;
 };
 
