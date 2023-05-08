@@ -195,7 +195,7 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
             selected={startDate}
             onChange={(date) => setStartDate(date!)}
             placeholderText="Start date"
-            className="w-full"
+            className="w-full rounded-r-lg"
             isClearable
           />
         </div>

@@ -1,0 +1,58 @@
+'use client';
+
+import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+
+const DateFilter = () => {
+  const [fromDate, setFromDate] = useState(new Date());
+  const [toDate, setToDate] = useState(new Date());
+  const [hiddenButton, setHiddenButton] = useState(true);
+
+  return (
+    <main className="flex space-x-5">
+      <div className="flex items-baseline">
+        Utilization From
+        <div className="w-40 ml-3">
+          <DatePicker
+            selected={fromDate}
+            maxDate={toDate}
+            onChange={(date) => {
+              setHiddenButton(false);
+              setFromDate(date!);
+            }}
+            isClearable
+            placeholderText="Date"
+            className="w-full rounded-lg"
+          />
+        </div>
+      </div>
+      <div className="flex items-baseline">
+        To:
+        <div className="w-40 ml-3">
+          <DatePicker
+            selected={toDate}
+            minDate={fromDate}
+            onChange={(date) => {
+              setHiddenButton(false);
+              setToDate(date!);
+            }}
+            isClearable
+            placeholderText="Date"
+            className="w-full rounded-lg"
+          />
+        </div>
+      </div>
+
+      {hiddenButton ? null : (
+        <button
+          onClick={() => setHiddenButton(true)}
+          className="px-4 bg-blue-900 rounded-lg text-slate-200"
+        >
+          Show
+        </button>
+      )}
+    </main>
+  );
+};
+
+export default DateFilter;
