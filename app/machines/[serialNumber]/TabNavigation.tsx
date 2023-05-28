@@ -8,7 +8,7 @@ const TabNavigation = () => {
   const segment = useSelectedLayoutSegment();
 
   return (
-    <nav className="w-full px-10 mb-6 text-lg border border-black rounded-md shadow-sm shadow-black">
+    <nav className="w-full px-10 mb-6 text-lg">
       <ul className="flex py-4 space-x-20">
         <li>
           <Link

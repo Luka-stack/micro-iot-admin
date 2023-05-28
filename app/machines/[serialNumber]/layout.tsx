@@ -1,4 +1,4 @@
-import TabNavigation from '@/components/machines/tab-navigation';
+import TabNavigation from '@/app/machines/[serialNumber]/TabNavigation';
 
 export default function MachinesLayout({
   children,

@@ -1,14 +1,12 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import './global.css';
-import { Inter } from '@next/font/google';
-import { NavigationHeader } from '@/components/ui/navigation-header';
-import { SidebarNavigation } from '@/components/home/sidebar-navigation';
 
-const inter = Inter({ subsets: ['latin'] });
+import { Roboto } from 'next/font/google';
 
-export const metadata = {
-  title: 'Micro IoT',
-};
+import { NavigationHeader } from '@/components/layout/navigation-header';
+import { SidebarNavigation } from '@/components/layout/sidebar-navigation';
+
+const roboto = Roboto({ weight: '400', subsets: ['latin'], display: 'swap' });
 
 export default function RootLayout({
   children,
@@ -16,10 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={roboto.className}>
       <body className="flex flex-col h-screen bg-slate-900 text-slate-400">
         <NavigationHeader />
-        <main className="flex h-full">
+
+        <main className="flex h-[calc(100%-68px)]">
           <SidebarNavigation />
           {children}
         </main>

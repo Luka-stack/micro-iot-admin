@@ -1,11 +1,11 @@
-import MachinesView from '@/components/home/machines-view';
+import { MachinesView } from '@/features/machines';
+import { MachinesProvider } from '@/features/machines/context';
+import { Metadata } from 'next';
 
-async function getMachines() {
-  const res = await fetch('http://localhost:5000/api/machines?limit=10', {
-    cache: 'no-store',
-  });
-  return res.json();
-}
+export const metadata: Metadata = {
+  title: 'Micro IoT',
+  description: 'IoT dashboard project with NextJs and NestJs',
+};
 
 async function getFilters() {
   const res = await fetch('http://localhost:5000/api/misc/filters');
@@ -13,10 +13,11 @@ async function getFilters() {
 }
 
 export default async function Home() {
-  const machinesData = getMachines();
-  const filtersData = getFilters();
+  const filters = await getFilters();
 
-  const [machines, filters] = await Promise.all([machinesData, filtersData]);
-
-  return <MachinesView data={machines} filters={filters.data} />;
+  return (
+    <MachinesProvider>
+      <MachinesView filters={filters.data} />
+    </MachinesProvider>
+  );
 }

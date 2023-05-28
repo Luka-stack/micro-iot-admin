@@ -11,9 +11,9 @@ import {
   SelectedFilter,
   TypeFilter,
 } from '@/types';
-import { BaseSelect } from '../ui/base-select';
-import { BaseLoadingButton } from '../ui/base-loading-button';
-import { EqFilterSelect } from '../ui/eq-filter-select';
+import { BaseSelect } from '../../../components/ui/base-select';
+import { BaseLoadingButton } from '../../../components/ui/base-loading-button';
+import { EqFilterSelect } from '../../../components/ui/eq-filter-select';
 
 const eqFilters = [
   {
@@ -122,83 +122,81 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
   };
 
   return (
-    <main className="flex flex-col justify-between flex-none p-4 w-72">
-      <div className="space-y-6">
-        <div className="flex flex-col">
-          <input
-            ref={serialNumberRef}
-            type="text"
-            id="serialNumber"
-            name="serialNumber"
-            placeholder="Serial Number"
-            className="px-2 py-2 text-sm rounded-lg shadow-md bg-slate-800 placeholder:text-slate-500 focus:outline-none shadow-black hover:bg-slate-700"
-          />
-        </div>
-
-        <BaseSelect
-          title={'Machine Producents'}
-          selectables={filters.producents}
-          selected={selectedProducent}
-          setSelected={onProducentChange}
+    <main className="flex flex-col flex-none p-4 space-y-8 w-72">
+      <div className="flex flex-col">
+        <input
+          ref={serialNumberRef}
+          type="text"
+          id="serialNumber"
+          name="serialNumber"
+          placeholder="Serial Number"
+          className="px-2 py-2 text-sm rounded-lg shadow-md bg-slate-800 placeholder:text-slate-500 focus:outline-none shadow-black hover:bg-slate-700"
         />
+      </div>
 
-        <BaseSelect
-          title={'Machine Types'}
-          selectables={machineTypes}
-          selected={selectedType}
-          setSelected={onTypeChange}
+      <BaseSelect
+        title={'Machine Producents'}
+        selectables={filters.producents}
+        selected={selectedProducent}
+        setSelected={onProducentChange}
+      />
+
+      <BaseSelect
+        title={'Machine Types'}
+        selectables={machineTypes}
+        selected={selectedType}
+        setSelected={onTypeChange}
+      />
+
+      <BaseSelect
+        title={'Machine Models'}
+        selectables={machineModels}
+        selected={selectedModel}
+        setSelected={setSelectedModel}
+      />
+
+      <div className="flex items-center w-full text-xs">
+        <div className="w-full h-[0.01rem] bg-slate-400"></div>
+        <span className="flex-none px-3">Advanced search</span>
+        <div className="w-full h-[0.01rem] bg-slate-400"></div>
+      </div>
+
+      <BaseSelect
+        title={'Machine Status'}
+        selectables={machineStatus}
+        selected={selectedStatus}
+        setSelected={setSelectedStatus}
+      />
+
+      <div className="flex rounded-lg shadow-md shadow-black">
+        <EqFilterSelect
+          selectables={eqFilters}
+          selected={rateFilter}
+          setSelected={setRateFilter}
         />
-
-        <BaseSelect
-          title={'Machine Models'}
-          selectables={machineModels}
-          selected={selectedModel}
-          setSelected={setSelectedModel}
+        <input
+          ref={rateRef}
+          type="number"
+          id="productionRate"
+          name="productionRate"
+          placeholder="Production rate [s]"
+          className="w-full px-2 py-2 text-sm rounded-r-lg bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700"
         />
+      </div>
 
-        <div className="flex items-center w-full text-xs">
-          <div className="w-full h-[0.01rem] bg-slate-400"></div>
-          <span className="flex-none px-3">Advanced search</span>
-          <div className="w-full h-[0.01rem] bg-slate-400"></div>
-        </div>
-
-        <BaseSelect
-          title={'Machine Status'}
-          selectables={machineStatus}
-          selected={selectedStatus}
-          setSelected={setSelectedStatus}
+      <div className="flex rounded-lg shadow-md shadow-black">
+        <EqFilterSelect
+          selectables={eqFilters}
+          selected={startDateFilter}
+          setSelected={setStartDateFilter}
         />
-
-        <div className="flex rounded-lg shadow-md shadow-black">
-          <EqFilterSelect
-            selectables={eqFilters}
-            selected={rateFilter}
-            setSelected={setRateFilter}
-          />
-          <input
-            ref={rateRef}
-            type="number"
-            id="productionRate"
-            name="productionRate"
-            placeholder="Production rate [s]"
-            className="w-full px-2 py-2 text-sm rounded-r-lg bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700"
-          />
-        </div>
-
-        <div className="flex rounded-lg shadow-md shadow-black">
-          <EqFilterSelect
-            selectables={eqFilters}
-            selected={startDateFilter}
-            setSelected={setStartDateFilter}
-          />
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date!)}
-            placeholderText="Start date"
-            className="w-full rounded-r-lg"
-            isClearable
-          />
-        </div>
+        <DatePicker
+          selected={startDate}
+          onChange={(date) => setStartDate(date!)}
+          placeholderText="Start date"
+          className="w-full rounded-r-lg"
+          isClearable
+        />
       </div>
 
       <BaseLoadingButton
