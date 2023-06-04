@@ -73,3 +73,8 @@ export type MachinesResponse = {
   data: Machine[];
   meta: Pagination;
 };
+
+export type MachineUtilization = {
+  utilization: number;
+  date: string;
+};

@@ -5,6 +5,7 @@ import { useMachinesActions } from '../context';
 import { MachineProductionButton } from '@/components/buttons/MachineProductionButton';
 import { MachineReportButton } from '@/components/buttons/MachineReportButton';
 import { MachineMaintainButton } from '@/components/buttons/MachineMaintainButton';
+import { revalidateMachines } from '@/app/actions';
 
 type Props = {
   machine: Machine;
@@ -28,13 +29,14 @@ export function PreviewTools({ machine }: Props) {
     });
 
     dispatch('UPDATE_MACHINE', updatedMachine);
+    revalidateMachines();
   };
 
   return (
     <section className="flex flex-col mt-5 space-y-5">
       <MachineStatusButton
         loading={loading}
-        onClick={changeMachineStatus}
+        updateAction={changeMachineStatus}
         status={machine.status}
       />
 

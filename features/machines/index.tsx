@@ -1,4 +1,5 @@
 'use client';
+
 import { Filters } from '@/types';
 import { useMachinesRequest } from './hooks/use-machines-request';
 import { MachinesSearch } from '@/features/machines/components/MachinesSearch';

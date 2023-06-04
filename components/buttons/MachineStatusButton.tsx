@@ -5,10 +5,14 @@ import { MachineStatus } from '@/types';
 type Props = {
   loading: boolean;
   status: MachineStatus;
-  onClick: () => void;
+  updateAction: () => void;
 };
 
-export function MachineStatusButton({ loading, status, onClick }: Props) {
+export function MachineStatusButton({
+  loading,
+  status,
+  updateAction: onClick,
+}: Props) {
   return (
     <BaseLoadingButton
       onClick={onClick}

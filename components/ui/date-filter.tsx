@@ -3,9 +3,18 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
-const DateFilter = () => {
-  const [fromDate, setFromDate] = useState(new Date());
+type Props = {
+  onChange: (from: Date, to: Date) => void;
+};
+
+export function DateFilter({ onChange }: Props) {
+  const [fromDate, setFromDate] = useState(() => {
+    const sixDaysAgo = new Date();
+    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
+    return sixDaysAgo;
+  });
   const [toDate, setToDate] = useState(new Date());
+
   const [hiddenButton, setHiddenButton] = useState(true);
 
   return (
@@ -26,6 +35,7 @@ const DateFilter = () => {
           />
         </div>
       </div>
+
       <div className="flex items-baseline">
         To:
         <div className="w-40 ml-3">
@@ -45,7 +55,10 @@ const DateFilter = () => {
 
       {hiddenButton ? null : (
         <button
-          onClick={() => setHiddenButton(true)}
+          onClick={() => {
+            setHiddenButton(true);
+            onChange(fromDate, toDate);
+          }}
           className="px-4 bg-blue-900 rounded-lg text-slate-200"
         >
           Show
@@ -53,6 +66,4 @@ const DateFilter = () => {
       )}
     </main>
   );
-};
-
-export default DateFilter;
+}

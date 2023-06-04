@@ -8,7 +8,9 @@ export const metadata: Metadata = {
 };
 
 async function getFilters() {
-  const res = await fetch('http://localhost:5000/api/misc/filters');
+  const res = await fetch('http://localhost:5000/api/misc/filters', {
+    cache: 'force-cache',
+  });
   return res.json();
 }
 
