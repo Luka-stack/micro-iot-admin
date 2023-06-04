@@ -16,7 +16,7 @@ export type Machine = {
     minRate: number;
     defaultRate: number;
   };
-  status: string;
+  status: MachineStatus;
   lastStatusUpdate: string;
   productionRate: number;
 };
@@ -72,4 +72,9 @@ export type Pagination = {
 export type MachinesResponse = {
   data: Machine[];
   meta: Pagination;
+};
+
+export type MachineUtilization = {
+  utilization: number;
+  date: string;
 };

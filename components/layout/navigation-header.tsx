@@ -2,7 +2,7 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 
 export const NavigationHeader = () => {
   return (
-    <header className="flex items-center justify-between flex-none px-4 py-3 shadow-sm shadow-slate-700">
+    <header className="flex items-center justify-between flex-none p-4">
       <div>
         <Bars3Icon className="h-9" />
       </div>
