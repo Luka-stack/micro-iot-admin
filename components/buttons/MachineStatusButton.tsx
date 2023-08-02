@@ -18,7 +18,7 @@ export function MachineStatusButton({
       onClick={onClick}
       loading={loading}
       style={clsx(
-        'py-2 border-2 rounded-md shadow-md w-40 flex justify-center',
+        'border-2 rounded-md shadow-md w-40 h-11',
         status === 'WORKING'
           ? 'text-red-700 border-red-700 bg-red-900/20 hover:bg-red-900/30'
           : 'text-green-700 border-green-700 bg-green-900/20 hover:bg-green-900/30'

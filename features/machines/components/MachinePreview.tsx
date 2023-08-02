@@ -5,8 +5,10 @@ import Image from 'next/image';
 import { PreviewTools } from './PreviewTools';
 import { DetailSection } from './PreviewDetails';
 import { useMachinesActions, useMachinesStore } from '../context';
+import { useRouter } from 'next/navigation';
 
 export function Preview() {
+  const router = useRouter();
   const dispatch = useMachinesActions();
   const {
     machinePreview: { machine, visible },

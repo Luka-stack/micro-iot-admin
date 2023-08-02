@@ -1,4 +1,9 @@
 import { TabNavigation } from '@/app/machines/[serialNumber]/TabNavigation';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Machine',
+};
 
 export default function MachinesLayout({
   children,

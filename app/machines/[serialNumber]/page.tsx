@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { MachineTools } from './MachineTools';
+import { RefreshPage } from '@/components/ui/refresh-page';
 
 type Props = {
   params: {
@@ -15,7 +16,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return { title: `Micro IoT | Machine ${params.serialNumber}` };
+  return { title: `Machine ${params.serialNumber}` };
 }
 
 async function getMachine(serialNumber: string): Promise<Machine> {
@@ -45,6 +46,7 @@ export default async function Machines({ params }: Props) {
 
   return (
     <main className="w-full p-4">
+      <RefreshPage />
       <div className="flex">
         <section className="flex flex-col w-1/5 space-y-5">
           <div className="relative self-center w-60 h-72">

@@ -16,6 +16,8 @@ type Props = {
 };
 
 export function MachineTools({ machine }: Props) {
+  console.log('Machine Tools');
+
   const router = useRouter();
   const { loading, doRequest } = useMachineUpdate();
   const [isPending, startTransition] = useTransition();

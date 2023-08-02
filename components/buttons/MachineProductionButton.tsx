@@ -46,7 +46,6 @@ export const MachineProductionButton = ({
         ? model.maxRate
         : model.defaultRate / 2;
 
-    // if (productionLevel === 3)
     return model.defaultRate / 3 < model.maxRate
       ? model.maxRate
       : model.defaultRate / 3;
@@ -57,7 +56,7 @@ export const MachineProductionButton = ({
       <BaseLoadingButton
         onClick={() => setIsOpen(true)}
         loading={loading}
-        style="w-40 py-2 border-2 rounded-md shadow-md border-slate-400 text-slate-400 bg-slate-600/20 hover:bg-slate-600/30"
+        style="w-40 h-11 border-2 rounded-md shadow-md border-slate-400 text-slate-400 bg-slate-600/20 hover:bg-slate-600/30"
         text="Production rate"
         loadingText={false}
       />
@@ -172,7 +171,7 @@ function LevelZero({
   level: number;
   setLevel: (level: number) => void;
 }) {
-  if (model.minRate !== model.defaultRate) {
+  if (model.minRate === model.defaultRate) {
     return null;
   }
 
@@ -264,7 +263,7 @@ function LevelThree({
     return level3Rate !== level2Rate;
   };
 
-  if (hasLevelThree()) {
+  if (!hasLevelThree()) {
     return null;
   }
 

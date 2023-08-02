@@ -41,6 +41,7 @@ function CustomLink({
   return (
     <Link
       href={href}
+      prefetch={false}
       className={clsx(
         'flex items-end space-x-4 py-1.5 rounded-lg px-2 cursor-pointer hover:scale-105',
         selected

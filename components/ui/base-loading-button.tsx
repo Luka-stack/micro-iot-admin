@@ -15,13 +15,13 @@ export const BaseLoadingButton = ({
 }: Props) => {
   return (
     <button onClick={onClick} disabled={loading} className={style}>
-      {loading ? <LoadingSvg text={loadingText} /> : text}
+      {false ? <LoadingSvg text={loadingText} /> : text}
     </button>
   );
 };
 
 const LoadingSvg = ({ text }: { text: boolean }) => (
-  <>
+  <div className="flex items-center justify-center">
     <svg
       className="w-4 h-4 text-white animate-spin"
       xmlns="http://www.w3.org/2000/svg"
@@ -43,5 +43,5 @@ const LoadingSvg = ({ text }: { text: boolean }) => (
       ></path>
     </svg>
     {text ? <span>Loading...</span> : null}
-  </>
+  </div>
 );

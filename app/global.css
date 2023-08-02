@@ -83,3 +83,9 @@ input[type='number'] {
 .react-datepicker__close-icon {
   @apply mr-1 after:pb-1 after:text-sm after:bg-transparent after:rounded-full after:content-['🗙'] after:hover:bg-slate-700 after:text-slate-400;
 }
+
+/*  */
+
+.util-graph-height {
+  height: calc(100vh - 330px);
+}

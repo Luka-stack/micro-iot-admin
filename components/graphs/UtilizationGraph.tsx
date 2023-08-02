@@ -14,8 +14,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartData,
-  TooltipItem,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
@@ -99,7 +97,7 @@ export function UtilizationGraph({ data }: Props) {
   const utilization = useTransformData(data);
 
   return (
-    <div className="grid w-full h-full mt-10 auto-rows-fr auto-cols-fr">
+    <div className="grid w-full mt-10 auto-rows-fr auto-cols-fr util-graph-height">
       <Bar options={options} data={utilization} />
     </div>
   );

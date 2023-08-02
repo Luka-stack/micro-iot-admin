@@ -13,7 +13,7 @@ type Props = {
 
 export function MahcineUtilizationTab({ serialNumber, data }: Props) {
   const { utilization, loading, doRequest } = useRequestUtilization(
-    'f03afd24-b055',
+    serialNumber,
     data
   );
 
