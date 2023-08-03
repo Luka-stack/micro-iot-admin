@@ -1,5 +1,6 @@
 import { calculateHoursAndMinutes } from '@/common/date-helpers';
 import { notFound } from 'next/navigation';
+import { use } from 'react';
 
 type Statistics = {
   total: number;
@@ -13,22 +14,20 @@ type Statistics = {
 async function getStatistics(
   serialNumber: string
 ): Promise<{ data: Statistics }> {
-  const res = await fetch(
+  return fetch(
     `http://localhost:7000/api/analyser/${serialNumber}/statistics`,
     {
-      next: { revalidate: 3600 },
+      cache: 'no-cache',
     }
-  );
-
-  return res.json();
+  ).then((res) => res.json());
 }
 
-export default async function MachineUtilizationStatsPage({
-  params,
+export function UtilizationStatsTab({
+  serialNumber,
 }: {
-  params: { serialNumber: string };
+  serialNumber: string;
 }) {
-  const { data } = await getStatistics(params.serialNumber);
+  const { data } = use<{ data: Statistics }>(getStatistics(serialNumber));
 
   if (!data) {
     return notFound();

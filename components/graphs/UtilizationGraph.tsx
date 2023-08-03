@@ -59,7 +59,7 @@ const options = {
   },
   scales: {
     y: {
-      max: 24,
+      max: 8,
       grid: {
         display: true,
         color: '#334155',

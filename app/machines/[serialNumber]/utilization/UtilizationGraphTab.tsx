@@ -1,21 +1,18 @@
 'use client';
 
-import { UtilizationGraph } from '@/components/graphs/UtilizationGraph';
 import { DateFilter } from '@/components/ui/date-filter';
 import { calculateHoursAndMinutes } from '@/common/date-helpers';
 import { MachineUtilization } from '@/types';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { UtilizationGraph } from '@/components/graphs/UtilizationGraph';
 
 type Props = {
   serialNumber: string;
-  data: MachineUtilization[];
 };
 
-export function MahcineUtilizationTab({ serialNumber, data }: Props) {
-  const { utilization, loading, doRequest } = useRequestUtilization(
-    serialNumber,
-    data
-  );
+export function UtilizationGraphTab({ serialNumber }: Props) {
+  const { utilization, loading, doRequest } =
+    useRequestUtilization(serialNumber);
 
   const totalUtilization = useMemo(() => {
     const totalUtilization = utilization.reduce(
@@ -40,12 +37,8 @@ export function MahcineUtilizationTab({ serialNumber, data }: Props) {
   );
 }
 
-function useRequestUtilization(
-  serialNumber: string,
-  cachedData: MachineUtilization[]
-) {
-  const [utilization, setUtilization] =
-    useState<MachineUtilization[]>(cachedData);
+function useRequestUtilization(serialNumber: string) {
+  const [utilization, setUtilization] = useState<MachineUtilization[]>([]);
   const [loading, setLoading] = useState(false);
 
   const doRequest = async (from: Date, to: Date) => {
@@ -63,11 +56,16 @@ function useRequestUtilization(
 
     const { data } = await response.json();
 
-    console.log('After fetch', data);
-
     setUtilization(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    const sixDaysAgo = new Date();
+    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
+
+    doRequest(sixDaysAgo, new Date());
+  }, []);
 
   return { utilization, loading, doRequest };
 }
