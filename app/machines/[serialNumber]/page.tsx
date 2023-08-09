@@ -92,7 +92,7 @@ function MachineProperties({ machine }: { machine: Machine }) {
       <>
         <b>{machine.status === 'WORKING' ? 'Working' : 'Idle'} hours:</b>{' '}
         {hours}
-        [h] {minutes}[min]
+        [h] {minutes} [min]
       </>
     );
   };

@@ -1,9 +1,14 @@
-import { HomeIcon, ChartBarIcon } from '@heroicons/react/24/solid';
+'use client';
+
 import clsx from 'clsx';
 import Link from 'next/link';
 import { ReactNode } from 'react';
+import { HomeIcon, ChartBarIcon } from '@heroicons/react/24/solid';
+import { usePathname } from 'next/navigation';
 
 export const SidebarNavigation = () => {
+  const pathname = usePathname();
+
   return (
     <main className="flex-none h-full p-4 w-52">
       <ul className="space-y-4">
@@ -11,7 +16,7 @@ export const SidebarNavigation = () => {
           <CustomLink
             href="/"
             text="Machines"
-            selected
+            selected={pathname === '/'}
             icon={<HomeIcon className="h-7 text-slate-300" />}
           />
         </li>
@@ -19,6 +24,7 @@ export const SidebarNavigation = () => {
           <CustomLink
             href="/work-progress"
             text="Work Progress"
+            selected={pathname === '/work-progress'}
             icon={<ChartBarIcon className="h-7 text-slate-300" />}
           />
         </li>

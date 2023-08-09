@@ -1,6 +1,5 @@
 import { MachinesView } from '@/features/machines';
 import { MachinesProvider } from '@/features/machines/context';
-import { Metadata } from 'next';
 
 async function getFilters() {
   const res = await fetch('http://localhost:5000/api/misc/filters', {
