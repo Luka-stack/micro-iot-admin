@@ -1,18 +1,20 @@
 'use client';
 
-import { useMachinesStore } from '@/features/machines/context';
-import { usePagination } from '@/hooks/use-pagination';
-import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
+import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
+
+import { Pagination } from '@/types';
+import { usePagination } from '@/hooks/use-pagination';
+import { createPaginationUrl } from '@/common/helpers';
 
 type Props = {
   loading: boolean;
+  pagination: Pagination;
   changePage: (paginationUrl: string) => void;
 };
 
-export const BasePagination = ({ loading, changePage }: Props) => {
-  const { pagination } = useMachinesStore();
+export const BasePagination = ({ loading, pagination, changePage }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const hasNext = useMemo(
@@ -30,12 +32,7 @@ export const BasePagination = ({ loading, changePage }: Props) => {
 
   const onPageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-
-    const url = `limit=${pagination.limit}&offset=${
-      (pageNumber - 1) * pagination.limit
-    }`;
-
-    changePage(url);
+    changePage(createPaginationUrl(pageNumber, pagination.limit));
   };
 
   if (paginationRange.length === 1) {
@@ -72,8 +69,8 @@ export const BasePagination = ({ loading, changePage }: Props) => {
                 onClick={() => onPageChange(pageNumber)}
                 disabled={currentPage === pageNumber}
                 className={clsx(
-                  'flex items-center justify-center px-3 py-1 space-x-2 bg-blue-900 rounded-md shadow-md text-slate-200 hover:bg-blue-700 shadow-black',
-                  currentPage === pageNumber && 'bg-blue-700'
+                  'flex items-center justify-center px-3 py-1 space-x-2 rounded-md shadow-md text-slate-200 hover:bg-blue-700 shadow-black',
+                  currentPage === pageNumber ? 'bg-blue-700' : 'bg-blue-900'
                 )}
               >
                 {pageNumber}

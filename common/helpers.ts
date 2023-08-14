@@ -36,6 +36,10 @@ export function createFilterUrl(filters: SelectedFilters): string {
   return query.toString();
 }
 
+export function createPaginationUrl(number: number, limit: number): string {
+  return `limit=${limit}&offset=${(number - 1) * limit}`;
+}
+
 export function differenceInHoursAndMin(date: Date): [number, number] {
   const diffMs = Math.abs(new Date().getTime() - date.getTime());
   const hours = Math.floor(diffMs / 1000 / 60 / 60);

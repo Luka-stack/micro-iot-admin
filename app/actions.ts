@@ -21,3 +21,15 @@ export async function updateProductionRate(
 }
 
 export const revalidateMachines = async () => revalidateTag('machine');
+
+export async function getMachines() {
+  return fetch(`http://localhost:5000/api/machines`, {
+    next: { revalidate: 3600 },
+  }).then((response) => response.json());
+}
+
+export async function filterMachines(queryParam = '') {
+  return fetch(`http://localhost:5000/api/machines?${queryParam}`, {
+    next: { revalidate: 3600 },
+  }).then((response) => response.json());
+}

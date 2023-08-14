@@ -78,3 +78,8 @@ export type MachineUtilization = {
   utilization: number;
   date: string;
 };
+
+export type MachineWork = {
+  timestamp: string;
+  work: number;
+};
