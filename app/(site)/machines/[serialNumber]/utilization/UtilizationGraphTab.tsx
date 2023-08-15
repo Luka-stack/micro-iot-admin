@@ -4,7 +4,7 @@ import { DateFilter } from '@/components/ui/date-filter';
 import { calculateHoursAndMinutes } from '@/common/date-helpers';
 import { MachineUtilization } from '@/types';
 import { useEffect, useMemo, useState } from 'react';
-import { UtilizationGraph } from '@/components/graphs/UtilizationGraph';
+import { MachineUtilizationGraph } from '@/components/graphs/MachineUtilizationGraph';
 
 type Props = {
   serialNumber: string;
@@ -32,7 +32,7 @@ export function UtilizationGraphTab({ serialNumber }: Props) {
       </div>
 
       <DateFilter onChange={doRequest} />
-      <UtilizationGraph data={utilization} />
+      <MachineUtilizationGraph data={utilization} />
     </main>
   );
 }

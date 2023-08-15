@@ -93,7 +93,7 @@ type Props = {
   data: MachineUtilization[];
 };
 
-export function UtilizationGraph({ data }: Props) {
+export function MachineUtilizationGraph({ data }: Props) {
   const utilization = useTransformData(data);
 
   return (

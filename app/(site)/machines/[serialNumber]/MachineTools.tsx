@@ -4,7 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Machine } from '@/types';
-import { updateProductionRate } from '../../actions';
+import { updateProductionRate } from '@/app/actions';
 import { MachineReportButton } from '@/components/buttons/MachineReportButton';
 import { MachineStatusButton } from '@/components/buttons/MachineStatusButton';
 import { MachineProductionButton } from '@/components/buttons/MachineProductionButton';

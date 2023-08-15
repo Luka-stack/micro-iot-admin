@@ -3,13 +3,12 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useDebounce } from 'use-debounce';
-import { use, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { filterMachines } from '../actions';
 import { BasePagination } from '@/components/ui/base-pagination';
 import { MachineWorkContext } from '@/context/machine-work-context';
 import { Machine, Pagination } from '@/types';
-import { createPaginationUrl } from '@/common/helpers';
+import { useFetchMachinesPromise } from '@/hooks/use-fetch-machine-promise';
 
 type Props = {
   machinePromise: Promise<{ data: Machine[]; meta: Pagination }>;
@@ -17,7 +16,7 @@ type Props = {
 
 export function MachineList({ machinePromise }: Props) {
   const { machines, pagination, loading, search } =
-    useFetchMachines(machinePromise);
+    useFetchMachinesPromise(machinePromise);
 
   const [serialNumber, setSerialNumber] = useSerialNumberFilter(search);
 
@@ -30,6 +29,7 @@ export function MachineList({ machinePromise }: Props) {
 
   const changePage = useCallback(
     (paginationUrl: string) => search(paginationUrl, serialNumber),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [serialNumber]
   );
 
@@ -78,46 +78,6 @@ export function MachineList({ machinePromise }: Props) {
   );
 }
 
-function useFetchMachines(
-  promise: Promise<{ data: Machine[]; meta: Pagination }>
-) {
-  const machineData = use(promise);
-  const [loading, setLoading] = useState(false);
-  const [machines, setMachines] = useState<Machine[]>(machineData.data);
-  const [pagination, setPagination] = useState<Pagination>(machineData.meta);
-
-  const search = async (paginationUrl?: string, serialNumber?: string) => {
-    setLoading(true);
-
-    const query = createQueryString(paginationUrl, serialNumber);
-
-    const { data, meta } = await filterMachines(query.join('&'));
-
-    setMachines(data);
-    setPagination(meta);
-    setLoading(false);
-  };
-
-  const createQueryString = (paginationUrl?: string, serialNumber?: string) => {
-    const query: string[] = [];
-
-    if (paginationUrl) {
-      query.push(paginationUrl);
-    } else {
-      const page = pagination.offset / pagination.limit + 1;
-      query.push(createPaginationUrl(page, pagination.limit));
-    }
-
-    if (serialNumber) {
-      query.push(`serialNumber=${serialNumber}`);
-    }
-
-    return query;
-  };
-
-  return { machines, pagination, loading, search };
-}
-
 function useSerialNumberFilter(
   search: (val1: undefined, serialNumber: string) => void
 ): [string, (val: string) => void] {
@@ -132,6 +92,7 @@ function useSerialNumberFilter(
     }
 
     search(undefined, serialNumber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serialNumber]);
 
   return [serialNumber, inputState[1]];

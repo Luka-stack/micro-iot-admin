@@ -1,5 +1,5 @@
 import 'react-datepicker/dist/react-datepicker.css';
-import './global.css';
+import '../global.css';
 
 import { Roboto } from 'next/font/google';
 

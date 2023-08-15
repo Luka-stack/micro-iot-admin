@@ -22,9 +22,9 @@ export const SidebarNavigation = () => {
         </li>
         <li>
           <CustomLink
-            href="/work-progress"
-            text="Work Progress"
-            selected={pathname === '/work-progress'}
+            href="/machines/work"
+            text="Machine Work"
+            selected={pathname === '/machines/work'}
             icon={<ChartBarIcon className="h-7 text-slate-300" />}
           />
         </li>

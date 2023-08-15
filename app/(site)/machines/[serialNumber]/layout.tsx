@@ -1,5 +1,5 @@
-import { TabNavigation } from '@/app/machines/[serialNumber]/TabNavigation';
 import { Metadata } from 'next';
+import { TabNavigation } from './TabNavigation';
 
 export const metadata: Metadata = {
   title: 'Machine',

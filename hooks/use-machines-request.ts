@@ -1,7 +1,6 @@
+import { MACHINE_API } from '@/common/apis';
 import { useMachineStore } from '@/store';
 import { useCallback, useState } from 'react';
-
-const machineUrl = 'http://localhost:5000/api/machines';
 
 export function useMachinesRequest(): {
   loading: boolean;
@@ -30,12 +29,13 @@ export function useMachinesRequest(): {
     async (paginationUrl: string) => {
       setLoading(true);
 
-      const query = `${machineUrl}?${
+      const query = `${MACHINE_API}?${
         filters ? filters + '&' : ''
       }${paginationUrl}`;
 
       await fetchData(query);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [filters]
   );
 
@@ -43,9 +43,10 @@ export function useMachinesRequest(): {
     setLoading(true);
     setFilters(filterUrl);
 
-    const query = `${machineUrl}?${filterUrl}`;
+    const query = `${MACHINE_API}?${filterUrl}`;
 
     await fetchData(query);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

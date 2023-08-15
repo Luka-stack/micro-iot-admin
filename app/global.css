@@ -97,3 +97,38 @@ input[type='number'] {
 .work-graph-multiple-height {
   height: calc(100vh - 300px);
 }
+
+.work-graph-preview {
+  height: calc(100vh - 250px);
+}
+
+@keyframes bounceIn {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+.bounce-loading.first-ball {
+  animation: bounceIn 2s infinite 2s;
+}
+
+.bounce-loading.second-ball {
+  animation: bounceIn 2s infinite 2s;
+  animation-delay: 0.1s;
+}
+
+.bounce-loading.third-ball {
+  animation: bounceIn 2s infinite 2s;
+  animation-delay: 0.2s;
+}
