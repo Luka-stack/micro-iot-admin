@@ -17,15 +17,15 @@ export function MachinesView({ filters }: Props) {
   const { loading, changePage, filterData } = useMachinesRequest();
 
   return (
-    <main className="flex w-full">
-      <section className="flex w-full">
+    <main className="flex w-full full-page">
+      <section className="flex w-full space-x-4">
         <MachinesSearch
           filters={filters}
           loading={loading}
           filterData={filterData}
         />
 
-        <div className="flex flex-col w-full p-4">
+        <div className="flex flex-col flex-1 overflow-hidden border rounded-md border-white/10">
           <MachinesTable />
 
           <BasePagination

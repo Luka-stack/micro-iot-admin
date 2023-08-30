@@ -40,7 +40,7 @@ export const BasePagination = ({ loading, pagination, changePage }: Props) => {
   }
 
   return (
-    <div className="p-2">
+    <div className="flex-none p-2">
       <ul
         className={clsx(
           'flex items-center justify-end flex-none h-full space-x-2 text-sm',

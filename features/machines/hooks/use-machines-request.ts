@@ -51,7 +51,7 @@ export function useMachinesRequest(): {
   }, []);
 
   useEffect(() => {
-    changePage('limit=10&offset=0');
+    changePage('limit=20&offset=0');
   }, []);
 
   return {

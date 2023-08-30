@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply bg-main text-slate-300;
+}
+
+.main-gradient {
+  @apply bg-gradient-to-r from-[#21222D] to-[#232B54];
+}
+
+.main-gradient-hover {
+  @apply bg-gradient-to-r hover:from-[#21222D69] hover:to-[#232B5469];
+}
+
+.full-page {
+  height: calc(100vh - 116px);
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
