@@ -13,7 +13,7 @@ export default function MachinesLayout({
   params: { serialNumber: string };
 }) {
   return (
-    <main className="flex flex-col w-full m-4">
+    <main className="flex flex-1 space-x-4">
       <TabNavigation serialNumber={params.serialNumber} />
 
       {children}

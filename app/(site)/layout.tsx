@@ -3,7 +3,7 @@ import '../global.css';
 
 import { Roboto } from 'next/font/google';
 
-import { GlobalNavigation } from '@/app/(site)/global-navigation';
+import { GlobalNavigation } from '@/app/(site)/GlobalNavigation';
 import { Metadata } from 'next';
 
 const roboto = Roboto({ weight: '400', subsets: ['latin'], display: 'swap' });
@@ -26,7 +26,6 @@ export default function RootLayout({
       <body className="flex flex-col h-screen">
         <GlobalNavigation />
 
-        {/* <main className="flex h-[calc(100%-100px)]">{children}</main> */}
         <main className="flex flex-1 p-4">{children}</main>
       </body>
     </html>

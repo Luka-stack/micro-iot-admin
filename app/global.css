@@ -103,7 +103,7 @@ input[type='number'] {
 /*  */
 
 .util-graph-height {
-  height: calc(100vh - 330px);
+  height: calc(100vh - 250px);
 }
 
 .work-graph-height {

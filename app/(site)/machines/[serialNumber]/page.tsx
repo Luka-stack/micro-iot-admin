@@ -1,13 +1,9 @@
-import {
-  differenceInHoursAndMin,
-  getProductionRateLevel,
-} from '@/common/helpers';
-import { Machine } from '@/types';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { MachineTools } from './MachineTools';
+
+import { Machine } from '@/types';
 import { RefreshPage } from '@/components/ui/refresh-page';
+import { MachineDashboard } from '@/features/machine-dashboard';
 
 type Props = {
   params: {
@@ -45,101 +41,10 @@ export default async function Machines({ params }: Props) {
   }
 
   return (
-    <main className="w-full p-4">
+    <main className="flex-1 p-4 border rounded-md border-white/10">
       <RefreshPage />
-      <div className="flex">
-        <section className="flex flex-col w-1/5 space-y-5">
-          <div className="relative self-center w-60 h-72">
-            <Image src={`/${machine.type.imageUrl}`} alt="Machine" fill />
-          </div>
 
-          <div className="space-y-2">
-            <p>
-              <b>Machine:</b> {machine.serialNumber}
-            </p>
-            <p>
-              <b>Producent:</b> {machine.producent}
-            </p>
-            <p>
-              <b>Type:</b> {machine.type.name}
-            </p>
-            <p>
-              <b>Model:</b> {machine.model.name}
-            </p>
-          </div>
-        </section>
-
-        <section className="flex flex-col w-4/5 justify-evenly">
-          <section className="flex h-60 justify-evenly">
-            <MachineProperties machine={machine} />
-            <ModelProperties machine={machine} />
-          </section>
-
-          <MachineTools machine={machine} />
-        </section>
-      </div>
+      <MachineDashboard machine={machine} />
     </main>
-  );
-}
-
-function MachineProperties({ machine }: { machine: Machine }) {
-  const hoursLabel = () => {
-    const [hours, minutes] = differenceInHoursAndMin(
-      new Date(machine.lastStatusUpdate)
-    );
-
-    return (
-      <>
-        <b>{machine.status === 'WORKING' ? 'Working' : 'Idle'} hours:</b>{' '}
-        {hours}
-        [h] {minutes} [min]
-      </>
-    );
-  };
-
-  return (
-    <div className="px-10 py-4 space-y-2 border border-black rounded-md bg-black/10">
-      <p>
-        <b>Status:</b> {machine.status}
-      </p>
-      <p>
-        <b>Production Rate:</b> {machine.productionRate} [s]
-      </p>
-      <p>
-        <b>Production Rate:</b> Level{' '}
-        {getProductionRateLevel(
-          machine.productionRate,
-          machine.model.defaultRate,
-          machine.model.maxRate
-        )}
-        .
-      </p>
-      <p>{hoursLabel()}</p>
-    </div>
-  );
-}
-
-function ModelProperties({ machine }: { machine: Machine }) {
-  return (
-    <div className="px-10 py-4 space-y-2 border border-black rounded-md bg-black/10">
-      <p>
-        <b>Fault Rate:</b> {machine.model.faultRate}
-      </p>
-      <p>
-        <b>Work Rate:</b> {machine.model.workBase}
-      </p>
-      <p>
-        <b>Work Rate Range:</b> +/- {machine.model.workRange}
-      </p>
-      <p>
-        <b>Def Production Rate:</b> {machine.model.defaultRate} [s]
-      </p>
-      <p>
-        <b>Min Production Rate</b> {machine.model.minRate} [s]
-      </p>
-      <p>
-        <b>Max Production Rate</b> {machine.model.maxRate} [s]
-      </p>
-    </div>
   );
 }
