@@ -122,8 +122,8 @@ function useTransformData(data: MachineUtilization[]) {
         label: 'Utilization',
         rawDates,
         data: chartData,
-        backgroundColor: '#3730A3',
-        hoverBackgroundColor: '#4338CA',
+        backgroundColor: '#232B52',
+        hoverBackgroundColor: '#353B74',
       },
     ],
   };

@@ -1,5 +1,3 @@
-'use client';
-
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
@@ -7,14 +5,21 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 import { Pagination } from '@/types';
 import { usePagination } from '@/hooks/use-pagination';
 import { createPaginationUrl } from '@/common/helpers';
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
   loading: boolean;
   pagination: Pagination;
+  classes?: string;
   changePage: (paginationUrl: string) => void;
 };
 
-export const BasePagination = ({ loading, pagination, changePage }: Props) => {
+export const BasePagination = ({
+  loading,
+  pagination,
+  classes,
+  changePage,
+}: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const hasNext = useMemo(
@@ -40,7 +45,7 @@ export const BasePagination = ({ loading, pagination, changePage }: Props) => {
   }
 
   return (
-    <div className="flex-none p-2">
+    <div className={twMerge('flex-none', classes)}>
       <ul
         className={clsx(
           'flex items-center justify-end flex-none h-full space-x-2 text-sm',

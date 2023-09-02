@@ -12,7 +12,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return { title: `Machine ${params.serialNumber}` };
+  return { title: params.serialNumber };
 }
 
 async function getMachine(serialNumber: string): Promise<Machine> {

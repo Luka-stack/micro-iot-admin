@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import { useMachinesActions, useMachinesStore } from '../context';
 
-export const MachinesTable = () => {
+export function MachinesTable() {
   const { machines } = useMachinesStore();
   const dispatch = useMachinesActions();
 
   return (
-    <div className="grid flex-1 overflow-y-auto auto-cols-fr auto-rows-fr scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-950">
-      <table className="">
+    <div className="flex-1 w-full overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-950">
+      <table className="w-full">
         <thead className="sticky top-0 main-gradient">
           <tr>
             <TableHeader text="" />
@@ -24,7 +24,7 @@ export const MachinesTable = () => {
           {machines.map((machine) => (
             <tr
               key={machine.serialNumber}
-              className="main-gradient-hover hover:cursor-pointer"
+              className="h-10 main-gradient-hover hover:cursor-pointer"
               onClick={() => dispatch('SET_PREVIEW', machine)}
             >
               <TableImage
@@ -43,7 +43,7 @@ export const MachinesTable = () => {
       </table>
     </div>
   );
-};
+}
 
 function TableHeader({ text }: { text: string }) {
   return (

@@ -3,7 +3,7 @@
 import { Filters } from '@/types';
 import { useMachinesRequest } from './hooks/use-machines-request';
 import { MachinesSearch } from '@/features/machines/components/MachinesSearch';
-import { Preview as MachinePreview } from './components/MachinePreview';
+import { MachinePreview as MachinePreview } from './components/MachinePreview';
 import { BasePagination } from '@/components/ui/base-pagination';
 import { MachinesTable } from './components/MachinesTable';
 import { useMachinesStore } from './context';
@@ -32,11 +32,12 @@ export function MachinesView({ filters }: Props) {
             pagination={pagination}
             loading={loading}
             changePage={changePage}
+            classes="p-2"
           />
         </div>
-      </section>
 
-      <MachinePreview />
+        <MachinePreview />
+      </section>
     </main>
   );
 }
