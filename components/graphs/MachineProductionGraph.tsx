@@ -14,7 +14,7 @@ type Props = {
   data: MachineWork[];
 };
 
-export function MachineWorkGraph({ data }: Props) {
+export function MachineProductionGraph({ data }: Props) {
   if (!data.length) {
     return <NoDataFound />;
   }

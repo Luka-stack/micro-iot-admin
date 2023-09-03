@@ -1,6 +1,6 @@
 'use client';
 
-import { MachineWorkGraph } from '@/components/graphs/MachineWorkGraph';
+import { MachineProductionGraph } from '@/components/graphs/MachineProductionGraph';
 import { MachineWork } from '@/types';
 import { use, useMemo } from 'react';
 
@@ -13,7 +13,7 @@ export function MachineChart({ dataPromise }: Props) {
 
   return (
     <div className="grid w-full h-full auto-rows-fr auto-cols-fr work-graph-preview">
-      <MachineWorkGraph data={machineWork} />
+      <MachineProductionGraph data={machineWork} />
     </div>
   );
 }

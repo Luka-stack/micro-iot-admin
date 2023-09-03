@@ -17,7 +17,7 @@ export function MachinesView({ filters }: Props) {
   const { loading, changePage, filterData } = useMachinesRequest();
 
   return (
-    <main className="flex w-full full-page">
+    <main className="flex w-full xxl:overflow-x-hidden full-page">
       <section className="flex w-full space-x-4">
         <MachinesSearch
           filters={filters}

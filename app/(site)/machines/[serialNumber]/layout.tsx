@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { TabNavigation } from './TabNavigation';
+import { DetailsNavigation } from './DetailsNavigation';
 
 export const metadata: Metadata = {
   title: 'Machine',
@@ -14,7 +14,7 @@ export default function MachinesLayout({
 }) {
   return (
     <main className="flex flex-1 space-x-4">
-      <TabNavigation serialNumber={params.serialNumber} />
+      <DetailsNavigation serialNumber={params.serialNumber} />
 
       {children}
     </main>

@@ -1,7 +1,7 @@
 import { Machine } from '@/types';
-import { MachineInfo } from './components/machine-info';
-import { MachineStatus } from './components/machine-status';
-import { MachineProduction } from './components/machine-production';
+import { MachineInfo } from './components/MachineInfo';
+import { MachineStatus } from './components/MachineStatus';
+import { MachineProduction } from './components/MachineProduction';
 
 type Props = {
   machine: Machine;

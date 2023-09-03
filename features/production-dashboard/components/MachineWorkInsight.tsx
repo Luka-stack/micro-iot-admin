@@ -3,7 +3,7 @@ import { PuffLoader } from 'react-spinners';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
 import { Machine } from '@/types';
-import { MachineWorkGraph } from '@/components/graphs/MachineWorkGraph';
+import { MachineProductionGraph } from '@/components/graphs/MachineProductionGraph';
 import { useFetchMachineWork } from '@/hooks/use-fetch-machine-work';
 import { differenceInHoursAndMin } from '@/common/helpers';
 import Link from 'next/link';
@@ -47,7 +47,7 @@ export function MachineWorkInsight({ machine, size, onEsc }: Props) {
             size === 1 ? 'work-graph-multiple-height' : 'work-graph-height'
           )}
         >
-          {loading ? <Loading /> : <MachineWorkGraph data={workData} />}
+          {loading ? <Loading /> : <MachineProductionGraph data={workData} />}
         </div>
 
         <div className="flex items-center justify-around flex-1 p-4 border-t-2 border-white/10">

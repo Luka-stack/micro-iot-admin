@@ -34,7 +34,7 @@ export default async function MachineWorkDetailPage({ params }: Props) {
         <MachineChart dataPromise={work} />
       </Suspense>
 
-      <div className="w-5/6 h-1 mx-auto mt-4 mb-10 rounded-md bg-slate-950" />
+      <div className="w-5/6 h-1 mx-auto mt-4 mb-10 rounded-md bg-white/10" />
 
       <Suspense fallback={<MachineDetailsSkeleton />}>
         <MachineDetails dataPromise={machine} />

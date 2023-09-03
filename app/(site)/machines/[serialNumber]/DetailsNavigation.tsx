@@ -9,7 +9,7 @@ type Props = {
   serialNumber: string;
 };
 
-export function TabNavigation({ serialNumber }: Props) {
+export function DetailsNavigation({ serialNumber }: Props) {
   const segment = useSelectedLayoutSegment();
 
   return (
