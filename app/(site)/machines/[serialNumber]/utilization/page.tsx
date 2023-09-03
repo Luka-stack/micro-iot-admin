@@ -1,64 +1,73 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { UtilizationNavigation } from './UtilizationNavigation';
-import { UtilizationGraphTab } from './UtilizationGraphTab';
-import { UtilizationStatsTab } from './UtilizationStatsTab';
+import { calculateHoursAndMinutes } from '@/common/date-helpers';
+import { MachineUtilizationGraph } from '@/components/graphs/MachineUtilizationGraph';
+import { DateFilter } from '@/components/ui/date-filter';
+import { MachineUtilization } from '@/types';
+import { useEffect, useMemo, useState } from 'react';
 
 type Props = {
   params: { serialNumber: string };
 };
 
 export default function MachineUtilizationPage({ params }: Props) {
-  const [tab, setTab] = useState<'graph' | 'stats'>('graph');
+  const { utilization, loading, doRequest } = useRequestUtilization(
+    params.serialNumber
+  );
+
+  const totalUtilization = useMemo(() => {
+    const totalUtilization = utilization.reduce(
+      (acc, curr) => acc + curr.utilization,
+      0
+    );
+
+    const { hours, minutes } = calculateHoursAndMinutes(totalUtilization);
+
+    return `${hours} [h] ${minutes} [min]`;
+  }, [utilization]);
 
   return (
-    <main className="flex flex-col w-full h-full">
-      <UtilizationNavigation tab={tab} setTab={setTab} />
+    <main className="relative flex flex-col w-full h-full p-4 border rounded-md border-white/10">
+      <div className="absolute text-sm right-5 top-6">
+        <h3>Utilization Summary: {totalUtilization}</h3>
+      </div>
 
-      {tab === 'graph' ? (
-        <UtilizationGraphTab serialNumber={params.serialNumber} />
-      ) : (
-        <Suspense fallback={<StatsSkeleton />}>
-          <UtilizationStatsTab serialNumber={params.serialNumber} />
-        </Suspense>
-      )}
+      <DateFilter onChange={doRequest} />
+      <MachineUtilizationGraph data={utilization} />
     </main>
   );
 }
 
-function StatsSkeleton() {
-  return (
-    <main className="flex flex-col items-center space-y-10">
-      <h1 className="text-2xl font-medium text-center">Utilization Summary</h1>
-      <div className="flex flex-col w-64 p-5 border border-black h-fit bg-black/10">
-        <div className="space-y-5 animate-pulse ">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="h-3 col-span-2 rounded bg-slate-700"></div>
-            <div className="h-3 col-span-1 rounded bg-slate-700"></div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="h-3 col-span-2 rounded bg-slate-700"></div>
-            <div className="h-3 col-span-1 rounded bg-slate-700"></div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="h-3 col-span-2 rounded bg-slate-700"></div>
-            <div className="h-3 col-span-1 rounded bg-slate-700"></div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="h-3 col-span-2 rounded bg-slate-700"></div>
-            <div className="h-3 col-span-1 rounded bg-slate-700"></div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="h-3 col-span-2 rounded bg-slate-700"></div>
-            <div className="h-3 col-span-1 rounded bg-slate-700"></div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="h-3 col-span-2 rounded bg-slate-700"></div>
-            <div className="h-3 col-span-1 rounded bg-slate-700"></div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+function useRequestUtilization(serialNumber: string) {
+  const [utilization, setUtilization] = useState<MachineUtilization[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const doRequest = async (from: Date, to: Date) => {
+    setLoading(true);
+
+    const response = await fetch(
+      `http://localhost:7000/api/analyser/${serialNumber}/utilization?${new URLSearchParams(
+        {
+          fromDate: from.toISOString().slice(0, 10),
+          toDate: to.toISOString().slice(0, 10),
+        }
+      )}`,
+      { cache: 'no-cache' }
+    );
+
+    const { data } = await response.json();
+
+    setUtilization(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    const sixDaysAgo = new Date();
+    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
+
+    doRequest(sixDaysAgo, new Date());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return { utilization, loading, doRequest };
 }

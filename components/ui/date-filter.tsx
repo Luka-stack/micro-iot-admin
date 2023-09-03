@@ -1,7 +1,5 @@
-'use client';
-
-import { useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { useState } from 'react';
 
 type Props = {
   onChange: (from: Date, to: Date) => void;

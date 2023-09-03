@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  calculateMonthDay,
-  toDecimalHours,
-  toHoursAndMinutes,
-} from '@/common/date-helpers';
-import { MachineUtilization } from '@/types';
+import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,7 +10,13 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+
+import { MachineUtilization } from '@/types';
+import {
+  calculateMonthDay,
+  toDecimalHours,
+  toHoursAndMinutes,
+} from '@/common/date-helpers';
 
 ChartJS.register(
   CategoryScale,
@@ -121,8 +122,8 @@ function useTransformData(data: MachineUtilization[]) {
         label: 'Utilization',
         rawDates,
         data: chartData,
-        backgroundColor: '#3730A3',
-        hoverBackgroundColor: '#4338CA',
+        backgroundColor: '#232B52',
+        hoverBackgroundColor: '#353B74',
       },
     ],
   };

@@ -7,7 +7,14 @@ module.exports = {
     './features/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        main: '#171820',
+      },
+      screens: {
+        xxl: '1380px',
+      },
+    },
   },
   plugins: [require('tailwind-scrollbar')],
 };

@@ -14,7 +14,7 @@ type Props = {
   data: MachineWork[];
 };
 
-export function MachineWorkGraph({ data }: Props) {
+export function MachineProductionGraph({ data }: Props) {
   if (!data.length) {
     return <NoDataFound />;
   }
@@ -42,8 +42,8 @@ export function MachineWorkGraph({ data }: Props) {
         <Area
           type="monotone"
           dataKey="work"
-          stroke="#7e22ce"
-          fill="#7E22CE4C"
+          stroke="#1d4ed8"
+          fill="#232B52CC"
         />
       </AreaChart>
     </ResponsiveContainer>
