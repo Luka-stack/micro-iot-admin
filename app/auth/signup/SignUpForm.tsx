@@ -36,6 +36,26 @@ async function oauthSignup(user: {
   }
 }
 
+async function localSignup(user: {
+  email: string;
+  displayName: string;
+  role: string;
+}) {
+  try {
+    const response = await fetch('http://localhost:5001/auth/v1/signup', {
+      cache: 'no-store',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export function SignupForm({ userPromise }: Props) {
   const { data } = use(userPromise);
   const router = useRouter();
@@ -44,13 +64,21 @@ export function SignupForm({ userPromise }: Props) {
     event.preventDefault();
 
     const target = event.target as any;
+    const user = {
+      role: target['roles'].value,
+      email: target['email'].value,
+      displayName: target['displayName'].value,
+      password: target['password'].value,
+    };
 
     try {
-      const response = await oauthSignup({
-        role: target['roles'].value,
-        email: target['email'].value,
-        displayName: target['displayName'].value,
-      });
+      let response;
+
+      if (data) {
+        response = await oauthSignup(user);
+      } else {
+        response = await localSignup(user);
+      }
 
       console.log(response);
       router.replace('/auth/login');
@@ -95,6 +123,18 @@ export function SignupForm({ userPromise }: Props) {
           className="rounded-md outline-2 outline-red-500 text-slate-900"
         />
       </div>
+
+      {data ? null : (
+        <div className="flex flex-col my-5">
+          <label htmlFor="displayName">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            className="rounded-md outline-2 outline-red-500 text-slate-900"
+          />
+        </div>
+      )}
 
       <div className="flex flex-col my-5">
         <select
