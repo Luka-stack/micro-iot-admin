@@ -1,114 +1,42 @@
-'use client';
-
 import Link from 'next/link';
+import Image from 'next/image';
 
-const checklogin = async () => {
-  try {
-    const response = await fetch(
-      'http://localhost:5001/auth/v1/authenticated',
-      {
-        cache: 'no-store',
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Access-Control-Allow-Origin': 'true',
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    console.log(data);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const login = async (user: { password: string; email: string }) => {
-  try {
-    const response = await fetch('http://localhost:5001/auth/v1/login', {
-      cache: 'no-store',
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Access-Control-Allow-Origin': 'true',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-
-    const data = await response.json();
-
-    console.log(data);
-  } catch (err) {
-    console.error(err);
-  }
-};
+import { LoginForm } from './LoginForm';
 
 export default function LoginPage() {
-  const glogin = () => {
-    window.open('http://localhost:5001/auth/v1/google/login', '_self');
-  };
-
-  const onSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const target = event.target as any;
-    const user = {
-      email: target['email'].value,
-      password: target['password'].value,
-    };
-
-    try {
-      await login(user);
-    } catch (err) {
-      console.error('Login Error', err);
-    }
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center space-y-5">
-      <form className="" onSubmit={onSubmit}>
-        <h1>Login</h1>
+    <main className="flex h-screen divide-x divide-white/10">
+      <div className="relative w-3/4 h-full">
+        <Image src="/login-bg.jpg" alt="Working Mechanical Arms" fill />
+      </div>
 
-        <div className="flex flex-col my-5">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            className="rounded-md outline-2 outline-red-500 text-slate-900"
-          />
+      <div className="w-1/4">
+        <div className="flex flex-col items-center justify-center h-full main-gradient">
+          <div className="mb-12 text-center">
+            <h2 className="-mb-1 text-lg font-semibold">Welcome in</h2>
+            <h1 className="text-3xl italic font-extrabold header-gradient">
+              Fox Machines
+            </h1>
+          </div>
+
+          <LoginForm />
+
+          <button className="flex bg-[#232b54] w-2/3 justify-center rounded-md shadow-md border border-white/10 py-2 shadow-black/60 mt-12 mb-5 space-x-3 hover:bg-[#2d3354]">
+            <Image src="/google.png" alt="Google" width={24} height={24} />
+            <p>Log in with Google</p>
+          </button>
+
+          <div className="flex space-x-2">
+            <p>{`Don't have an account?`}</p>
+            <Link
+              href="/auth/signup"
+              className="text-blue-500 underline cursor-pointer hover:scale-105 underline-offset-2"
+            >
+              Sign Up for Free!
+            </Link>
+          </div>
         </div>
-
-        <div className="flex flex-col my-5">
-          <label htmlFor="displayName">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            className="rounded-md outline-2 outline-red-500 text-slate-900"
-          />
-        </div>
-
-        <input
-          type="submit"
-          value="Log In"
-          className="w-full bg-blue-800 rounded-md"
-        />
-      </form>
-
-      <button onClick={glogin} className="px-4 py-2 bg-red-700 rounded-lg">
-        Log in with google
-      </button>
-
-      <Link href="/auth/signup" className="px-4 py-2 rounded-lg bg-violet-700">
-        Local Signup
-      </Link>
-
-      <button onClick={checklogin} className="px-4 py-2 bg-blue-700 rounded-lg">
-        Check User
-      </button>
-    </div>
+      </div>
+    </main>
   );
 }

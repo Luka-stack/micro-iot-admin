@@ -1,162 +1,86 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { use } from 'react';
+import { useState } from 'react';
+// @ts-ignore
+import { experimental_useFormState as useFormState } from 'react-dom';
 
-type UserPromise = {
-  data?: {
-    email: string;
-    displayName: string;
-  };
+import { Select } from './Select';
+import { signUp } from '@/app/auth-actions';
+import { SubmitButton } from '../SubmitButton';
+
+const initialState = {
+  error: false,
 };
+const POSITIONS = [{ name: 'Maintainer' }, { name: 'Employee' }];
 
-type Props = {
-  userPromise: Promise<UserPromise>;
-};
-
-async function oauthSignup(user: {
-  email: string;
-  displayName: string;
-  role: string;
-}) {
-  try {
-    const response = await fetch('http://localhost:5001/auth/v1/signup/oauth', {
-      cache: 'no-store',
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Access-Control-Allow-Origin': 'true',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-    return await response.json();
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function localSignup(user: {
-  email: string;
-  displayName: string;
-  role: string;
-}) {
-  try {
-    const response = await fetch('http://localhost:5001/auth/v1/signup', {
-      cache: 'no-store',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-    return await response.json();
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-export function SignupForm({ userPromise }: Props) {
-  const { data } = use(userPromise);
-  const router = useRouter();
-
-  const onSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const target = event.target as any;
-    const user = {
-      role: target['roles'].value,
-      email: target['email'].value,
-      displayName: target['displayName'].value,
-      password: target['password'].value,
-    };
-
-    try {
-      let response;
-
-      if (data) {
-        response = await oauthSignup(user);
-      } else {
-        response = await localSignup(user);
-      }
-
-      console.log(response);
-      router.replace('/auth/login');
-    } catch (err) {
-      console.error('Singup Error', err);
-    }
-  };
+export function SignUpForm() {
+  const [position, setPosition] = useState(POSITIONS[0]);
+  const [state, formAction] = useFormState(signUp, initialState);
 
   return (
-    <form className="" onSubmit={onSubmit}>
-      <h1>{data ? data.displayName : 'New User'}</h1>
+    <form className="w-2/3 space-y-6" action={formAction}>
+      <p>{state?.error ? 'Error' : 'No Error'}</p>
 
-      <div className="flex flex-col my-5">
-        <label htmlFor="email">Email</label>
-        {data ? (
-          <input
-            type="email"
-            name="email"
-            id="email"
-            disabled={true}
-            defaultValue={data?.email || ''}
-            className="rounded-md outline-2 outline-red-500 text-slate-900"
-          />
-        ) : (
-          <input
-            type="email"
-            name="email"
-            id="email"
-            disabled={false}
-            className="rounded-md outline-2 outline-red-500 text-slate-900"
-          />
-        )}
-      </div>
-
-      <div className="flex flex-col my-5">
-        <label htmlFor="displayName">Display Name</label>
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm" htmlFor="email">
+          Your Email
+        </label>
         <input
-          type="text"
-          name="displayName"
-          id="displayName"
-          defaultValue={data?.displayName || ''}
-          className="rounded-md outline-2 outline-red-500 text-slate-900"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Enter your email"
+          className="px-2 py-2 rounded-lg shadow-md bg-slate-900 placeholder:text-slate-500 focus:outline-none shadow-black/60 hover:bg-slate-800"
         />
       </div>
 
-      {data ? null : (
-        <div className="flex flex-col my-5">
-          <label htmlFor="displayName">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            className="rounded-md outline-2 outline-red-500 text-slate-900"
-          />
-        </div>
-      )}
-
-      <div className="flex flex-col my-5">
-        <select
-          name="roles"
-          id="roles"
-          className="text-slate-900"
-          defaultValue="employee"
-        >
-          <option value="employee" className="text-slate-900">
-            Employee
-          </option>
-          <option value="maintainer" className="text-slate-900">
-            Maintainer
-          </option>
-        </select>
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm" htmlFor="name">
+          Your Display Name
+        </label>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Enter your display name"
+          className="px-2 py-2 rounded-lg shadow-md bg-slate-900 placeholder:text-slate-500 focus:outline-none shadow-black/60 hover:bg-slate-800"
+        />
       </div>
 
-      <input
-        type="submit"
-        value="Sign Up"
-        className="w-full bg-blue-800 rounded-md"
+      <Select
+        title="Your Position"
+        selected={position}
+        selectables={POSITIONS}
+        setSelected={setPosition}
       />
+
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm" htmlFor="password">
+          Your Password
+        </label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="************"
+          className="px-2 pt-3 pb-1 rounded-lg shadow-md bg-slate-900 placeholder:text-slate-500 focus:outline-none shadow-black/60 hover:bg-slate-800"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm" htmlFor="confirmPassword">
+          Confirm Password
+        </label>
+        <input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          placeholder="************"
+          className="px-2 pt-3 pb-1 rounded-lg shadow-md bg-slate-900 placeholder:text-slate-500 focus:outline-none shadow-black/60 hover:bg-slate-800"
+        />
+      </div>
+
+      <SubmitButton label="Sign Up" />
     </form>
   );
 }

@@ -14,6 +14,12 @@ html {
   @apply bg-gradient-to-r hover:from-[#21222D69] hover:to-[#232B5469];
 }
 
+.header-gradient {
+  background: -webkit-linear-gradient(#ffffff, #172554);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .full-page {
   height: calc(100vh - 116px);
 }
@@ -28,6 +34,8 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+/* Date Picker */
 
 .react-datepicker {
   @apply bg-transparent border-none;
@@ -100,7 +108,7 @@ input[type='number'] {
   @apply mr-1 after:pb-1 after:text-sm after:bg-transparent after:rounded-full after:content-['🗙'] after:hover:bg-slate-700 after:text-slate-400;
 }
 
-/*  */
+/* Graph */
 
 .util-graph-height {
   height: calc(100vh - 250px);
@@ -117,6 +125,8 @@ input[type='number'] {
 .work-graph-preview {
   height: calc(100vh - 250px);
 }
+
+/* Animation */
 
 @keyframes bounceIn {
   0%,
