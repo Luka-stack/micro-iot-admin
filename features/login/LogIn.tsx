@@ -1,21 +1,19 @@
 'use client';
 
-// @ts-ignore
-import { experimental_useFormState as useFormState } from 'react-dom';
+import { ClientSubmitButton } from '@/components/SubmitButton';
+import { useLogIn } from './use-log-in';
+import { useSearchParams } from 'next/navigation';
+import { get } from 'http';
 
-import { login } from '@/app/auth-actions';
-import { SubmitButton } from '../SubmitButton';
+export function LogIn() {
+  const { loading, error, submit } = useLogIn();
+  const searchParams = useSearchParams();
 
-const initialState = {
-  error: false,
-};
-
-export function LoginForm() {
-  const [state, formAction] = useFormState(login, initialState);
+  console.log(searchParams.get('callbackUrl'));
 
   return (
-    <form className="w-2/3 space-y-5" action={formAction}>
-      {state?.error ? (
+    <form className="w-2/3 space-y-5" onSubmit={submit}>
+      {error ? (
         <div className="py-2 mb-5 text-center border-2 border-red-900 rounded-md bg-red-500/10">
           <h3 className="font-bold">Wrong Credentials</h3>
           <p className="italic">Invalid username or password</p>
@@ -48,7 +46,7 @@ export function LoginForm() {
         />
       </div>
 
-      <SubmitButton label="Log In" />
+      <ClientSubmitButton label="Log In" pending={loading} />
     </form>
   );
 }

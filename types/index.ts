@@ -83,3 +83,9 @@ export type MachineWork = {
   timestamp: string;
   work: number;
 };
+
+export type User = {
+  email: string;
+  displayName: string;
+  role: string;
+};
