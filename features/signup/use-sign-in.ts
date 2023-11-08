@@ -35,7 +35,7 @@ export function useSignIn() {
         password: formData.get('password'),
         confirmPassword: formData.get('confirmPassword'),
         displayName: formData.get('displayName'),
-        role: formData.get('role'),
+        role: 'employee',
       });
 
       await postRequest(AuthEndpoints.signup, data, 201);

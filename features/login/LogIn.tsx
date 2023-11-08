@@ -2,14 +2,9 @@
 
 import { ClientSubmitButton } from '@/components/SubmitButton';
 import { useLogIn } from './use-log-in';
-import { useSearchParams } from 'next/navigation';
-import { get } from 'http';
 
 export function LogIn() {
   const { loading, error, submit } = useLogIn();
-  const searchParams = useSearchParams();
-
-  console.log(searchParams.get('callbackUrl'));
 
   return (
     <form className="w-2/3 space-y-5" onSubmit={submit}>

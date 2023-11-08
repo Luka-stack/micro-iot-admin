@@ -42,7 +42,9 @@ export const GlobalNavigation = () => {
       {session && session.user ? (
         <div className="flex items-center mr-4 space-x-10">
           <div>
-            <p className="text-xs text-slate-500">{session.user.role}</p>
+            <p className="text-xs capitalize text-slate-500">
+              {session.user.role}
+            </p>
             <h3>{session.user.displayName}</h3>
           </div>
           <button

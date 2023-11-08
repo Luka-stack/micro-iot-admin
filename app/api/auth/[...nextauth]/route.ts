@@ -1,4 +1,5 @@
 import NextAuth from 'next-auth/next';
+import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions, User } from 'next-auth';
 
@@ -7,6 +8,11 @@ import { AuthEndpoints } from '@/common/apis';
 
 export const authOptions: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    }),
+
     CredentialsProvider({
       id: 'local-login',
       credentials: {
@@ -36,6 +42,30 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === 'google') {
+        const googleUser = {
+          idToken: account.id_token,
+          email: user.email,
+          name: user.name,
+        };
+
+        try {
+          const response = await postRequest<User>(
+            AuthEndpoints.providerLogin('google'),
+            googleUser,
+            200
+          );
+          user.accessToken = response.accessToken;
+          user.user = response.user;
+        } catch (error) {
+          console.log(error);
+          throw new Error('Authentication error');
+        }
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         return {

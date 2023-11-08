@@ -5,12 +5,8 @@ import { useState } from 'react';
 
 import { useSignIn } from './use-sign-in';
 import { ClientSubmitButton } from '@/components/SubmitButton';
-import { Select } from '@/components/ui/Select';
-
-const POSITIONS = [{ name: 'Maintainer' }, { name: 'Employee' }];
 
 export function SignUp() {
-  const [position, setPosition] = useState(POSITIONS[0]);
   const { loading, errors, submit } = useSignIn();
 
   return (
@@ -49,15 +45,6 @@ export function SignUp() {
         <p className="text-sm text-red-800">{errors?.displayName}</p>
       </div>
 
-      <Select
-        title="Your Position"
-        selected={position}
-        selectables={POSITIONS}
-        setSelected={setPosition}
-      />
-
-      <input type="hidden" value={position.name} name="role" />
-
       <div className="flex flex-col space-y-2">
         <label className="text-sm" htmlFor="password">
           Your Password
@@ -91,8 +78,6 @@ export function SignUp() {
         />
         <p className="text-sm text-red-800">{errors?.confirmPassword}</p>
       </div>
-
-      {/* <p className="text-red-800">{errors?.other}</p> */}
 
       <ClientSubmitButton label="Sign Up" pending={loading} />
     </form>
