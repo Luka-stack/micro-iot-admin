@@ -2,8 +2,8 @@
 import { useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 
-import { MACHINE_STATUSES } from '@/common/constants';
-import { createFilterUrl } from '@/common/helpers';
+import { MACHINE_STATUSES } from '@/lib/constants';
+import { createFilterUrl } from '@/lib/helpers';
 import {
   Filters,
   ModelFilter,
@@ -11,9 +11,9 @@ import {
   SelectedFilter,
   TypeFilter,
 } from '@/types';
-import { BaseSelect } from '../../../components/ui/base-select';
-import { BaseLoadingButton } from '../../../components/ui/base-loading-button';
-import { EqFilterSelect } from '../../../components/ui/eq-filter-select';
+import { BaseSelect } from '../../../components/ui/BaseSelect';
+import { BaseLoadingButton } from '../../../components/ui/BaseLoadingButton';
+import { EqFilterSelect } from '../../../components/ui/EqFilterSelect';
 
 const eqFilters = [
   {

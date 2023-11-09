@@ -4,7 +4,7 @@ import { Filters } from '@/types';
 import { useMachinesRequest } from './hooks/use-machines-request';
 import { MachinesSearch } from '@/features/machines/components/MachinesSearch';
 import { MachinePreview as MachinePreview } from './components/MachinePreview';
-import { BasePagination } from '@/components/ui/base-pagination';
+import { BasePagination } from '@/components/ui/BasePagination';
 import { MachinesTable } from './components/MachinesTable';
 import { useMachinesStore } from './context';
 

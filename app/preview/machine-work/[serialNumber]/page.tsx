@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 
-import { MachineChart } from './MachineChart';
-import { MachineDetails } from './MachineDetails';
-import { ANALYSER_API, MACHINE_API } from '@/common/apis';
+import { MachineChart } from './_components/MachineChart';
+import { MachineDetails } from './_components/MachineDetails';
+import { ANALYSER_API, MACHINE_API } from '@/lib/apis';
 
 type Props = {
   params: { serialNumber: string };

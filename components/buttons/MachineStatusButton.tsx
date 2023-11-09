@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { BaseLoadingButton } from '../ui/base-loading-button';
+import { BaseLoadingButton } from '../ui/BaseLoadingButton';
 import { MachineStatus } from '@/types';
 
 type Props = {

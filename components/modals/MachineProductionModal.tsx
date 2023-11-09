@@ -1,30 +1,28 @@
-'use client';
-
 import clsx from 'clsx';
 import { Dialog, Transition } from '@headlessui/react';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   ShieldExclamationIcon,
 } from '@heroicons/react/24/outline';
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 
 import { Machine } from '@/types';
-import { BaseLoadingButton } from '../ui/BaseLoadingButton';
 import { getProductionRateLevel } from '@/lib/helpers';
 
 type Props = {
   machine: Machine;
-  loading: boolean;
+  visible: boolean;
+  close: () => void;
   updateAction: (rate: number) => void;
 };
 
-export const MachineProductionButton = ({
+export function MachineProductionModal({
   machine: { model, productionRate },
-  loading,
+  visible,
+  close,
   updateAction,
-}: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+}: Props) {
   const [productionLevel, setProductionLevel] = useProductionRateLevel(
     productionRate,
     model.defaultRate,
@@ -32,7 +30,7 @@ export const MachineProductionButton = ({
   );
 
   const onRateChange = async () => {
-    setIsOpen(false);
+    close();
     updateAction(getProductionRateFromLevel());
   };
 
@@ -52,101 +50,87 @@ export const MachineProductionButton = ({
   };
 
   return (
-    <main>
-      <BaseLoadingButton
-        onClick={() => setIsOpen(true)}
-        loading={loading}
-        style="w-40 h-11 border-2 rounded-md shadow-md border-slate-400 text-slate-400 bg-slate-600/20 hover:bg-slate-600/30"
-        text="Production rate"
-        loadingText={false}
-      />
-
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-50"
-          onClose={() => setIsOpen(false)}
+    <Transition appear show={visible} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={close}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-opacity-25 bg-slate-800" />
-          </Transition.Child>
+          <div className="fixed inset-0 bg-opacity-50 bg-slate-900" />
+        </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-full p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-md bg-slate-800 rounded-2xl shadow-black">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-200"
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-full p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-md bg-slate-800 rounded-2xl shadow-black">
+                <Dialog.Title
+                  as="h3"
+                  className="text-lg font-medium leading-6 text-gray-200"
+                >
+                  Production Rate Levels
+                </Dialog.Title>
+
+                <div className="mt-5 space-y-4">
+                  <LevelZero
+                    model={model}
+                    level={productionLevel}
+                    setLevel={setProductionLevel}
+                  />
+                  <LevelOne
+                    level={productionLevel}
+                    setLevel={setProductionLevel}
+                  />
+
+                  <LevelTwo
+                    model={model}
+                    level={productionLevel}
+                    setLevel={setProductionLevel}
+                  />
+
+                  <LevelThree
+                    model={model}
+                    level={productionLevel}
+                    setLevel={setProductionLevel}
+                  />
+                </div>
+
+                <div className="flex justify-end mt-4 space-x-5">
+                  <button
+                    type="button"
+                    className="inline-flex justify-center px-4 py-2 text-sm font-medium border border-transparent rounded-md bg-slate-700 text-slate-200 hover:bg-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    onClick={close}
                   >
-                    Production Rate Levels
-                  </Dialog.Title>
-
-                  <div className="mt-5 space-y-4">
-                    <LevelZero
-                      model={model}
-                      level={productionLevel}
-                      setLevel={setProductionLevel}
-                    />
-                    <LevelOne
-                      level={productionLevel}
-                      setLevel={setProductionLevel}
-                    />
-
-                    <LevelTwo
-                      model={model}
-                      level={productionLevel}
-                      setLevel={setProductionLevel}
-                    />
-
-                    <LevelThree
-                      model={model}
-                      level={productionLevel}
-                      setLevel={setProductionLevel}
-                    />
-                  </div>
-
-                  <div className="flex justify-end mt-4 space-x-5">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center px-4 py-2 text-sm font-medium border border-transparent rounded-md bg-slate-700 text-slate-200 hover:bg-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex justify-center px-4 py-2 text-sm font-medium bg-blue-900 border border-transparent rounded-md text-slate-200 hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={onRateChange}
-                    >
-                      Change
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-flex justify-center px-4 py-2 text-sm font-medium bg-blue-900 border border-transparent rounded-md text-slate-200 hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    onClick={onRateChange}
+                  >
+                    Change
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
-        </Dialog>
-      </Transition>
-    </main>
+        </div>
+      </Dialog>
+    </Transition>
   );
-};
+}
 
 function useProductionRateLevel(
   rate: number,

@@ -1,4 +1,4 @@
-import { MACHINE_STATUSES } from '@/common/constants';
+import { MACHINE_STATUSES } from '@/lib/constants';
 
 export type Machine = {
   serialNumber: string;
@@ -82,4 +82,10 @@ export type MachineUtilization = {
 export type MachineWork = {
   timestamp: string;
   work: number;
+};
+
+export type User = {
+  email: string;
+  displayName: string;
+  role: string;
 };

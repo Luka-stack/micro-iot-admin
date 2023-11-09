@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { Machine } from '@/types';
-import { RefreshPage } from '@/components/ui/refresh-page';
-import { MachineDashboard } from '@/features/machine-dashboard';
+import { RefreshPage } from '@/components/ui/RefreshPage';
+import { MachineDashboard } from '@/app/(site)/machines/[serialNumber]/_components/MachineDashboard';
 
 type Props = {
   params: {

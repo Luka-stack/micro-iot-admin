@@ -2,7 +2,7 @@ import { use, useState } from 'react';
 
 import { filterMachines } from '@/app/actions';
 import { Machine, Pagination } from '@/types';
-import { createPaginationUrl } from '@/common/helpers';
+import { createPaginationUrl } from '@/lib/helpers';
 
 export function useFetchMachinesPromise(
   promise: Promise<{ data: Machine[]; meta: Pagination }>

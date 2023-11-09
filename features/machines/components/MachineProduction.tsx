@@ -1,11 +1,11 @@
-import { getProductionRateLevel } from '@/common/helpers';
+import { getProductionRateLevel } from '@/lib/helpers';
 import { Machine } from '@/types';
 import { useMemo, useState } from 'react';
 import { useMachinesActions } from '../context';
 import clsx from 'clsx';
 import { useMachineUpdate } from '@/hooks/use-machine-update';
 import { revalidateMachines } from '@/app/actions';
-import { MachineProductionModal } from '@/components/modals/machine-production-modal';
+import { MachineProductionModal } from '@/components/modals/MachineProductionModal';
 
 type Props = {
   machine: Machine;
