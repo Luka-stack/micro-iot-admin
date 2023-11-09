@@ -8,7 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { Machine } from '@/types';
-import { getProductionRateLevel } from '@/common/helpers';
+import { getProductionRateLevel } from '@/lib/helpers';
 
 type Props = {
   machine: Machine;

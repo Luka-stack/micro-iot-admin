@@ -2,7 +2,7 @@ import { signIn } from 'next-auth/react';
 import { ZodError, z } from 'zod';
 import { FormEvent, useCallback, useState } from 'react';
 
-import { AuthEndpoints } from '@/common/apis';
+import { AuthEndpoints } from '@/lib/apis';
 import { RequestError, postRequest } from '@/lib/fetch-client';
 
 const schema = z

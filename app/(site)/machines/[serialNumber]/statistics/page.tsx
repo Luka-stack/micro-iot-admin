@@ -1,4 +1,4 @@
-import { calculateHoursAndMinutes } from '@/common/date-helpers';
+import { calculateHoursAndMinutes } from '@/lib/date-helpers';
 import { notFound } from 'next/navigation';
 
 type Statistics = {

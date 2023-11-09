@@ -4,7 +4,7 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 
 import { Pagination } from '@/types';
 import { usePagination } from '@/hooks/use-pagination';
-import { createPaginationUrl } from '@/common/helpers';
+import { createPaginationUrl } from '@/lib/helpers';
 import { twMerge } from 'tailwind-merge';
 
 type Props = {

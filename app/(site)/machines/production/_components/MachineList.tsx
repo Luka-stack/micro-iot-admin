@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useDebounce } from 'use-debounce';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { BasePagination } from '@/components/ui/base-pagination';
+import { BasePagination } from '@/components/ui/BasePagination';
 import { MachineWorkContext } from '@/context/machine-work-context';
 import { Machine, Pagination } from '@/types';
 import { useFetchMachinesPromise } from '@/hooks/use-fetch-machine-promise';

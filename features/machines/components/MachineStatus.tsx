@@ -4,7 +4,7 @@ import { PowerIcon } from '@heroicons/react/24/outline';
 import { Machine } from '@/types';
 import { useMachineUpdate } from '@/hooks/use-machine-update';
 import { useMachinesActions } from '../context';
-import { differenceInHoursAndMin } from '@/common/helpers';
+import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
   machine: Machine;

@@ -1,4 +1,4 @@
-import { MACHINE_API } from '@/common/apis';
+import { MACHINE_API } from '@/lib/apis';
 import { useMachineStore } from '@/store';
 import { useCallback, useState } from 'react';
 

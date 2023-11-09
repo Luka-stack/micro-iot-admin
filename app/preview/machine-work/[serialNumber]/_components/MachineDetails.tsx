@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { use } from 'react';
 
 import { Machine } from '@/types';
-import { differenceInHoursAndMin } from '@/common/helpers';
+import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
   dataPromise: Promise<{ data: Machine }>;

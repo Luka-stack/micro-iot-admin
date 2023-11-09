@@ -1,4 +1,4 @@
-import { differenceInHoursAndMin } from '@/common/helpers';
+import { differenceInHoursAndMin } from '@/lib/helpers';
 import { Machine } from '@/types';
 
 type Props = {

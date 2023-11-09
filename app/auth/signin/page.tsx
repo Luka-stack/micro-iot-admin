@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { LogIn } from '@/features/login/LogIn';
-import { GoogleSignIn } from '@/features/login/GoogleSignIn';
+import { LogIn } from '@/app/auth/signin/_components/LogIn';
+import { GoogleSignIn } from '@/app/auth/signin/_components/GoogleSignIn';
 
 export default function LoginPage() {
   return (

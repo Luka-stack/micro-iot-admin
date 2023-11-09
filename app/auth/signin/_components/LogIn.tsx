@@ -2,16 +2,18 @@
 
 import { ClientSubmitButton } from '@/components/SubmitButton';
 import { useLogIn } from './use-log-in';
+import { useSearchParams } from 'next/navigation';
 
 export function LogIn() {
-  const { loading, error, submit } = useLogIn();
+  const { loading, submit } = useLogIn();
+  const searchParams = useSearchParams();
 
   return (
     <form className="w-2/3 space-y-5" onSubmit={submit}>
-      {error ? (
+      {searchParams.get('error') ? (
         <div className="py-2 mb-5 text-center border-2 border-red-900 rounded-md bg-red-500/10">
-          <h3 className="font-bold">Wrong Credentials</h3>
-          <p className="italic">Invalid username or password</p>
+          <h3 className="font-bold">Login error</h3>
+          <p className="italic">{searchParams.get('error')}</p>
         </div>
       ) : null}
 

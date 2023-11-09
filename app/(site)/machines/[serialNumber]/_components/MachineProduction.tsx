@@ -1,8 +1,8 @@
 'use client';
 
 import { updateProductionRate } from '@/app/actions';
-import { getProductionRateLevel } from '@/common/helpers';
-import { MachineProductionModal } from '@/components/modals/machine-production-modal';
+import { getProductionRateLevel } from '@/lib/helpers';
+import { MachineProductionModal } from '@/components/modals/MachineProductionModal';
 
 import { Machine } from '@/types';
 import clsx from 'clsx';

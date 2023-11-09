@@ -1,8 +1,8 @@
 'use client';
 
-import { calculateHoursAndMinutes } from '@/common/date-helpers';
+import { calculateHoursAndMinutes } from '@/lib/date-helpers';
 import { MachineUtilizationGraph } from '@/components/graphs/MachineUtilizationGraph';
-import { DateFilter } from '@/components/ui/date-filter';
+import { DateFilter } from '@/components/ui/DateFilter';
 import { MachineUtilization } from '@/types';
 import { useEffect, useMemo, useState } from 'react';
 

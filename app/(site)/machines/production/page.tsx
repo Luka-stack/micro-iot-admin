@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 
-import { MachineList } from './MachineList';
+import { MachineList } from './_components/MachineList';
 import { getMachines } from '@/app/actions';
 import { MachineWorkServerContext } from '@/context/machine-work-context';
-import { MachineWorkDashbord } from '@/features/production-dashboard';
+import { MachineWorkDashboard } from '@/app/(site)/machines/production/_components/MachineWorkDashboard';
 
 export const metadata: Metadata = {
   title: 'Production',
@@ -17,7 +17,7 @@ export default async function WorkProgressPage() {
       <MachineWorkServerContext>
         <MachineList machinePromise={machines} />
 
-        <MachineWorkDashbord />
+        <MachineWorkDashboard />
       </MachineWorkServerContext>
     </main>
   );

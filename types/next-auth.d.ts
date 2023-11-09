@@ -8,7 +8,7 @@ declare module 'next-auth' {
   interface Session {
     user?: {
       displayName: string;
-      emai: string;
+      email: string;
       role: string;
     };
     accessToken?: string;
@@ -17,7 +17,7 @@ declare module 'next-auth' {
   interface User {
     user?: {
       displayName: string;
-      emai: string;
+      email: string;
       role: string;
     };
     accessToken?: string;
@@ -29,7 +29,7 @@ declare module 'next-auth/jwt' {
   interface JWT {
     user?: {
       displayName: string;
-      emai: string;
+      email: string;
       role: string;
     };
     accessToken?: string;

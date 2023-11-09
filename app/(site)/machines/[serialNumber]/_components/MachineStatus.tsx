@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { Machine } from '@/types';
-import { differenceInHoursAndMin } from '@/common/helpers';
+import { differenceInHoursAndMin } from '@/lib/helpers';
 import { useMachineUpdate } from '@/hooks/use-machine-update';
 
 type Props = {

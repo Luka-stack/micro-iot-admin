@@ -5,7 +5,7 @@ import { Roboto } from 'next/font/google';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { GlobalNavigation } from '@/app/(site)/GlobalNavigation';
+import { GlobalNavigation } from '@/app/(site)/_components/GlobalNavigation';
 import SessionProvider from '@/components/SessionProvider';
 
 const roboto = Roboto({ weight: '400', subsets: ['latin'], display: 'swap' });

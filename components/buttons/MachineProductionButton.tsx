@@ -10,8 +10,8 @@ import {
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 
 import { Machine } from '@/types';
-import { BaseLoadingButton } from '../ui/base-loading-button';
-import { getProductionRateLevel } from '@/common/helpers';
+import { BaseLoadingButton } from '../ui/BaseLoadingButton';
+import { getProductionRateLevel } from '@/lib/helpers';
 
 type Props = {
   machine: Machine;

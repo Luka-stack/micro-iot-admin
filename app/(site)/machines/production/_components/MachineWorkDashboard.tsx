@@ -3,9 +3,9 @@
 import { CursorArrowRaysIcon } from '@heroicons/react/24/outline';
 
 import { MachineWorkContext } from '@/context/machine-work-context';
-import { MachineWorkInsight } from './components/MachineWorkInsight';
+import { MachineWorkInsight } from './MachineWorkInsight';
 
-export function MachineWorkDashbord() {
+export function MachineWorkDashboard() {
   const state = MachineWorkContext.useState();
   const actions = MachineWorkContext.useActions();
 

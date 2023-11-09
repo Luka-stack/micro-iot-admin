@@ -1,4 +1,4 @@
-import { MACHINE_STATUSES } from '@/common/constants';
+import { MACHINE_STATUSES } from '@/lib/constants';
 
 export type Machine = {
   serialNumber: string;

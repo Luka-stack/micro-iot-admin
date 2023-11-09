@@ -1,4 +1,4 @@
-import { ANALYSER_API } from '@/common/apis';
+import { ANALYSER_API } from '@/lib/apis';
 import { MachineWork } from '@/types';
 import { useEffect, useState } from 'react';
 

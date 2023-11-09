@@ -5,7 +5,7 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { Machine } from '@/types';
 import { MachineProductionGraph } from '@/components/graphs/MachineProductionGraph';
 import { useFetchMachineWork } from '@/hooks/use-fetch-machine-work';
-import { differenceInHoursAndMin } from '@/common/helpers';
+import { differenceInHoursAndMin } from '@/lib/helpers';
 import Link from 'next/link';
 
 type Props = {

@@ -16,7 +16,7 @@ import {
   calculateMonthDay,
   toDecimalHours,
   toHoursAndMinutes,
-} from '@/common/date-helpers';
+} from '@/lib/date-helpers';
 
 ChartJS.register(
   CategoryScale,

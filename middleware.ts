@@ -16,6 +16,14 @@ export default async function middleware(
     ) {
       return NextResponse.redirect(new URL('/', req.url));
     }
+
+    if (
+      req.nextUrl.pathname.startsWith('/admin') &&
+      token?.user?.role !== 'administrator'
+    ) {
+      // Sent to 404
+      return NextResponse.redirect(new URL('/', req.url));
+    }
   } else if (req.nextUrl.pathname.startsWith('/auth/signup')) {
     return NextResponse.next();
   }

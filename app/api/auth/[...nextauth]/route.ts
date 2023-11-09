@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions, User } from 'next-auth';
 
 import { postRequest } from '@/lib/fetch-client';
-import { AuthEndpoints } from '@/common/apis';
+import { AuthEndpoints } from '@/lib/apis';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
           user.user = response.user;
         } catch (error) {
           console.log(error);
-          throw new Error('Authentication error');
+          throw new Error("Couldn't authenticate with Google");
         }
       }
 
@@ -86,6 +86,9 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
+  },
+  pages: {
+    error: '/auth/signin',
   },
 };
 

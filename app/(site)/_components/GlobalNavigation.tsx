@@ -18,6 +18,13 @@ export const GlobalNavigation = () => {
         {/* Navigation */}
         <nav>
           <ul className="flex items-center space-x-10">
+            {session?.user?.role === 'administrator' ? (
+              <ListItem
+                href="/admin"
+                active={segments.includes('admin')}
+                text="Admin Dashboard"
+              />
+            ) : null}
             <ListItem href="/" active={segments.length === 0} text="Machines" />
             <ListItem
               href="/machines/production"
