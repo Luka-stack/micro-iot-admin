@@ -1,6 +1,6 @@
 'use client';
 
-import { updateProductionRate } from '@/app/actions';
+import { updateMachine } from '@/app/actions';
 import { getProductionRateLevel } from '@/lib/helpers';
 import { MachineProductionModal } from '@/components/modals/MachineProductionModal';
 
@@ -29,7 +29,7 @@ export function MachineProduction({ machine }: Props) {
 
   const changeProductionRate = (productionRate: number) => {
     startTransition(() => {
-      updateProductionRate(machine.serialNumber, productionRate);
+      updateMachine(machine.serialNumber, productionRate);
     });
   };
 

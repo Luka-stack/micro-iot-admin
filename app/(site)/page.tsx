@@ -1,5 +1,6 @@
 import { MachinesView } from '@/features/machines';
 import { MachinesProvider } from '@/features/machines/context';
+import { Tanstackprovider } from '@/components/providers/TanstackProvider';
 
 async function getFilters() {
   const res = await fetch('http://localhost:5000/api/misc/filters', {
@@ -9,11 +10,15 @@ async function getFilters() {
 }
 
 export default async function Home() {
-  const filters = await getFilters();
+  const { data } = await getFilters();
 
   return (
-    <MachinesProvider>
-      <MachinesView filters={filters.data} />
-    </MachinesProvider>
+    <Tanstackprovider>
+      <MachinesProvider filters={data}>
+        <main className="flex w-full xxl:overflow-x-hidden full-page">
+          <MachinesView />
+        </main>
+      </MachinesProvider>
+    </Tanstackprovider>
   );
 }

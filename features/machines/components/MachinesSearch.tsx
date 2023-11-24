@@ -1,19 +1,18 @@
-'use client';
-import { useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { useRef, useState } from 'react';
 
-import { MACHINE_STATUSES } from '@/lib/constants';
+import { BaseSelect } from '../../../components/ui/BaseSelect';
+import { EqFilterSelect } from '../../../components/ui/EqFilterSelect';
 import { createFilterUrl } from '@/lib/helpers';
+import { MACHINE_STATUSES } from '@/lib/constants';
+import { BaseLoadingButton } from '../../../components/ui/BaseLoadingButton';
+import { useMachinesActions, useMachinesStore } from '../context';
 import {
-  Filters,
   ModelFilter,
   ProducentFilter,
   SelectedFilter,
   TypeFilter,
 } from '@/types';
-import { BaseSelect } from '../../../components/ui/BaseSelect';
-import { BaseLoadingButton } from '../../../components/ui/BaseLoadingButton';
-import { EqFilterSelect } from '../../../components/ui/EqFilterSelect';
 
 const eqFilters = [
   {
@@ -31,12 +30,13 @@ const machineStatus = Object.keys(MACHINE_STATUSES).map((status) => ({
 }));
 
 type Props = {
-  filters: Filters;
-  loading: boolean;
-  filterData: (filterUrl: string) => Promise<void>;
+  pending: boolean;
 };
 
-export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
+export const MachinesSearch = ({ pending }: Props) => {
+  const { filters } = useMachinesStore();
+  const dispatch = useMachinesActions();
+
   const serialNumberRef = useRef<HTMLInputElement>(null);
   const rateRef = useRef<HTMLInputElement>(null);
 
@@ -101,25 +101,25 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
     setSelectedModel(null);
   };
 
-  const fetchSearchData = async () => {
-    const filterUrl = createFilterUrl({
-      serialNumber: serialNumberRef.current?.value,
-      producents: selectedProducent,
-      types: selectedType,
-      models: selectedModel,
-      status: selectedStatus,
-      rate: {
-        filter: rateFilter.value,
-        value: rateRef.current?.value,
-      },
-      startDate: {
-        filter: startDateFilter.value,
-        value: startDate,
-      },
-    } as any);
-
-    filterData(filterUrl);
-  };
+  const fetchSearchData = () =>
+    dispatch(
+      'SET_FILTERS',
+      createFilterUrl({
+        serialNumber: serialNumberRef.current?.value,
+        producents: selectedProducent,
+        types: selectedType,
+        models: selectedModel,
+        status: selectedStatus,
+        rate: {
+          filter: rateFilter.value,
+          value: rateRef.current?.value,
+        },
+        startDate: {
+          filter: startDateFilter.value,
+          value: startDate,
+        },
+      } as any)
+    );
 
   return (
     <main className="flex flex-col justify-between flex-none p-4 border rounded-md w-72 border-white/10 main-gradient">
@@ -196,13 +196,14 @@ export const MachinesSearch = ({ filters, loading, filterData }: Props) => {
             onChange={(date) => setStartDate(date!)}
             placeholderText="Start date"
             className="w-full rounded-r-lg"
+            wrapperClassName="w-full"
             isClearable
           />
         </div>
       </div>
 
       <BaseLoadingButton
-        loading={loading}
+        loading={pending}
         style="bg-blue-900 text-slate-200 py-1.5 rounded-md hover:bg-blue-800 flex justify-center space-x-2 items-center shadow-md shadow-black"
         text="Search"
         onClick={fetchSearchData}

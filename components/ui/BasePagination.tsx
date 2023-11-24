@@ -1,25 +1,19 @@
 import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 import { useMemo, useState } from 'react';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 
-import { Pagination } from '@/types';
 import { usePagination } from '@/hooks/use-pagination';
-import { createPaginationUrl } from '@/lib/helpers';
-import { twMerge } from 'tailwind-merge';
+import { Pagination } from '@/types';
+import { useMachinesActions } from '@/features/machines/context';
 
 type Props = {
-  loading: boolean;
   pagination: Pagination;
   classes?: string;
-  changePage: (paginationUrl: string) => void;
 };
 
-export const BasePagination = ({
-  loading,
-  pagination,
-  classes,
-  changePage,
-}: Props) => {
+export const BasePagination = ({ pagination, classes }: Props) => {
+  const dispatch = useMachinesActions();
   const [currentPage, setCurrentPage] = useState(1);
 
   const hasNext = useMemo(
@@ -37,7 +31,7 @@ export const BasePagination = ({
 
   const onPageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    changePage(createPaginationUrl(pageNumber, pagination.limit));
+    dispatch('SET_PAGINATION', { pageNumber, pageLimit: pagination.limit });
   };
 
   if (paginationRange.length === 1) {
@@ -48,8 +42,7 @@ export const BasePagination = ({
     <div className={twMerge('flex-none', classes)}>
       <ul
         className={clsx(
-          'flex items-center justify-end flex-none h-full space-x-2 text-sm',
-          loading && 'pointer-events-none'
+          'flex items-center justify-end flex-none h-full space-x-2 text-sm'
         )}
       >
         {hasPrev ? (

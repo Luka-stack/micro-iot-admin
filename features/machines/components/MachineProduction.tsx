@@ -1,10 +1,11 @@
-import { getProductionRateLevel } from '@/lib/helpers';
-import { Machine } from '@/types';
-import { useMemo, useState } from 'react';
-import { useMachinesActions } from '../context';
 import clsx from 'clsx';
-import { useMachineUpdate } from '@/hooks/use-machine-update';
-import { revalidateMachines } from '@/app/actions';
+import { useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+
+import { Machine } from '@/types';
+import { useMachinesActions } from '../context';
+import { updateMachine } from '@/app/actions';
+import { getProductionRateLevel } from '@/lib/helpers';
 import { MachineProductionModal } from '@/components/modals/MachineProductionModal';
 
 type Props = {
@@ -13,8 +14,9 @@ type Props = {
 
 export function MachineProduction({ machine }: Props) {
   const dispatch = useMachinesActions();
+  const queryClient = useQueryClient();
   const [visible, setVisible] = useState(false);
-  const { loading, doRequest } = useMachineUpdate();
+  const [pending, setPending] = useState(false);
 
   const productionLevel = useMemo(
     () =>
@@ -23,17 +25,19 @@ export function MachineProduction({ machine }: Props) {
         machine.model.defaultRate,
         machine.model.maxRate
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machine.productionRate]
+    [machine]
   );
 
   const changeProductionRate = async (productionRate: number) => {
-    const updatedMachine = await doRequest(machine.serialNumber, {
+    setPending(true);
+
+    const response = await updateMachine(machine.serialNumber, {
       productionRate,
     });
+    queryClient.invalidateQueries({ queryKey: ['machines'] });
+    dispatch('UPDATE', response.data);
 
-    dispatch('UPDATE_MACHINE', updatedMachine);
-    revalidateMachines();
+    setPending(false);
   };
 
   return (
@@ -43,17 +47,17 @@ export function MachineProduction({ machine }: Props) {
       </h3>
       <button
         onClick={() => setVisible(true)}
-        disabled={loading}
+        disabled={pending}
         className={clsx(
-          'flex items-center justify-center mx-auto border-8 border-green-700 rounded-full w-20 aspect-square hover:scale-105',
-          loading && '!border-slate-500',
+          'flex items-center justify-center mx-auto border-8 rounded-full w-20 aspect-square hover:scale-105',
+          pending && '!border-slate-500',
           productionLevel === 0 && 'border-slate-200',
           productionLevel === 1 && 'border-green-700',
           productionLevel === 2 && 'border-amber-700',
           productionLevel === 3 && 'border-red-700'
         )}
       >
-        <h2 className="text-2xl font-bold">2</h2>
+        <h2 className="text-2xl font-bold">{productionLevel}</h2>
       </button>
       <p className="mt-3 text-sm whitespace-nowrap">{`Production Rate: ${machine.productionRate} [s]`}</p>
 

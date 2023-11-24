@@ -1,8 +1,12 @@
 import Image from 'next/image';
-import { useMachinesActions, useMachinesStore } from '../context';
+import { useMachinesActions } from '../context';
+import { Machine } from '@/types';
 
-export function MachinesTable() {
-  const { machines } = useMachinesStore();
+type Props = {
+  machines: Machine[];
+};
+
+export function MachinesTable({ machines }: Props) {
   const dispatch = useMachinesActions();
 
   return (

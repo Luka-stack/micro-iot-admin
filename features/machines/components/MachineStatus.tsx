@@ -1,8 +1,10 @@
 import clsx from 'clsx';
+import { useState } from 'react';
 import { PowerIcon } from '@heroicons/react/24/outline';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Machine } from '@/types';
-import { useMachineUpdate } from '@/hooks/use-machine-update';
+import { updateMachine } from '@/app/actions';
 import { useMachinesActions } from '../context';
 import { differenceInHoursAndMin } from '@/lib/helpers';
 
@@ -12,14 +14,20 @@ type Props = {
 
 export function MachineStatus({ machine }: Props) {
   const dispatch = useMachinesActions();
-  const { loading, doRequest } = useMachineUpdate();
+  const queryClient = useQueryClient();
+
+  const [pending, setPending] = useState(false);
 
   const changeMachineStatus = async () => {
-    const updated = await doRequest(machine.serialNumber, {
+    setPending(true);
+
+    const response = await updateMachine(machine.serialNumber, {
       status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
     });
+    queryClient.invalidateQueries({ queryKey: ['machines'] });
+    dispatch('UPDATE', response.data);
 
-    dispatch('UPDATE_MACHINE', updated);
+    setPending(false);
   };
 
   const hoursLabel = () => {
@@ -37,11 +45,11 @@ export function MachineStatus({ machine }: Props) {
       <h3 className="mb-2 font-semibold tracking-wider text-center">
         Machine Status
       </h3>
-      <button onClick={changeMachineStatus} disabled={loading}>
+      <button onClick={changeMachineStatus} disabled={pending}>
         <PowerIcon
           className={clsx(
             'h-20 hover:scale-105',
-            loading && '!text-yellow-700',
+            pending && '!text-yellow-700',
             machine.status === 'WORKING'
               ? 'text-green-500 animate-pulse'
               : 'text-slate-500'
