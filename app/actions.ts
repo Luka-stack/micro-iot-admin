@@ -1,7 +1,7 @@
 'use server';
 
 import { MACHINE_API } from '@/lib/apis';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 
 const machineUrl = 'http://localhost:5000/api/machines';
 
@@ -25,11 +25,9 @@ export async function updateMachine(
     throw new Error(`Couln't update machine ${serialNumber}`);
   }
 
-  revalidatePath(`/machines/${serialNumber}`);
+  revalidateTag(serialNumber);
   return await response.json();
 }
-
-export const revalidateMachines = async () => revalidateTag('machine');
 
 export async function getMachines() {
   return fetch(MACHINE_API, {

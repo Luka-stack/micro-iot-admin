@@ -35,12 +35,12 @@ export function MachinePreview() {
         {machine && (
           <div className="flex flex-col items-center h-full">
             <section className="flex items-center justify-end w-full p-2 space-x-2 main-gradient">
-              <Link
+              <a
                 href={`/machines/${machine.serialNumber}`}
                 className="px-2 py-1 rounded-md shadow-sm bg-slate-800 shadow-black hover:bg-slate-900"
               >
                 <ArrowTopRightOnSquareIcon className="h-4 text-slate-300" />
-              </Link>
+              </a>
               <button
                 onClick={close}
                 className="px-1.5 rounded-md bg-slate-800 py-1 text-xs hover:bg-slate-900 shadow-sm shadow-black"
