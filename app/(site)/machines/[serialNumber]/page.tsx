@@ -14,24 +14,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: params.serialNumber };
 }
 
-// async function getMachine(serialNumber: string): Promise<Machine> {
-//   const [machineRes, statusRes] = await Promise.all([
-//     fetch(`http://localhost:5000/api/machines/${serialNumber}`, {
-//       next: { tags: ['machine'] },
-//     }),
-//     fetch(`http://localhost:5000/api/machines/${serialNumber}/status`, {
-//       cache: 'no-store',
-//     }),
-//   ]);
-
-//   const [machineData, statusData] = await Promise.all([
-//     machineRes.json(),
-//     statusRes.json(),
-//   ]);
-
-//   return { ...machineData.data, status: statusData.data.status };
-// }
-
 async function getMachine(serialNumber: string) {
   const response = await fetch(
     `http://localhost:5000/api/machines/${serialNumber}`,
