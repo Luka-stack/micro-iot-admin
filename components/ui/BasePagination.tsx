@@ -5,15 +5,14 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 
 import { usePagination } from '@/hooks/use-pagination';
 import { Pagination } from '@/types';
-import { useMachinesActions } from '@/features/machines/context';
 
 type Props = {
-  pagination: Pagination;
   classes?: string;
+  pagination: Pagination;
+  changePage: (page: number) => void;
 };
 
-export const BasePagination = ({ pagination, classes }: Props) => {
-  const dispatch = useMachinesActions();
+export const BasePagination = ({ pagination, classes, changePage }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const hasNext = useMemo(
@@ -31,7 +30,7 @@ export const BasePagination = ({ pagination, classes }: Props) => {
 
   const onPageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    dispatch('SET_PAGINATION', { pageNumber, pageLimit: pagination.limit });
+    changePage(pageNumber);
   };
 
   if (paginationRange.length === 1) {

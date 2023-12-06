@@ -2,9 +2,7 @@ import { MachinesView } from '@/features/machines';
 import { MachinesProvider } from '@/features/machines/context';
 
 async function getFilters() {
-  const res = await fetch('http://localhost:5000/api/misc/filters', {
-    cache: 'force-cache',
-  });
+  const res = await fetch('http://localhost:5000/api/misc/filters');
   return res.json();
 }
 

@@ -29,12 +29,6 @@ export async function updateMachine(
   return await response.json();
 }
 
-export async function getMachines() {
-  return fetch(MACHINE_API, {
-    next: { revalidate: 3600 },
-  }).then((response) => response.json());
-}
-
 export async function filterMachines(queryParam = '') {
   return fetch(`${machineUrl}?${queryParam}`, {
     next: { revalidate: 3600 },

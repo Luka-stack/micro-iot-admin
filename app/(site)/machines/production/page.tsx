@@ -1,24 +1,33 @@
 import { Metadata } from 'next';
 
 import { MachineList } from './_components/MachineList';
-import { getMachines } from '@/app/actions';
-import { MachineWorkServerContext } from '@/context/machine-work-context';
+import { MACHINE_API } from '@/lib/apis';
+import { ProductionProvider } from './_components/ProductionProvider';
+import { Machine, Pagination } from '@/types';
 import { MachineWorkDashboard } from '@/app/(site)/machines/production/_components/MachineWorkDashboard';
 
 export const metadata: Metadata = {
   title: 'Production',
 };
 
+async function getData(): Promise<{ data: Machine[]; meta: Pagination }> {
+  const response = await fetch(MACHINE_API, {
+    next: { revalidate: 3600 },
+  });
+
+  return await response.json();
+}
+
 export default async function WorkProgressPage() {
-  const machines = getMachines();
+  const machines = await getData();
 
   return (
     <main className="flex w-full space-x-4 full-page">
-      <MachineWorkServerContext>
-        <MachineList machinePromise={machines} />
+      <ProductionProvider>
+        <MachineList machines={machines} />
 
         <MachineWorkDashboard />
-      </MachineWorkServerContext>
+      </ProductionProvider>
     </main>
   );
 }

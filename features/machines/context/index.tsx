@@ -40,7 +40,6 @@ const reducer = (state: State, { type, payload }: Action) => {
       return {
         ...state,
         pageNumber: payload.pageNumber,
-        pageLimit: payload.pageLimit,
       };
 
     case 'UPDATE':

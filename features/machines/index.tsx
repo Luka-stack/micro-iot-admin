@@ -2,12 +2,13 @@
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
+import { MACHINE_API } from '@/lib/apis';
 import { MachinesTable } from './components/MachinesTable';
 import { BasePagination } from '@/components/ui/BasePagination';
 import { MachinePreview } from './components/MachinePreview';
 import { MachinesSearch } from './components/MachinesSearch';
-import { useMachinesStore } from './context';
 import { createPaginationUrl } from '@/lib/helpers';
+import { useMachinesActions, useMachinesStore } from './context';
 
 async function fetchMachines(
   pageNumber: number,
@@ -17,12 +18,7 @@ async function fetchMachines(
   const paginatinUrl = createPaginationUrl(pageNumber, pageLimit);
 
   const response = await fetch(
-    `http://localhost:5000/api/machines?${
-      filters ? filters + '&' : ''
-    }${paginatinUrl}`,
-    {
-      cache: 'no-cache',
-    }
+    `${MACHINE_API}?${filters ? filters + '&' : ''}${paginatinUrl}`
   );
 
   if (!response.ok) {
@@ -33,6 +29,7 @@ async function fetchMachines(
 }
 
 export function MachinesView() {
+  const dispatch = useMachinesActions();
   const { pageNumber, pageLimit, currentFilters } = useMachinesStore();
 
   const { isPending, data } = useQuery({
@@ -51,7 +48,11 @@ export function MachinesView() {
         <div className="flex flex-col flex-1 overflow-hidden border rounded-md border-white/10">
           <MachinesTable machines={data.data} />
 
-          <BasePagination pagination={data.meta} classes="p-2" />
+          <BasePagination
+            pagination={data.meta}
+            classes="p-2"
+            changePage={() => dispatch('SET_PAGINATION', { pageNumber })}
+          />
         </div>
       )}
 

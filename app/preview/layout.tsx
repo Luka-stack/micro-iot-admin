@@ -2,6 +2,7 @@ import '../global.css';
 
 import { Roboto } from 'next/font/google';
 import { Metadata } from 'next';
+import { TanstackProvider } from '@/components/providers/TanstackProvider';
 
 const roboto = Roboto({ weight: '400', subsets: ['latin'], display: 'swap' });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={roboto.className}>
       <body className="flex flex-col h-screen bg-slate-900 text-slate-400">
-        {children}
+        <TanstackProvider>{children}</TanstackProvider>
       </body>
     </html>
   );
