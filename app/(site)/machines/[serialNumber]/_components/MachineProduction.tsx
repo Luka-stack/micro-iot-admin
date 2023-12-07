@@ -1,12 +1,12 @@
 'use client';
 
-import { updateProductionRate } from '@/app/actions';
-import { getProductionRateLevel } from '@/lib/helpers';
-import { MachineProductionModal } from '@/components/modals/MachineProductionModal';
-
-import { Machine } from '@/types';
 import clsx from 'clsx';
 import { useMemo, useState, useTransition } from 'react';
+
+import { Machine } from '@/types';
+import { updateMachine } from '@/app/actions';
+import { getProductionRateLevel } from '@/lib/helpers';
+import { MachineProductionModal } from '@/components/modals/MachineProductionModal';
 
 type Props = {
   machine: Machine;
@@ -23,13 +23,12 @@ export function MachineProduction({ machine }: Props) {
         machine.model.defaultRate,
         machine.model.maxRate
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machine.productionRate]
+    [machine]
   );
 
   const changeProductionRate = (productionRate: number) => {
     startTransition(() => {
-      updateProductionRate(machine.serialNumber, productionRate);
+      updateMachine(machine.serialNumber, { productionRate });
     });
   };
 
@@ -62,7 +61,7 @@ export function MachineProduction({ machine }: Props) {
               onClick={() => setVisible(true)}
               disabled={isPending}
               className={clsx(
-                'flex items-center justify-center mx-auto border-8 border-green-700 rounded-full w-28 aspect-square hover:scale-105',
+                'flex items-center justify-center mx-auto border-8 rounded-full w-28 aspect-square hover:scale-105',
                 isPending && '!border-slate-500',
                 productionLevel === 0 && 'border-slate-200',
                 productionLevel === 1 && 'border-green-700',
@@ -70,7 +69,7 @@ export function MachineProduction({ machine }: Props) {
                 productionLevel === 3 && 'border-red-700'
               )}
             >
-              <h2 className="text-4xl font-bold">2</h2>
+              <h2 className="text-4xl font-bold">{productionLevel}</h2>
             </button>
             <p className="mt-3">
               {`Production Rate: ${machine.productionRate} [s]`}

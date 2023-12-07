@@ -30,25 +30,24 @@ export function DetailsNavigation({ serialNumber }: Props) {
           active={segment === 'shifts'}
           text="Shifts"
         />
-        <li className="">
-          <ListItem
+        <ListItem
+          href={`/machines/${serialNumber}/utilization`}
+          active={segment === 'utilization' || segment === 'statistics'}
+          text="Utilization"
+        />
+
+        <ul className="mt-3 ml-5 space-y-2">
+          <NestedListItem
             href={`/machines/${serialNumber}/utilization`}
-            active={segment === 'utilization' || segment === 'statistics'}
-            text="Utilization"
+            active={segment === 'utilization'}
+            text="Graph"
           />
-          <ul className="mt-3 ml-5 space-y-2">
-            <NestedListItem
-              href={`/machines/${serialNumber}/utilization`}
-              active={segment === 'utilization'}
-              text="Graph"
-            />
-            <NestedListItem
-              href={`/machines/${serialNumber}/statistics`}
-              active={segment === 'statistics'}
-              text="Statistics"
-            />
-          </ul>
-        </li>
+          <NestedListItem
+            href={`/machines/${serialNumber}/statistics`}
+            active={segment === 'statistics'}
+            text="Statistics"
+          />
+        </ul>
       </ul>
     </nav>
   );

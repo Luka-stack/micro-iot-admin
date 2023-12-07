@@ -1,5 +1,5 @@
 'use client';
-import { Machine, Pagination } from '@/types';
+import { Filters, Machine } from '@/types';
 import { createContext, useContext, useReducer } from 'react';
 
 type MachinePreview = {
@@ -8,9 +8,11 @@ type MachinePreview = {
 };
 
 interface State {
-  machines: Machine[];
-  pagination: Pagination;
   machinePreview: MachinePreview;
+  pageNumber: number;
+  pageLimit: number;
+  currentFilters: string;
+  filters: Filters;
 }
 
 interface Action {
@@ -19,43 +21,41 @@ interface Action {
 }
 
 const StateContext = createContext<State>({
-  machines: [],
-  pagination: { count: 0, limit: 0, offset: 0, total: 0 },
   machinePreview: { machine: null, visible: false },
+  pageNumber: 0,
+  pageLimit: 10,
+  currentFilters: '',
+  filters: {
+    producents: [],
+    types: [],
+    models: [],
+  },
 });
 
 const DispatchContext = createContext<any>(null);
 
 const reducer = (state: State, { type, payload }: Action) => {
   switch (type) {
-    case 'UPDATE_MACHINE':
-      const index = state.machines.findIndex(
-        (machine) => machine.serialNumber === payload.serialNumber
-      );
-      const newMachines = [
-        ...state.machines.slice(0, index),
-        payload,
-        ...state.machines.slice(index + 1),
-      ];
-
-      let machinePreview = state.machinePreview;
-      if (state.machinePreview.visible) {
-        machinePreview = { machine: payload, visible: true };
-      }
-
+    case 'SET_PAGINATION':
       return {
         ...state,
-        machines: newMachines,
-        machinePreview,
+        pageNumber: payload.pageNumber,
       };
 
-    case 'SET_MACHINES':
-      const { data, meta } = payload;
+    case 'UPDATE':
+      const { status, lastStatusUpdate, productionRate } = payload;
 
       return {
         ...state,
-        machines: data,
-        pagination: meta,
+        machinePreview: {
+          visible: true,
+          machine: {
+            ...state.machinePreview.machine,
+            status,
+            lastStatusUpdate,
+            productionRate,
+          },
+        },
       };
 
     case 'SET_PREVIEW':
@@ -74,6 +74,12 @@ const reducer = (state: State, { type, payload }: Action) => {
         machinePreview: { ...state.machinePreview, visible: false },
       };
 
+    case 'SET_FILTERS':
+      return {
+        ...state,
+        currentFilters: payload,
+      };
+
     default:
       throw new Error(`Unkown action type: ${type}`);
   }
@@ -81,13 +87,17 @@ const reducer = (state: State, { type, payload }: Action) => {
 
 export const MachinesProvider = ({
   children,
+  filters,
 }: {
   children: React.ReactNode;
+  filters: Filters;
 }) => {
   const [state, defaultDispatch] = useReducer(reducer, {
-    machines: [],
-    pagination: { count: 0, limit: 0, offset: 0, total: 0 },
     machinePreview: { machine: null, visible: false },
+    pageNumber: 1,
+    pageLimit: 10,
+    currentFilters: '',
+    filters,
   });
 
   const dispatch = (type: Action['type'], payload: Action['payload']) =>

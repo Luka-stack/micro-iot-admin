@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-
-import { Machine } from '@/types';
-import { RefreshPage } from '@/components/ui/RefreshPage';
-import { MachineDashboard } from '@/app/(site)/machines/[serialNumber]/_components/MachineDashboard';
+import { MachineInfo } from './_components/MachineInfo';
+import { MachineStatus } from './_components/MachineStatus';
+import { MachineProduction } from './_components/MachineProduction';
 
 type Props = {
   params: {
@@ -15,22 +14,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: params.serialNumber };
 }
 
-async function getMachine(serialNumber: string): Promise<Machine> {
-  const [machineRes, statusRes] = await Promise.all([
-    fetch(`http://localhost:5000/api/machines/${serialNumber}`, {
-      next: { tags: ['machine'] },
-    }),
-    fetch(`http://localhost:5000/api/machines/${serialNumber}/status`, {
-      cache: 'no-store',
-    }),
-  ]);
+async function getMachine(serialNumber: string) {
+  const response = await fetch(
+    `http://localhost:5000/api/machines/${serialNumber}`,
+    { next: { tags: [serialNumber] } }
+  );
 
-  const [machineData, statusData] = await Promise.all([
-    machineRes.json(),
-    statusRes.json(),
-  ]);
-
-  return { ...machineData.data, status: statusData.data.status };
+  return await response.json();
 }
 
 export default async function Machines({ params }: Props) {
@@ -42,9 +32,14 @@ export default async function Machines({ params }: Props) {
 
   return (
     <main className="flex-1 p-4 border rounded-md border-white/10">
-      <RefreshPage />
+      <div className="flex flex-col items-center w-full h-full justify-evenly">
+        <div className="flex w-full justify-evenly">
+          <MachineInfo machine={machine.data} />
+          <MachineStatus machine={machine.data} />
+        </div>
 
-      <MachineDashboard machine={machine} />
+        <MachineProduction machine={machine.data} />
+      </div>
     </main>
   );
 }

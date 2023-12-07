@@ -2,12 +2,14 @@
 
 import { CursorArrowRaysIcon } from '@heroicons/react/24/outline';
 
-import { MachineWorkContext } from '@/context/machine-work-context';
 import { MachineWorkInsight } from './MachineWorkInsight';
+import { useProductionContext } from './ProductionProvider';
 
 export function MachineWorkDashboard() {
-  const state = MachineWorkContext.useState();
-  const actions = MachineWorkContext.useActions();
+  const [state, setState] = useProductionContext();
+
+  const handleClose = (serialNumber: string) =>
+    setState((prev) => prev.filter((m) => m.serialNumber !== serialNumber));
 
   if (state.length === 0) {
     return <NoMachineSelected />;
@@ -20,9 +22,7 @@ export function MachineWorkDashboard() {
           key={machine.serialNumber}
           machine={machine}
           size={state.length}
-          onEsc={() =>
-            actions({ type: 'REMOVE_MACHINE', payload: machine.serialNumber })
-          }
+          onEsc={() => handleClose(machine.serialNumber)}
         />
       ))}
     </main>

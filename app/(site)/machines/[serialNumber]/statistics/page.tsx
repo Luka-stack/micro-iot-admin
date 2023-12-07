@@ -45,12 +45,12 @@ export default async function MachineStatisticsPage({ params }: Props) {
   return (
     <main className="flex flex-col justify-center flex-1 gap-10 border rounded-md border-white/10">
       <div className="flex flex-wrap justify-center space-x-10">
-        <section className="p-6 border rounded-md shadow-sm main-gradient border-white/10 shadow-black animate-pulse">
+        <section className="p-6 border rounded-md shadow-sm main-gradient border-white/10 shadow-black">
           <h3 className="text-lg font-semibold">{`Total machine utilization: ${hoursAndMinLabel(
             data.total
           )}`}</h3>
         </section>
-        <section className="p-6 border rounded-md shadow-sm main-gradient border-white/10 shadow-black animate-pulse">
+        <section className="p-6 border rounded-md shadow-sm main-gradient border-white/10 shadow-black">
           <h3 className="text-lg font-semibold">{`Today's machine utilization: ${hoursAndMinLabel(
             data.today
           )}`}</h3>

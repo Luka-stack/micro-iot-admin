@@ -5,28 +5,28 @@ import { revalidateTag } from 'next/cache';
 
 const machineUrl = 'http://localhost:5000/api/machines';
 
-export async function updateProductionRate(
+export async function updateMachine(
   serialNumber: string,
-  productionRate: number
+  data: {
+    productionRate?: number;
+    status?: string;
+  }
 ) {
-  await fetch(`${MACHINE_API}/${serialNumber}`, {
+  const response = await fetch(`${MACHINE_API}/${serialNumber}`, {
     cache: 'no-store',
     method: 'PATCH',
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
     },
-    body: JSON.stringify({ productionRate }),
+    body: JSON.stringify(data),
   });
 
-  revalidateTag('machine');
-}
+  if (!response.ok) {
+    throw new Error(`Couln't update machine ${serialNumber}`);
+  }
 
-export const revalidateMachines = async () => revalidateTag('machine');
-
-export async function getMachines() {
-  return fetch(MACHINE_API, {
-    next: { revalidate: 3600 },
-  }).then((response) => response.json());
+  revalidateTag(serialNumber);
+  return await response.json();
 }
 
 export async function filterMachines(queryParam = '') {

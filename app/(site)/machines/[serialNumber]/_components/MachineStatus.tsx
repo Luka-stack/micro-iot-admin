@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   BellAlertIcon,
   PowerIcon,
@@ -9,23 +9,24 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { Machine } from '@/types';
+import { updateMachine } from '@/app/actions';
 import { differenceInHoursAndMin } from '@/lib/helpers';
-import { useMachineUpdate } from '@/hooks/use-machine-update';
 
 type Props = {
   machine: Machine;
 };
 
 export function MachineStatus({ machine }: Props) {
-  const router = useRouter();
-  const { loading, doRequest } = useMachineUpdate();
+  const [pending, setPending] = useState(false);
 
   const changeMachineStatus = async () => {
-    await doRequest(machine.serialNumber, {
+    setPending(true);
+
+    await updateMachine(machine.serialNumber, {
       status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
     });
 
-    router.refresh();
+    setPending(false);
   };
 
   const hoursLabel = () => {
@@ -44,11 +45,11 @@ export function MachineStatus({ machine }: Props) {
         <h3 className="mb-5 text-lg font-semibold tracking-wider text-center">
           Machine Status
         </h3>
-        <button onClick={changeMachineStatus} disabled={loading}>
+        <button onClick={changeMachineStatus} disabled={pending}>
           <PowerIcon
             className={clsx(
               'h-28 hover:scale-105',
-              loading && '!text-yellow-700',
+              pending && '!text-yellow-700',
               machine.status === 'WORKING'
                 ? 'text-green-500 animate-pulse'
                 : 'text-slate-500'

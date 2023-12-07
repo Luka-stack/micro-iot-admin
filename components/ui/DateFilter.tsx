@@ -2,16 +2,14 @@ import DatePicker from 'react-datepicker';
 import { useState } from 'react';
 
 type Props = {
-  onChange: (from: Date, to: Date) => void;
+  filterFrom: Date;
+  filterTo: Date;
+  changeFilter: (from: Date, to: Date) => void;
 };
 
-export function DateFilter({ onChange }: Props) {
-  const [fromDate, setFromDate] = useState(() => {
-    const sixDaysAgo = new Date();
-    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-    return sixDaysAgo;
-  });
-  const [toDate, setToDate] = useState(new Date());
+export function DateFilter({ filterFrom, filterTo, changeFilter }: Props) {
+  const [fromDate, setFromDate] = useState<Date | null>(filterFrom);
+  const [toDate, setToDate] = useState<Date | null>(filterTo);
 
   const [hiddenButton, setHiddenButton] = useState(true);
 
@@ -51,11 +49,11 @@ export function DateFilter({ onChange }: Props) {
         </div>
       </div>
 
-      {hiddenButton ? null : (
+      {hiddenButton || !fromDate || !toDate ? null : (
         <button
           onClick={() => {
             setHiddenButton(true);
-            onChange(fromDate, toDate);
+            changeFilter(fromDate!, toDate!);
           }}
           className="px-4 bg-blue-900 rounded-lg text-slate-200"
         >

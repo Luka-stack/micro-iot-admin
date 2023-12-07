@@ -1,26 +1,52 @@
 'use client';
 
 import Image from 'next/image';
-import { use } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { Machine } from '@/types';
+import { MACHINE_API } from '@/lib/apis';
 import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
-  dataPromise: Promise<{ data: Machine }>;
+  serialNumber: string;
 };
 
-export function MachineDetails({ dataPromise }: Props) {
-  const { data } = use(dataPromise);
+async function getMachine(serialNumber: string) {
+  const response = await fetch(`${MACHINE_API}/${serialNumber}`);
+
+  if (!response.ok) {
+    throw new Error('Request failed');
+  }
+
+  return response.json();
+}
+
+export function MachineDetails({ serialNumber }: Props) {
+  const {
+    isPending,
+    isError,
+    data: machine,
+  } = useQuery({
+    queryKey: ['machine-detail', serialNumber],
+    queryFn: () => getMachine(serialNumber),
+  });
+
+  if (isPending) {
+    return <MachineDetailsSkeleton />;
+  }
+
+  if (isError) {
+    // TODO Error Page
+    return <p>Error</p>;
+  }
 
   const [hours, minutes] = differenceInHoursAndMin(
-    new Date(data.lastStatusUpdate)
+    new Date(machine.data.lastStatusUpdate)
   );
 
   return (
     <div className="flex items-center justify-around">
       <Image
-        src={`/${data.type.imageUrl}`}
+        src={`/${machine.data.type.imageUrl}`}
         alt="Machine"
         height={112}
         width={112}
@@ -28,21 +54,23 @@ export function MachineDetails({ dataPromise }: Props) {
 
       <section className="space-y-2">
         <p>
-          <b>Status:</b> {data.status}
+          <b>Status:</b> {machine.data.status}
         </p>
         <p>
-          <b>Serial Number:</b> {data.serialNumber}
+          <b>Serial Number:</b> {machine.data.serialNumber}
         </p>
       </section>
 
       <section className="space-y-2">
         <p>
           <b>Production Rate:</b>
-          {` ${data.productionRate} [s]`}
+          {` ${machine.data.productionRate} [s]`}
         </p>
         <p>
           <b>
-            {data.status === 'WORKING' ? 'Working hours: ' : 'Idle hours: '}
+            {machine.data.status === 'WORKING'
+              ? 'Working hours: '
+              : 'Idle hours: '}
           </b>
           {`${hours} [h] ${minutes} [min]`}
         </p>
@@ -50,27 +78,60 @@ export function MachineDetails({ dataPromise }: Props) {
 
       <section className="space-y-2">
         <p>
-          <b>Work Rate:</b> {data.model.workBase}
+          <b>Work Rate:</b> {machine.data.model.workBase}
         </p>
         <p>
-          <b>Work Rate Range:</b> +/- {data.model.workRange}
+          <b>Work Rate Range:</b> +/- {machine.data.model.workRange}
         </p>
       </section>
 
       <section className="space-y-2">
         <p>
-          <b>Producent:</b> {data.producent}
+          <b>Producent:</b> {machine.data.producent}
         </p>
       </section>
 
       <section className="space-y-2">
         <p>
-          <b>Type:</b> {data.type.name}
+          <b>Type:</b> {machine.data.type.name}
         </p>
         <p>
-          <b>Model:</b> {data.model.name}
+          <b>Model:</b> {machine.data.model.name}
         </p>
       </section>
+    </div>
+  );
+}
+
+function MachineDetailsSkeleton() {
+  return (
+    <div className="flex items-center justify-around animate-pulse">
+      <div className="rounded-md w-28 aspect-square bg-slate-700" />
+
+      <div className="space-y-7">
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+      </div>
+
+      <div className="space-y-7">
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+      </div>
+
+      <div className="space-y-7">
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+      </div>
+
+      <div className="space-y-7">
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+      </div>
+
+      <div className="space-y-7">
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+        <div className="h-3 rounded-md w-52 bg-slate-700" />
+      </div>
     </div>
   );
 }

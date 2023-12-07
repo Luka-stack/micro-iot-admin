@@ -1,12 +1,14 @@
 import clsx from 'clsx';
+import Link from 'next/link';
+
+import { useQuery } from '@tanstack/react-query';
 import { PuffLoader } from 'react-spinners';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
-import { Machine } from '@/types';
+import { ANALYSER_API } from '@/lib/apis';
+import { Machine, MachineWork } from '@/types';
 import { MachineProductionGraph } from '@/components/graphs/MachineProductionGraph';
-import { useFetchMachineWork } from '@/hooks/use-fetch-machine-work';
 import { differenceInHoursAndMin } from '@/lib/helpers';
-import Link from 'next/link';
 
 type Props = {
   machine: Machine;
@@ -14,8 +16,23 @@ type Props = {
   onEsc: () => void;
 };
 
+async function getData(serialNumber: string): Promise<MachineWork[]> {
+  const response = await fetch(`${ANALYSER_API}/${serialNumber}/work`, {
+    cache: 'no-cache',
+  });
+  const data: MachineWork[] = await response.json();
+
+  return data.map((machine) => ({
+    timestamp: new Date(machine.timestamp).toLocaleString(),
+    work: parseFloat(machine.work.toFixed(2)),
+  }));
+}
+
 export function MachineWorkInsight({ machine, size, onEsc }: Props) {
-  const { loading, workData } = useFetchMachineWork(machine.serialNumber);
+  const { isPending, data } = useQuery({
+    queryKey: [machine.serialNumber],
+    queryFn: () => getData(machine.serialNumber),
+  });
 
   const [hours, minutes] = differenceInHoursAndMin(
     new Date(machine.lastStatusUpdate)
@@ -47,7 +64,7 @@ export function MachineWorkInsight({ machine, size, onEsc }: Props) {
             size === 1 ? 'work-graph-multiple-height' : 'work-graph-height'
           )}
         >
-          {loading ? <Loading /> : <MachineProductionGraph data={workData} />}
+          {isPending ? <Loading /> : <MachineProductionGraph data={data!} />}
         </div>
 
         <div className="flex items-center justify-around flex-1 p-4 border-t-2 border-white/10">
@@ -104,7 +121,7 @@ export function MachineWorkInsight({ machine, size, onEsc }: Props) {
 function Loading() {
   return (
     <div className="mx-auto my-auto">
-      <PuffLoader color="#7e22ce" size={100} speedMultiplier={0.5} />
+      <PuffLoader color="#94a3b8" size={100} speedMultiplier={0.5} />
     </div>
   );
 }
