@@ -1,7 +1,7 @@
 import DatePicker from 'react-datepicker';
 import { useRef, useState } from 'react';
 
-import { BaseSelect } from '../../../components/ui/BaseSelect';
+import { FilterSelect } from '../../../components/ui/FilterSelect';
 import { EqFilterSelect } from '../../../components/ui/EqFilterSelect';
 import { createFilterUrl } from '@/lib/helpers';
 import { MACHINE_STATUSES } from '@/lib/constants';
@@ -135,25 +135,28 @@ export const MachinesSearch = ({ pending }: Props) => {
           />
         </div>
 
-        <BaseSelect
+        <FilterSelect
           title={'Machine Producents'}
           selectables={filters.producents}
           selected={selectedProducent}
           setSelected={onProducentChange}
+          variant="slate"
         />
 
-        <BaseSelect
+        <FilterSelect
           title={'Machine Types'}
           selectables={machineTypes}
           selected={selectedType}
           setSelected={onTypeChange}
+          variant="slate"
         />
 
-        <BaseSelect
+        <FilterSelect
           title={'Machine Models'}
           selectables={machineModels}
           selected={selectedModel}
           setSelected={setSelectedModel}
+          variant="slate"
         />
 
         <div className="flex items-center w-full text-xs">
@@ -162,11 +165,12 @@ export const MachinesSearch = ({ pending }: Props) => {
           <div className="w-full h-[0.01rem] bg-slate-400"></div>
         </div>
 
-        <BaseSelect
+        <FilterSelect
           title={'Machine Status'}
           selectables={machineStatus}
           selected={selectedStatus}
           setSelected={setSelectedStatus}
+          variant="slate"
         />
 
         <div className="flex rounded-lg shadow-md shadow-black">

@@ -52,11 +52,11 @@ export type SelectedFilters = {
   types?: SelectedFilter;
   models?: SelectedFilter;
   status?: SelectedFilter;
-  rate: {
+  rate?: {
     filter: string;
     value?: number;
   };
-  startDate: {
+  startDate?: {
     filter: string;
     value?: Date;
   };

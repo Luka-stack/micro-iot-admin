@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import { useMachinesActions } from '../context';
+
 import { Machine } from '@/types';
+import { useMachinesActions } from '../context';
 
 type Props = {
   machines: Machine[];

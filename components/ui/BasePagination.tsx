@@ -1,10 +1,12 @@
+'use client';
+
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useMemo, useState } from 'react';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 
-import { usePagination } from '@/hooks/use-pagination';
 import { Pagination } from '@/types';
+import { usePagination } from '@/hooks/use-pagination';
 
 type Props = {
   classes?: string;
@@ -12,7 +14,7 @@ type Props = {
   changePage: (page: number) => void;
 };
 
-export const BasePagination = ({ pagination, classes, changePage }: Props) => {
+export function BasePagination({ pagination, classes, changePage }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const hasNext = useMemo(
@@ -89,4 +91,4 @@ export const BasePagination = ({ pagination, classes, changePage }: Props) => {
       </ul>
     </div>
   );
-};
+}

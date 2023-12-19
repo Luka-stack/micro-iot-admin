@@ -158,3 +158,17 @@ input[type='number'] {
   animation: bounceIn 2s infinite 2s;
   animation-delay: 0.2s;
 }
+
+@layer utilities {
+  .table-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .table-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent rounded-lg;
+  }
+
+  .table-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-b-lg rounded-tr-lg bg-gradient-to-t from-[#21222D] to-[#232B54];
+  }
+}
