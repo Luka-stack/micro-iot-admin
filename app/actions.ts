@@ -1,7 +1,8 @@
 'use server';
 
-import { MACHINE_API } from '@/lib/apis';
 import { revalidateTag } from 'next/cache';
+
+import { MACHINE_API } from '@/lib/apis';
 
 const machineUrl = 'http://localhost:5000/api/machines';
 

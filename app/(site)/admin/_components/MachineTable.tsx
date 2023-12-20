@@ -1,24 +1,17 @@
 'use client';
 
 import Image from 'next/image';
+import { twMerge } from 'tailwind-merge';
 
 import { Machine } from '@/types';
-import { twMerge } from 'tailwind-merge';
 import { SelectAssignee } from './SelectAssignee';
 
 type Props = {
   machines: Machine[];
+  employees: string[];
 };
 
-const users = [
-  'Unassigned',
-  'lukasz@iotfox.pl',
-  'taka@iotfox.pl',
-  'rafa@iotfox.pl',
-  'cos@iotfox.pl',
-];
-
-export function MachineTable({ machines }: Props) {
+export function MachineTable({ machines, employees }: Props) {
   return (
     <div className="flex-1 overflow-y-auto border rounded-lg border-white/10 table-scrollbar">
       <table className="w-full">
@@ -50,7 +43,11 @@ export function MachineTable({ machines }: Props) {
               <TableData className="">{machine.type.name}</TableData>
               <TableData className="">{machine.model.name}</TableData>
               <TableData className="w-64">
-                <SelectAssignee selectables={users} />
+                <SelectAssignee
+                  selectables={employees}
+                  employee={machine.assignedEmployee}
+                  serialNumber={machine.serialNumber}
+                />
               </TableData>
             </tr>
           ))}

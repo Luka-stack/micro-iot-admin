@@ -8,6 +8,7 @@ export const AuthEndpoints = {
   signup: `${AUTH_SERVER}/signup`,
   login: `${AUTH_SERVER}/login`,
   providerLogin: (provider: string) => `${AUTH_SERVER}/login/${provider}`,
+  employees: `${AUTH_SERVER}/employees`,
 };
 
 export const MiscEndpoints = {
@@ -16,4 +17,6 @@ export const MiscEndpoints = {
 
 export const MachineEndpoints = {
   filter: (url: string) => `${MACHINE_SERVER}/machines?${url}`,
+  assignEmployee: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}/assign-employee`,
 };

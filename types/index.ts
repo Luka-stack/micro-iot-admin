@@ -19,6 +19,7 @@ export type Machine = {
   status: MachineStatus;
   lastStatusUpdate: string;
   productionRate: number;
+  assignedEmployee: string | null;
 };
 
 export type Filters = {
@@ -84,8 +85,13 @@ export type MachineWork = {
   work: number;
 };
 
-export type User = {
+export type AuthUser = {
   email: string;
   displayName: string;
   role: string;
+};
+
+export type User = {
+  email: string;
+  displayName: string;
 };

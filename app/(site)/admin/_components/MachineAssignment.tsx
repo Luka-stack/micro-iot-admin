@@ -8,11 +8,11 @@ import { MachineTable } from './MachineTable';
 import { BasePagination } from '@/components/ui/BasePagination';
 import { MachineEndpoints } from '@/lib/apis';
 import { createPaginationUrl } from '@/lib/helpers';
-import { Filters, Machine, Pagination } from '@/types';
+import { Filters, Machine, Pagination, User } from '@/types';
 
 type Props = {
-  machineData: { data: Machine[]; meta: Pagination };
   filters: Filters;
+  employees: string[];
 };
 
 async function fetchMachines(
@@ -31,14 +31,13 @@ async function fetchMachines(
   return response.json();
 }
 
-export function MachineAssignment({ machineData, filters }: Props) {
+export function MachineAssignment({ filters, employees }: Props) {
   const [pageNumber, setPageNumber] = useState(1);
   const [filterUrl, setFilterUrl] = useState('');
 
   const { isPending, data } = useQuery({
     queryKey: ['machines', pageNumber, filterUrl],
     queryFn: () => fetchMachines(pageNumber, filterUrl),
-    initialData: machineData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -58,10 +57,10 @@ export function MachineAssignment({ machineData, filters }: Props) {
       ) : (
         <>
           <div className="flex flex-1 w-full overflow-hidden">
-            <MachineTable machines={data.data} />
+            <MachineTable machines={data!.data} employees={employees} />
           </div>
 
-          <BasePagination pagination={data.meta} changePage={setPageNumber} />
+          <BasePagination pagination={data!.meta} changePage={setPageNumber} />
         </>
       )}
     </div>

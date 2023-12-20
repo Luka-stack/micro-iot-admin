@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useState } from 'react';
 
 import { AuthEndpoints } from '@/lib/apis';
 import { RequestError, postRequest } from '@/lib/fetch-client';
+import { revalidateTag } from 'next/cache';
 
 const schema = z
   .object({
@@ -45,6 +46,8 @@ export function useSignIn() {
         password: data.password,
         callbackUrl: location.origin,
       });
+
+      revalidateTag('users');
     } catch (error) {
       if (error instanceof RequestError) {
         setErrors(error.cause);

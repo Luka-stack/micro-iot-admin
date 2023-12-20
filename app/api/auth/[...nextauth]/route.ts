@@ -5,6 +5,7 @@ import { NextAuthOptions, User } from 'next-auth';
 
 import { postRequest } from '@/lib/fetch-client';
 import { AuthEndpoints } from '@/lib/apis';
+import { revalidateTag } from 'next/cache';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -58,6 +59,10 @@ export const authOptions: NextAuthOptions = {
           );
           user.accessToken = response.accessToken;
           user.user = response.user;
+
+          if (response.newUser) {
+            revalidateTag('users');
+          }
         } catch (error) {
           console.log(error);
           throw new Error("Couldn't authenticate with Google");
