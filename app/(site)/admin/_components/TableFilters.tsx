@@ -5,11 +5,11 @@ import { Popover } from '@headlessui/react';
 import { FunnelIcon } from '@heroicons/react/20/solid';
 
 import { FilterSelect } from '@/components/ui/FilterSelect';
-import { useFilterReducer } from '../_hooks/use-filter-reducer';
+import { useFilterReducer } from '../../../../hooks/use-filter-reducer';
 import { ModelFilter, ProducentFilter, TypeFilter } from '@/types';
 import { useState } from 'react';
 import { createFilterUrl } from '@/lib/helpers';
-import { useDebounce, useDebouncedCallback } from 'use-debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 type Props = {
   producents: ProducentFilter[];

@@ -55,7 +55,7 @@ export type SelectedFilters = {
   status?: SelectedFilter;
   rate?: {
     filter: string;
-    value?: number;
+    value?: string;
   };
   startDate?: {
     filter: string;

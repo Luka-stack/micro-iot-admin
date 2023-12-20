@@ -5,15 +5,14 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { Machine } from '@/types';
 import { updateMachine } from '@/app/actions';
-import { useMachinesActions } from '../context';
 import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
   machine: Machine;
+  setPreviewMachine: (machine: Machine) => void;
 };
 
-export function MachineStatus({ machine }: Props) {
-  const dispatch = useMachinesActions();
+export function MachineStatus({ machine, setPreviewMachine }: Props) {
   const queryClient = useQueryClient();
 
   const [pending, setPending] = useState(false);
@@ -25,7 +24,7 @@ export function MachineStatus({ machine }: Props) {
       status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
     });
     queryClient.invalidateQueries({ queryKey: ['machines'] });
-    dispatch('UPDATE', response.data);
+    setPreviewMachine(response.data);
 
     setPending(false);
   };

@@ -3,17 +3,16 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
 import { Machine } from '@/types';
-import { useMachinesActions } from '../context';
 import { updateMachine } from '@/app/actions';
 import { getProductionRateLevel } from '@/lib/helpers';
 import { MachineProductionModal } from '@/components/modals/MachineProductionModal';
 
 type Props = {
+  setPreviewMachine: (machine: Machine) => void;
   machine: Machine;
 };
 
-export function MachineProduction({ machine }: Props) {
-  const dispatch = useMachinesActions();
+export function MachineProduction({ machine, setPreviewMachine }: Props) {
   const queryClient = useQueryClient();
   const [visible, setVisible] = useState(false);
   const [pending, setPending] = useState(false);
@@ -35,7 +34,7 @@ export function MachineProduction({ machine }: Props) {
       productionRate,
     });
     queryClient.invalidateQueries({ queryKey: ['machines'] });
-    dispatch('UPDATE', response.data);
+    setPreviewMachine(response.data);
 
     setPending(false);
   };

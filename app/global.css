@@ -42,7 +42,7 @@ input[type='number'] {
 }
 
 .react-datepicker__input-container input {
-  @apply px-2 py-2 text-sm bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700;
+  @apply px-2 py-2 text-sm bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-800/20;
 }
 
 .react-datepicker__month-container {

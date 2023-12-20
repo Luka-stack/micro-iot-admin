@@ -1,19 +1,19 @@
-import { MachinesView } from '@/features/machines';
-import { MachinesProvider } from '@/features/machines/context';
+import { MiscEndpoints } from '@/lib/apis';
+import { Filters } from '@/types';
+import { MachinesView } from './machines/_components/MachinesView';
 
-async function getFilters() {
-  const res = await fetch('http://localhost:5000/api/misc/filters');
-  return res.json();
+async function fetchFilters(): Promise<{ data: Filters }> {
+  const response = await fetch(MiscEndpoints.filters);
+
+  if (!response.ok) {
+    throw new Error("Couldn't load filters");
+  }
+
+  return response.json();
 }
 
 export default async function Home() {
-  const { data } = await getFilters();
+  const { data } = await fetchFilters();
 
-  return (
-    <MachinesProvider filters={data}>
-      <main className="flex w-full xxl:overflow-x-hidden full-page">
-        <MachinesView />
-      </main>
-    </MachinesProvider>
-  );
+  return <MachinesView filters={data} />;
 }

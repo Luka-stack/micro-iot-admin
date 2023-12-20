@@ -5,24 +5,25 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
 import { MachineStatus } from './MachineStatus';
 import { MachineProduction } from './MachineProduction';
-import { useMachinesActions, useMachinesStore } from '../context';
+import { Machine } from '@/types';
 
-export function MachinePreview() {
-  const dispatch = useMachinesActions();
-  const {
-    machinePreview: { machine, visible },
-  } = useMachinesStore();
+type Props = {
+  open: boolean;
+  machine: Machine | null;
+  updatePreview: (value: { machine: Machine | null; open: boolean }) => void;
+};
 
-  const close = () => {
-    dispatch('SET_PREVIEW', null);
-  };
+export function MachinePreview({ open, machine, updatePreview }: Props) {
+  const handleClose = () => updatePreview({ machine: null, open: false });
+
+  const handleUpdate = (machine: Machine) => updatePreview({ open, machine });
 
   return (
     <>
-      {visible && (
+      {open && (
         <div
           className="fixed inset-0 z-50 transition bg-gray-900 bg-opacity-50 duration dark:bg-opacity-80 xxl:hidden"
-          onClick={close}
+          onClick={handleClose}
         ></div>
       )}
 
@@ -42,7 +43,7 @@ export function MachinePreview() {
                 <ArrowTopRightOnSquareIcon className="h-4 text-slate-300" />
               </a>
               <button
-                onClick={close}
+                onClick={handleClose}
                 className="px-1.5 rounded-md bg-slate-800 py-1 text-xs hover:bg-slate-900 shadow-sm shadow-black"
               >
                 ESC
@@ -67,8 +68,14 @@ export function MachinePreview() {
                 />
               </div>
 
-              <MachineStatus machine={machine} />
-              <MachineProduction machine={machine} />
+              <MachineStatus
+                machine={machine}
+                setPreviewMachine={handleUpdate}
+              />
+              <MachineProduction
+                machine={machine}
+                setPreviewMachine={handleUpdate}
+              />
             </section>
           </div>
         )}
