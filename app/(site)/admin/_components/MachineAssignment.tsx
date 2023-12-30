@@ -9,6 +9,7 @@ import { BasePagination } from '@/components/ui/BasePagination';
 import { MachineEndpoints } from '@/lib/apis';
 import { createPaginationUrl } from '@/lib/helpers';
 import { Filters, Machine, Pagination, User } from '@/types';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   filters: Filters;
@@ -17,12 +18,18 @@ type Props = {
 
 async function fetchMachines(
   pageNumber: number,
-  filterUrl: string
+  filterUrl: string,
+  token?: string
 ): Promise<{ meta: Pagination; data: Machine[] }> {
   const paginationUrl = createPaginationUrl(pageNumber, 10);
   const url = filterUrl ? `${filterUrl}&${paginationUrl}` : paginationUrl;
 
-  const response = await fetch(MachineEndpoints.filter(url));
+  const response = await fetch(MachineEndpoints.filter(url), {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
     throw new Error();
@@ -32,12 +39,14 @@ async function fetchMachines(
 }
 
 export function MachineAssignment({ filters, employees }: Props) {
+  const { data: session } = useSession();
   const [pageNumber, setPageNumber] = useState(1);
   const [filterUrl, setFilterUrl] = useState('');
 
   const { isPending, data } = useQuery({
-    queryKey: ['machines', pageNumber, filterUrl],
-    queryFn: () => fetchMachines(pageNumber, filterUrl),
+    queryKey: ['machines', pageNumber, filterUrl, session?.accessToken],
+    queryFn: () => fetchMachines(pageNumber, filterUrl, session?.accessToken),
+    enabled: !!session?.accessToken,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
