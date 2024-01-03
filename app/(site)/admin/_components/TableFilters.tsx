@@ -1,24 +1,29 @@
-'use client';
-
 import clsx from 'clsx';
 import { Popover } from '@headlessui/react';
 import { FunnelIcon } from '@heroicons/react/20/solid';
+import { useMemo, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 import { FilterSelect } from '@/components/ui/FilterSelect';
+import { createFilterUrl } from '@/lib/helpers';
 import { useFilterReducer } from '../../../../hooks/use-filter-reducer';
 import { ModelFilter, ProducentFilter, TypeFilter } from '@/types';
-import { useState } from 'react';
-import { createFilterUrl } from '@/lib/helpers';
-import { useDebouncedCallback } from 'use-debounce';
 
 type Props = {
   producents: ProducentFilter[];
   types: TypeFilter[];
   models: ModelFilter[];
+  employees: string[];
   setFilters: (filter: string) => void;
 };
 
-export function TableFilters({ producents, types, models, setFilters }: Props) {
+export function TableFilters({
+  producents,
+  types,
+  models,
+  employees,
+  setFilters,
+}: Props) {
   const {
     producent,
     type,
@@ -30,6 +35,10 @@ export function TableFilters({ producents, types, models, setFilters }: Props) {
     selectModel,
   } = useFilterReducer(types, models);
 
+  const { employee, employeesFilter, setEmployee } =
+    useEmployeesFilter(employees);
+
+  const [anyFilter, setAnyFilter] = useState(false);
   const [serialNumber, setSerialNumber] = useState('');
   const debounced = useDebouncedCallback((value) => {
     setSerialNumber(value);
@@ -47,7 +56,9 @@ export function TableFilters({ producents, types, models, setFilters }: Props) {
     selectProducent(null);
     selectType(null);
     selectModel(null);
+    setEmployee(null);
     setFilters('');
+    setAnyFilter(false);
   };
 
   const handleFilter = () => {
@@ -57,8 +68,10 @@ export function TableFilters({ producents, types, models, setFilters }: Props) {
         producents: producent || undefined,
         types: type || undefined,
         models: model || undefined,
+        employee: employee?.name || undefined,
       })
     );
+    setAnyFilter(true);
   };
 
   return (
@@ -74,9 +87,12 @@ export function TableFilters({ producents, types, models, setFilters }: Props) {
 
       <Popover className="relative z-50">
         <Popover.Button className="p-2 border rounded-md shadow-sm border-white/10 shadow-black hover:bg-slate-800">
-          {producent || type || model ? (
-            <div className="absolute w-3 h-3 bg-blue-900 rounded-full -top-1 -right-1 animate-pulse" />
-          ) : null}
+          <div
+            className={clsx(
+              'absolute w-3 h-3 bg-blue-900 rounded-full -top-1 -right-1 animate-pulse',
+              !anyFilter && 'hidden'
+            )}
+          />
           <FunnelIcon className={clsx('w-5', { 'text-blue-900': false })} />
         </Popover.Button>
 
@@ -107,6 +123,14 @@ export function TableFilters({ producents, types, models, setFilters }: Props) {
                 variant="main"
               />
 
+              <FilterSelect
+                title={'Employees'}
+                selectables={employeesFilter}
+                selected={employee}
+                setSelected={setEmployee}
+                variant="main"
+              />
+
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={() => {
@@ -133,4 +157,14 @@ export function TableFilters({ producents, types, models, setFilters }: Props) {
       </Popover>
     </div>
   );
+}
+
+function useEmployeesFilter(employees: string[]) {
+  const employeesFilter = useMemo(
+    () => employees.map((name) => ({ name })),
+    [employees]
+  );
+  const [employee, setEmployee] = useState<{ name: string } | null>(null);
+
+  return { employeesFilter, employee, setEmployee };
 }

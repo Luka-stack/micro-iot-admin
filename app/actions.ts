@@ -1,8 +1,8 @@
 'use server';
-
 import { revalidateTag } from 'next/cache';
 
 import { MACHINE_API } from '@/lib/apis';
+import { auth } from '@/auth';
 
 const machineUrl = 'http://localhost:5000/api/machines';
 
@@ -13,11 +13,14 @@ export async function updateMachine(
     status?: string;
   }
 ) {
+  const session = await auth();
+
   const response = await fetch(`${MACHINE_API}/${serialNumber}`, {
     cache: 'no-store',
     method: 'PATCH',
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
+      Authorization: `Bearer ${session?.accessToken}`,
     },
     body: JSON.stringify(data),
   });

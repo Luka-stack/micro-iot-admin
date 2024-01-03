@@ -14,8 +14,9 @@ type Props = {
 
 export function MachineStatus({ machine, setPreviewMachine }: Props) {
   const queryClient = useQueryClient();
-
   const [pending, setPending] = useState(false);
+
+  const canUpdate = machine.status === 'IDLE' || machine.status === 'WORKING';
 
   const changeMachineStatus = async () => {
     setPending(true);
@@ -44,14 +45,15 @@ export function MachineStatus({ machine, setPreviewMachine }: Props) {
       <h3 className="mb-2 font-semibold tracking-wider text-center">
         Machine Status
       </h3>
-      <button onClick={changeMachineStatus} disabled={pending}>
+      <button onClick={changeMachineStatus} disabled={pending || !canUpdate}>
         <PowerIcon
           className={clsx(
             'h-20 hover:scale-105',
-            pending && '!text-yellow-700',
-            machine.status === 'WORKING'
-              ? 'text-green-500 animate-pulse'
-              : 'text-slate-500'
+            pending && '!text-slate-500',
+            machine.status === 'WORKING' && 'text-green-500 animate-pulse',
+            machine.status === 'IDLE' && 'text-slate-500',
+            machine.status === 'BROKEN' && 'text-red-500 animate-pulse',
+            machine.status === 'MAINTENANCE' && 'text-orange-500'
           )}
         />
       </button>

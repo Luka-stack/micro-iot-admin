@@ -17,6 +17,8 @@ export function MachineProduction({ machine, setPreviewMachine }: Props) {
   const [visible, setVisible] = useState(false);
   const [pending, setPending] = useState(false);
 
+  const canUpdate = machine.status === 'IDLE' || machine.status === 'WORKING';
+
   const productionLevel = useMemo(
     () =>
       getProductionRateLevel(
@@ -44,9 +46,10 @@ export function MachineProduction({ machine, setPreviewMachine }: Props) {
       <h3 className="mb-2 font-semibold tracking-wider text-center">
         Production
       </h3>
+
       <button
         onClick={() => setVisible(true)}
-        disabled={pending}
+        disabled={pending || !canUpdate}
         className={clsx(
           'flex items-center justify-center mx-auto border-8 rounded-full w-20 aspect-square hover:scale-105',
           pending && '!border-slate-500',
@@ -58,6 +61,7 @@ export function MachineProduction({ machine, setPreviewMachine }: Props) {
       >
         <h2 className="text-2xl font-bold">{productionLevel}</h2>
       </button>
+
       <p className="mt-3 text-sm whitespace-nowrap">{`Production Rate: ${machine.productionRate} [s]`}</p>
 
       <MachineProductionModal

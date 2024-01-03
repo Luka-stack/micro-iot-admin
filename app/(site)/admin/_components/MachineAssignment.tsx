@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { TableFilters } from './TableFilters';
 import { MachineTable } from './MachineTable';
 import { BasePagination } from '@/components/ui/BasePagination';
 import { MachineEndpoints } from '@/lib/apis';
 import { createPaginationUrl } from '@/lib/helpers';
-import { Filters, Machine, Pagination, User } from '@/types';
-import { useSession } from 'next-auth/react';
+import { Filters, Machine, Pagination } from '@/types';
 
 type Props = {
   filters: Filters;
@@ -43,10 +43,11 @@ export function MachineAssignment({ filters, employees }: Props) {
   const [pageNumber, setPageNumber] = useState(1);
   const [filterUrl, setFilterUrl] = useState('');
 
-  const { isPending, data } = useQuery({
+  const { isPending, isFetching, data } = useQuery({
     queryKey: ['machines', pageNumber, filterUrl, session?.accessToken],
     queryFn: () => fetchMachines(pageNumber, filterUrl, session?.accessToken),
     enabled: !!session?.accessToken,
+    placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -58,6 +59,7 @@ export function MachineAssignment({ filters, employees }: Props) {
         producents={filters.producents}
         types={filters.types}
         models={filters.models}
+        employees={employees}
         setFilters={setFilterUrl}
       />
 

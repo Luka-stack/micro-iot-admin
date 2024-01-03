@@ -23,6 +23,10 @@ export function createFilterUrl(filters: SelectedFilters): string {
     query.set('status', filters.status.name);
   }
 
+  if (filters.employee) {
+    query.set('employee', filters.employee);
+  }
+
   if (filters.rate?.value) {
     query.set('rate', filters.rate.value + '');
     query.set('rateFilter', filters.rate.filter);

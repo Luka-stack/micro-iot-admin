@@ -53,6 +53,7 @@ export type SelectedFilters = {
   types?: SelectedFilter;
   models?: SelectedFilter;
   status?: SelectedFilter;
+  employee?: string;
   rate?: {
     filter: string;
     value?: string;

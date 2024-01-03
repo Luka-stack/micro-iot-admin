@@ -5,7 +5,7 @@ import { MachinesSearchSidebar } from './MachinesSearchSidebar';
 import { createPaginationUrl } from '@/lib/helpers';
 import { MachineEndpoints } from '@/lib/apis';
 import { useCallback, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { MachinesTable } from './MachinesTable';
 import { BasePagination } from '@/components/ui/BasePagination';
 import { MachinePreview } from './MachinePreview';
@@ -51,6 +51,7 @@ export function MachinesView({ filters }: Props) {
     queryKey: ['machines', pageNumber, filterUrl, session?.accessToken],
     queryFn: () => fetchMachines(pageNumber, filterUrl, session?.accessToken),
     enabled: !!session?.accessToken,
+    placeholderData: keepPreviousData,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

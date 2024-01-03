@@ -2,9 +2,14 @@ import { Filters, User } from '@/types';
 
 import { MachineAssignment } from './_components/MachineAssignment';
 import { AuthEndpoints, MiscEndpoints } from '@/lib/apis';
+import { auth } from '@/auth';
 
-async function fetchFilters(): Promise<{ data: Filters }> {
-  const response = await fetch(MiscEndpoints.filters);
+async function fetchFilters(token?: string): Promise<{ data: Filters }> {
+  const response = await fetch(MiscEndpoints.filters, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
     throw new Error("Couldn't load filters");
@@ -13,9 +18,12 @@ async function fetchFilters(): Promise<{ data: Filters }> {
   return response.json();
 }
 
-async function fetchEmployees(): Promise<User[]> {
+async function fetchEmployees(token?: string): Promise<User[]> {
   const response = await fetch(AuthEndpoints.employees, {
     next: { tags: ['users'] },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {
@@ -26,9 +34,11 @@ async function fetchEmployees(): Promise<User[]> {
 }
 
 export default async function AdminPage() {
+  const session = await auth();
+
   const [filters, employees] = await Promise.all([
-    fetchFilters(),
-    fetchEmployees(),
+    fetchFilters(session?.accessToken),
+    fetchEmployees(session?.accessToken),
   ]);
 
   const employeesWithNull: string[] = [

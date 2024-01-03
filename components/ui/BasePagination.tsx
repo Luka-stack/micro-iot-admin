@@ -15,7 +15,9 @@ type Props = {
 };
 
 export function BasePagination({ pagination, classes, changePage }: Props) {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(
+    () => pagination.offset / pagination.limit + 1
+  );
 
   const hasNext = useMemo(
     () => pagination.total > pagination.offset + pagination.count,

@@ -1,5 +1,5 @@
-import { MiscEndpoints } from '@/lib/apis';
 import { Filters } from '@/types';
+import { MiscEndpoints } from '@/lib/apis';
 import { MachinesView } from './machines/_components/MachinesView';
 
 async function fetchFilters(): Promise<{ data: Filters }> {
