@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       colors: {
         main: '#171820',
+        'main-light': '#22232f',
       },
       screens: {
         xxl: '1380px',

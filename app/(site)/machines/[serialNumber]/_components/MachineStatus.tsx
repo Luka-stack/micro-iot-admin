@@ -1,15 +1,13 @@
 'use client';
 
 import clsx from 'clsx';
-import { useState } from 'react';
-import {
-  BellAlertIcon,
-  PowerIcon,
-  WrenchScrewdriverIcon,
-} from '@heroicons/react/24/outline';
+import { PowerIcon } from '@heroicons/react/24/outline';
+import { useOptimistic, useState } from 'react';
 
-import { Machine } from '@/types';
 import { updateMachine } from '@/app/actions';
+import { PriorityDialog } from './PriorityDialog';
+import { RaportDefectDialog } from './RaportDefectDialog';
+import { Machine, MachineStatus } from '@/types';
 import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
@@ -18,6 +16,10 @@ type Props = {
 
 export function MachineStatus({ machine }: Props) {
   const [pending, setPending] = useState(false);
+  const [optimisticMachine, updateOptimistic] = useOptimistic(
+    machine,
+    (state, newState: Partial<Machine>) => ({ ...state, ...newState })
+  );
 
   const changeMachineStatus = async () => {
     setPending(true);
@@ -39,13 +41,20 @@ export function MachineStatus({ machine }: Props) {
     } hours: ${hours} [h] ${minutes} [min]`;
   };
 
+  const canUpdateStatus =
+    machine.status === 'WORKING' || machine.status === 'IDLE';
+
   return (
-    <section className="flex p-4 px-10 space-x-10 border rounded-md shadow-md w-fit border-white/10 shadow-black">
+    <section className="flex items-center p-4 px-10 space-x-10 border rounded-md shadow-md w-fit border-white/10 shadow-black">
       <div className="flex flex-col items-center">
         <h3 className="mb-5 text-lg font-semibold tracking-wider text-center">
           Machine Status
         </h3>
-        <button onClick={changeMachineStatus} disabled={pending}>
+        <button
+          onClick={changeMachineStatus}
+          disabled={pending || !canUpdateStatus}
+          className="disabled:pointer-events-none"
+        >
           <PowerIcon
             className={clsx(
               'h-28 hover:scale-105',
@@ -59,16 +68,13 @@ export function MachineStatus({ machine }: Props) {
         <p className="mt-3">{hoursLabel()}</p>
       </div>
 
-      <div className="flex flex-col justify-between">
-        <button className="flex flex-col items-center text-slate-500 hover:text-slate-300">
-          <BellAlertIcon className="h-12" />
-          <p className="">Report defect</p>
-        </button>
-
-        <button className="flex flex-col items-center text-slate-500 hover:text-slate-300">
-          <WrenchScrewdriverIcon className="h-12" />
-          <p>Plan Service</p>
-        </button>
+      <div className="grid grid-cols-1 grid-rows-2 gap-4">
+        <RaportDefectDialog
+          disabled={!canUpdateStatus}
+          machine={optimisticMachine}
+          update={updateOptimistic}
+        />
+        <PriorityDialog machine={optimisticMachine} update={updateOptimistic} />
       </div>
     </section>
   );

@@ -20,6 +20,11 @@ export type Machine = {
   lastStatusUpdate: string;
   productionRate: number;
   assignedEmployee: string | null;
+  maintainInfo: {
+    notes: string[];
+    priority: string;
+    maintenance: string;
+  };
 };
 
 export type Filters = {
@@ -95,4 +100,17 @@ export type AuthUser = {
 export type User = {
   email: string;
   displayName: string;
+};
+
+export type RepairType = 'REPAIR' | 'MAINTENANCE';
+
+export type RepairHistory = {
+  serialNumber: string;
+  maintainer: string;
+  description: string;
+  type: RepairType;
+
+  date: string;
+  nextSchedule: string;
+  lastSchedule: string;
 };

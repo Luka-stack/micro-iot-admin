@@ -16,6 +16,10 @@ export const MiscEndpoints = {
 };
 
 export const MachineEndpoints = {
+  changePriority: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}/priority`,
+  reportDefect: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}/report-defect`,
   filter: (url: string) => `${MACHINE_SERVER}/machines?${url}`,
   assignEmployee: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}/assign-employee`,

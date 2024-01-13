@@ -159,6 +159,32 @@ input[type='number'] {
   animation-delay: 0.2s;
 }
 
+.stripes-repair {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.7176 0.221 22.18 / 0.5) 13px,
+    oklch(0.7176 0.221 22.18 / 0.5) 13px
+  );
+}
+
+.stripes-main {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.8471 0.199 83.87 / 0.5) 13px,
+    oklch(0.8471 0.199 83.87 / 0.5) 13px
+  );
+}
+
+@layer base {
+  .bg-main-hover {
+    @apply bg-[#22232f];
+  }
+}
+
 @layer utilities {
   .table-scrollbar::-webkit-scrollbar {
     @apply w-2;

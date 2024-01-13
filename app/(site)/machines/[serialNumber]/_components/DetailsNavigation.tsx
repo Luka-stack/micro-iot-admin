@@ -21,6 +21,11 @@ export function DetailsNavigation({ serialNumber }: Props) {
           text="Overview"
         />
         <LinkListItem
+          href={`/machines/${serialNumber}/service-history`}
+          active={segment === 'service-history'}
+          text="Service History"
+        />
+        <LinkListItem
           href={`/machines/${serialNumber}/alerts`}
           active={segment === 'alerts'}
           text="Alerts"

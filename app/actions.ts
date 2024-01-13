@@ -1,8 +1,10 @@
 'use server';
+
 import { revalidateTag } from 'next/cache';
 
-import { MACHINE_API } from '@/lib/apis';
 import { auth } from '@/auth';
+import { postRequest } from '@/lib/fetch-client';
+import { MACHINE_API, MachineEndpoints } from '@/lib/apis';
 
 const machineUrl = 'http://localhost:5000/api/machines';
 
@@ -37,4 +39,20 @@ export async function filterMachines(queryParam = '') {
   return fetch(`${machineUrl}?${queryParam}`, {
     next: { revalidate: 3600 },
   }).then((response) => response.json());
+}
+
+export async function reportDefect(serialNumber: string, notes: string[]) {
+  postRequest(MachineEndpoints.reportDefect(serialNumber), {
+    notes,
+  });
+
+  revalidateTag(serialNumber);
+}
+
+export async function changePriority(serialNumber: string, priority: string) {
+  postRequest(MachineEndpoints.changePriority(serialNumber), {
+    priority,
+  });
+
+  revalidateTag(serialNumber);
 }
