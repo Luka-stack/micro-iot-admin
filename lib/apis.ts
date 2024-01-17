@@ -16,11 +16,20 @@ export const MiscEndpoints = {
 };
 
 export const MachineEndpoints = {
+  filter: (query: string) => `${MACHINE_SERVER}/machines?${query}`,
+
+  machine: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}`,
+
+  updateMachine: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}`,
+
   changePriority: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}/priority`,
+
   reportDefect: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}/report-defect`,
-  filter: (url: string) => `${MACHINE_SERVER}/machines?${url}`,
+
   assignEmployee: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}/assign-employee`,
 };

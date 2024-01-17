@@ -3,12 +3,12 @@
 import { revalidateTag } from 'next/cache';
 
 import { auth } from '@/auth';
-import { postRequest } from '@/lib/fetch-client';
-import { MACHINE_API, MachineEndpoints } from '@/lib/apis';
+import { patchRequest, postRequest } from '@/lib/fetch-client';
+import { MachineEndpoints } from '@/lib/apis';
 
 const machineUrl = 'http://localhost:5000/api/machines';
 
-export async function updateMachine(
+export async function updateMachine<TData>(
   serialNumber: string,
   data: {
     productionRate?: number;
@@ -17,22 +17,14 @@ export async function updateMachine(
 ) {
   const session = await auth();
 
-  const response = await fetch(`${MACHINE_API}/${serialNumber}`, {
-    cache: 'no-store',
-    method: 'PATCH',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      Authorization: `Bearer ${session?.accessToken}`,
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Couln't update machine ${serialNumber}`);
-  }
+  const response = await patchRequest<TData>(
+    MachineEndpoints.updateMachine(serialNumber),
+    data,
+    session?.accessToken
+  );
 
   revalidateTag(serialNumber);
-  return await response.json();
+  return response.toPlainObject();
 }
 
 export async function filterMachines(queryParam = '') {
@@ -42,17 +34,27 @@ export async function filterMachines(queryParam = '') {
 }
 
 export async function reportDefect(serialNumber: string, notes: string[]) {
-  postRequest(MachineEndpoints.reportDefect(serialNumber), {
-    notes,
-  });
+  const session = await auth();
+
+  const response = await postRequest(
+    MachineEndpoints.reportDefect(serialNumber),
+    { notes },
+    session?.accessToken
+  );
 
   revalidateTag(serialNumber);
+  return response.toPlainObject();
 }
 
 export async function changePriority(serialNumber: string, priority: string) {
-  postRequest(MachineEndpoints.changePriority(serialNumber), {
-    priority,
-  });
+  const session = await auth();
+
+  const response = await postRequest(
+    MachineEndpoints.changePriority(serialNumber),
+    { priority },
+    session?.accessToken
+  );
 
   revalidateTag(serialNumber);
+  return response.toPlainObject();
 }

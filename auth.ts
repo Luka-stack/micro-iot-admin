@@ -9,7 +9,7 @@ import type {
   NextApiResponse,
 } from 'next';
 
-import { postRequest } from './lib/fetch-client';
+import { postRequestOld } from './lib/fetch-client';
 import { AuthEndpoints } from './lib/apis';
 
 export const config = {
@@ -31,7 +31,7 @@ export const config = {
         }
 
         try {
-          const response = await postRequest<User>(
+          const response = await postRequestOld<User>(
             AuthEndpoints.login,
             {
               email: credentials.email,
@@ -57,7 +57,7 @@ export const config = {
         };
 
         try {
-          const response = await postRequest<User>(
+          const response = await postRequestOld<User>(
             AuthEndpoints.providerLogin('google'),
             googleUser,
             200

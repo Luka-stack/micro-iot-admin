@@ -159,13 +159,33 @@ input[type='number'] {
   animation-delay: 0.2s;
 }
 
-.stripes-repair {
+.stripes-broken {
   background: repeating-linear-gradient(
     45deg,
     transparent,
     transparent 12px,
     oklch(0.7176 0.221 22.18 / 0.5) 13px,
     oklch(0.7176 0.221 22.18 / 0.5) 13px
+  );
+}
+
+.stripes-idle {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.4455 0.037 257.28 / 0.5) 13px,
+    oklch(0.4455 0.037 257.28 / 0.5) 13px
+  );
+}
+
+.stripes-idle {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.6271 0.17 149.21 / 0.5) 13px,
+    oklch(0.6271 0.17 149.21 / 0.5) 13px
   );
 }
 

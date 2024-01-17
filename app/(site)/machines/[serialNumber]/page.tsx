@@ -1,7 +1,12 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MachineInfo } from './_components/MachineInfo';
-import { MachineStatus } from './_components/MachineStatus';
+
+import { auth } from '@/auth';
+import { Machine } from '@/types';
+import { getRequest } from '@/lib/fetch-client';
+import { MachineInfoCard } from './_components/MachineInfoCard';
+import { MachineEndpoints } from '@/lib/apis';
+import { MachineStatusCard } from './_components/MachineStatusCard';
 import { MachineProduction } from './_components/MachineProduction';
 
 type Props = {
@@ -15,13 +20,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 async function getMachine(serialNumber: string) {
-  const response = await fetch(
-    `http://localhost:5000/api/machines/${serialNumber}`,
+  const session = await auth();
 
-    { next: { tags: [serialNumber] } }
+  const response = await getRequest<{ data: Machine }>(
+    MachineEndpoints.machine(serialNumber),
+    {
+      token: session?.accessToken,
+      next: { tags: [serialNumber] },
+    }
   );
 
-  return await response.json();
+  if (response.hasError) {
+    return null;
+  }
+
+  return response.fetchedData;
 }
 
 export default async function Machines({ params }: Props) {
@@ -35,8 +48,8 @@ export default async function Machines({ params }: Props) {
     <main className="flex-1 p-4 border rounded-md border-white/10">
       <div className="flex flex-col items-center w-full h-full justify-evenly">
         <div className="flex w-full justify-evenly">
-          <MachineInfo machine={machine.data} />
-          <MachineStatus machine={machine.data} />
+          <MachineInfoCard machine={machine.data} />
+          <MachineStatusCard machine={machine.data} />
         </div>
 
         <MachineProduction machine={machine.data} />

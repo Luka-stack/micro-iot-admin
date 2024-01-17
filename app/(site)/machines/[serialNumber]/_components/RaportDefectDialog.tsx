@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { toast } from 'sonner';
 import { Fragment, useState } from 'react';
 import { Dialog, Tab, Transition } from '@headlessui/react';
 import { BellAlertIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -34,10 +35,16 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
     };
 
     update(updatedInfo);
-
-    reportDefect(machine.serialNumber, [...machine.maintainInfo.notes, defect]);
-
     setDefect('');
+
+    const response = await reportDefect(machine.serialNumber, [
+      ...machine.maintainInfo.notes,
+      defect,
+    ]);
+
+    if (response.error) {
+      toast.error('Error while reporting defect');
+    }
   };
 
   const requestService = async (newStatus: MachineStatus) => {
@@ -46,9 +53,13 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
     };
 
     update(updatedStatus);
-
-    updateMachine(machine.serialNumber, updatedStatus);
     setIsOpen(false);
+
+    const response = await updateMachine(machine.serialNumber, updatedStatus);
+
+    if (response.error) {
+      toast.error('Error while requesting service');
+    }
   };
 
   return (
@@ -113,7 +124,8 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
                           as="h3"
                           className="w-full text-lg font-medium leading-6 text-center text-slate-300"
                         >
-                          List of reported defects for machine 20beb7c20-cffa
+                          List of reported defects for machine{' '}
+                          {machine.serialNumber}
                         </Dialog.Title>
 
                         <main className="flex space-x-10">
@@ -164,7 +176,7 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
                           as="h3"
                           className="text-lg font-medium leading-6 text-center text-slate-300"
                         >
-                          Services available for machine 20beb7c20-cffa
+                          Services available for machine {machine.serialNumber}
                         </Dialog.Title>
 
                         <main className="flex justify-around mt-5">

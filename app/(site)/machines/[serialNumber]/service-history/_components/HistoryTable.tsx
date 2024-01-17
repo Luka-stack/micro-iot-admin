@@ -97,7 +97,7 @@ function HistoryRow({ item }: { item: RepairHistory }) {
               className={clsx(
                 'px-2 py-1 text-xs text-center border rounded-full w-28',
                 item.type === 'REPAIR'
-                  ? 'border-red-600 stripes-repair'
+                  ? 'border-red-600 stripes-broken'
                   : 'border-yellow-600 stripes-main'
               )}
             >

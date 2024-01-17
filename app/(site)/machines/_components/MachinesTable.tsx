@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import { memo } from 'react';
 
-import { Machine } from '@/types';
+import { Machine, MachineStatus } from '@/types';
 import { TableData } from '@/components/ui/TableData';
 import { TableHeader } from '@/components/ui/TableHeader';
+import clsx from 'clsx';
 
 type Props = {
   updatePreview: (machine: Machine) => void;
@@ -25,7 +26,7 @@ export const MachinesTable = memo(function MachinesTable({
             <TableHeader>Type</TableHeader>
             <TableHeader>Model</TableHeader>
             <TableHeader>Rate [s]</TableHeader>
-            <TableHeader>Status</TableHeader>
+            <TableHeader className="text-center w-36">Status</TableHeader>
           </tr>
         </thead>
 
@@ -50,7 +51,9 @@ export const MachinesTable = memo(function MachinesTable({
               <TableData>{machine.type.name}</TableData>
               <TableData>{machine.model.name}</TableData>
               <TableData>{machine.productionRate}</TableData>
-              <TableData>{machine.status}</TableData>
+              <TableData>
+                <StatusBadge status={machine.status} />
+              </TableData>
             </tr>
           ))}
         </tbody>
@@ -58,3 +61,19 @@ export const MachinesTable = memo(function MachinesTable({
     </div>
   );
 });
+
+function StatusBadge({ status }: { status: MachineStatus }) {
+  return (
+    <div
+      className={clsx(
+        'px-2 py-1 text-xs font-semibold text-center border rounded-full w-28 mx-auto',
+        status === 'IDLE' && 'border-slate-600 stripes-idle',
+        status === 'BROKEN' && 'border-red-600 stripes-broken',
+        status === 'MAINTENANCE' && 'border-yellow-600 stripes-main',
+        status === 'WORKING' && 'border-green-600 stripes-working'
+      )}
+    >
+      {status}
+    </div>
+  );
+}

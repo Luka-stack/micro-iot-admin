@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Machine } from '@/types';
 import { updateMachine } from '@/app/actions';
 import { differenceInHoursAndMin } from '@/lib/helpers';
+import { toast } from 'sonner';
 
 type Props = {
   machine: Machine;
@@ -21,11 +22,17 @@ export function MachineStatus({ machine, setPreviewMachine }: Props) {
   const changeMachineStatus = async () => {
     setPending(true);
 
-    const response = await updateMachine(machine.serialNumber, {
+    const response = await updateMachine<Machine>(machine.serialNumber, {
       status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
     });
+
+    if (response.error) {
+      toast.error('Error while updating machine status');
+    } else {
+      setPreviewMachine(response.data!);
+    }
+
     queryClient.invalidateQueries({ queryKey: ['machines'] });
-    setPreviewMachine(response.data);
 
     setPending(false);
   };

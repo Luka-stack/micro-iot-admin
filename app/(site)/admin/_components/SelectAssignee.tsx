@@ -6,7 +6,7 @@ import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { Listbox, Transition } from '@headlessui/react';
 import { Fragment, useState, useTransition } from 'react';
 
-import { postRequest } from '@/lib/fetch-client';
+import { postRequestOld } from '@/lib/fetch-client';
 import { MachineEndpoints } from '@/lib/apis';
 
 type Props = {
@@ -25,7 +25,7 @@ export function SelectAssignee({ serialNumber, selectables, employee }: Props) {
     setAssignedEmployee(employee === selectables[0] ? null : employee);
 
     startTransition(() => {
-      postRequest(MachineEndpoints.assignEmployee(serialNumber), {
+      postRequestOld(MachineEndpoints.assignEmployee(serialNumber), {
         employee: employee === selectables[0] ? null : employee,
       });
     });

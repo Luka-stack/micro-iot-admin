@@ -3,7 +3,7 @@ import { ZodError, z } from 'zod';
 import { FormEvent, useCallback, useState } from 'react';
 
 import { AuthEndpoints } from '@/lib/apis';
-import { RequestError, postRequest } from '@/lib/fetch-client';
+import { RequestError, postRequestOld } from '@/lib/fetch-client';
 import { revalidateTag } from 'next/cache';
 
 const schema = z
@@ -39,7 +39,7 @@ export function useSignIn() {
         role: 'employee',
       });
 
-      await postRequest(AuthEndpoints.signup, data, 201);
+      await postRequestOld(AuthEndpoints.signup, data, 201);
 
       await signIn('local-login', {
         email: data.email,

@@ -1,20 +1,22 @@
 'use client';
 
 import clsx from 'clsx';
+import { toast } from 'sonner';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { useOptimistic, useState } from 'react';
 
+import { Machine } from '@/types';
 import { updateMachine } from '@/app/actions';
 import { PriorityDialog } from './PriorityDialog';
+import { MACHINE_STATUSES } from '@/lib/constants';
 import { RaportDefectDialog } from './RaportDefectDialog';
-import { Machine, MachineStatus } from '@/types';
 import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
   machine: Machine;
 };
 
-export function MachineStatus({ machine }: Props) {
+export function MachineStatusCard({ machine }: Props) {
   const [pending, setPending] = useState(false);
   const [optimisticMachine, updateOptimistic] = useOptimistic(
     machine,
@@ -24,11 +26,21 @@ export function MachineStatus({ machine }: Props) {
   const changeMachineStatus = async () => {
     setPending(true);
 
-    await updateMachine(machine.serialNumber, {
-      status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
-    });
+    const updatedStatus = {
+      status:
+        machine.status === 'IDLE'
+          ? MACHINE_STATUSES.WORKING
+          : MACHINE_STATUSES.IDLE,
+    };
 
+    updateOptimistic(updatedStatus);
     setPending(false);
+
+    const response = await updateMachine(machine.serialNumber, updatedStatus);
+
+    if (response.error) {
+      toast.error('Error while updating machine status');
+    }
   };
 
   const hoursLabel = () => {
@@ -59,9 +71,10 @@ export function MachineStatus({ machine }: Props) {
             className={clsx(
               'h-28 hover:scale-105',
               pending && '!text-yellow-700',
-              machine.status === 'WORKING'
-                ? 'text-green-500 animate-pulse'
-                : 'text-slate-500'
+              machine.status === 'WORKING' && 'text-green-500 animate-pulse',
+              machine.status === 'IDLE' && 'text-slate-500',
+              machine.status === 'BROKEN' && 'text-red-500 animate-pulse',
+              machine.status === 'MAINTENANCE' && 'text-orange-500'
             )}
           />
         </button>
