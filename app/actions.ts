@@ -33,12 +33,26 @@ export async function filterMachines(queryParam = '') {
   }).then((response) => response.json());
 }
 
-export async function reportDefect(serialNumber: string, notes: string[]) {
+export async function addDefect(serialNumber: string, defect: string) {
   const session = await auth();
 
   const response = await postRequest(
-    MachineEndpoints.reportDefect(serialNumber),
-    { notes },
+    MachineEndpoints.addDefect(serialNumber),
+    { defect },
+    session?.accessToken
+  );
+
+  revalidateTag(serialNumber);
+  return response.toPlainObject();
+}
+
+// Move to delete
+export async function deleteDefect(serialNumber: string, defect: string) {
+  const session = await auth();
+
+  const response = await postRequest(
+    MachineEndpoints.deleteDefect(serialNumber),
+    { defect },
     session?.accessToken
   );
 

@@ -26,6 +26,9 @@ export const MachinesTable = memo(function MachinesTable({
             <TableHeader>Type</TableHeader>
             <TableHeader>Model</TableHeader>
             <TableHeader>Rate [s]</TableHeader>
+            <TableHeader className="w-32 text-center">
+              Next Maintenance
+            </TableHeader>
             <TableHeader className="text-center w-36">Status</TableHeader>
           </tr>
         </thead>
@@ -51,6 +54,11 @@ export const MachinesTable = memo(function MachinesTable({
               <TableData>{machine.type.name}</TableData>
               <TableData>{machine.model.name}</TableData>
               <TableData>{machine.productionRate}</TableData>
+              <TableData className="text-center">
+                {new Date(
+                  machine.maintainInfo.maintenance
+                ).toLocaleDateString()}
+              </TableData>
               <TableData>
                 <StatusBadge status={machine.status} />
               </TableData>

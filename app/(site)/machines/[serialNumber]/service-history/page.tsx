@@ -1,373 +1,43 @@
-import { RepairHistory } from '@/types';
-import { HistoryTable } from './_components/HistoryTable';
+import { notFound } from 'next/navigation';
 
-function fetchHistory(): RepairHistory[] {
-  return [
+import { auth } from '@/auth';
+import { getRequest } from '@/lib/fetch-client';
+import { HistoryTable } from './_components/HistoryTable';
+import { MachineEndpoints } from '@/lib/apis';
+import { MachineWithHistory } from '@/types';
+
+type Props = {
+  params: {
+    serialNumber: string;
+  };
+};
+
+async function fetchHistory(serialNumber: string) {
+  const session = await auth();
+
+  const response = await getRequest<{ data: MachineWithHistory }>(
+    MachineEndpoints.machineHistory(serialNumber),
     {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-10T12:00:00.000Z',
-      nextSchedule: '2021-09-09T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-10T12:00:00.000Z',
-      nextSchedule: '2021-09-09T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-10T12:00:00.000Z',
-      nextSchedule: '2021-09-09T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-10T12:00:00.000Z',
-      nextSchedule: '2021-09-09T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-10T12:00:00.000Z',
-      nextSchedule: '2021-09-09T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-10T12:00:00.000Z',
-      nextSchedule: '2021-09-09T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'REPAIR',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-    {
-      serialNumber: '20beb7c2-cffa',
-      maintainer: 'main.1@iotfox.pl',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam n',
-      type: 'MAINTENANCE',
-      date: '2021-09-01T12:00:00.000Z',
-      nextSchedule: '2021-09-01T12:00:00.000Z',
-      lastSchedule: '2021-09-01T12:00:00.000Z',
-    },
-  ];
+      token: session?.accessToken,
+      next: {
+        revalidate: 3600,
+      },
+    }
+  );
+
+  if (response.hasError) {
+    return null;
+  }
+
+  return response.fetchedData;
 }
 
-export default function ServiceHistoryPage() {
-  const history = fetchHistory();
+export default async function ServiceHistoryPage({ params }: Props) {
+  const history = await fetchHistory(params.serialNumber);
 
-  return <HistoryTable history={history} />;
+  if (!history) {
+    return notFound();
+  }
+
+  return <HistoryTable machine={history.data} />;
 }

@@ -18,6 +18,9 @@ export const MiscEndpoints = {
 export const MachineEndpoints = {
   filter: (query: string) => `${MACHINE_SERVER}/machines?${query}`,
 
+  machineHistory: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}/history`,
+
   machine: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}`,
 
@@ -27,8 +30,11 @@ export const MachineEndpoints = {
   changePriority: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}/priority`,
 
-  reportDefect: (serialNumber: string) =>
-    `${MACHINE_SERVER}/machines/${serialNumber}/report-defect`,
+  addDefect: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}/add-defect`,
+
+  deleteDefect: (serialNumber: string) =>
+    `${MACHINE_SERVER}/machines/${serialNumber}/delete-defect`,
 
   assignEmployee: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}/assign-employee`,

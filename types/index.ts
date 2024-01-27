@@ -21,10 +21,25 @@ export type Machine = {
   productionRate: number;
   assignedEmployee: string | null;
   maintainInfo: {
-    notes: string[];
+    defects: string[];
     priority: string;
     maintenance: string;
   };
+};
+
+export type RepairHistory = {
+  serialNumber: string;
+  maintainer: string;
+  description: string;
+  type: RepairType;
+
+  date: string;
+  nextSchedule: string;
+  lastSchedule: string;
+};
+
+export type MachineWithHistory = Machine & {
+  maintenances: RepairHistory[] | null;
 };
 
 export type Filters = {
@@ -103,14 +118,3 @@ export type User = {
 };
 
 export type RepairType = 'REPAIR' | 'MAINTENANCE';
-
-export type RepairHistory = {
-  serialNumber: string;
-  maintainer: string;
-  description: string;
-  type: RepairType;
-
-  date: string;
-  nextSchedule: string;
-  lastSchedule: string;
-};

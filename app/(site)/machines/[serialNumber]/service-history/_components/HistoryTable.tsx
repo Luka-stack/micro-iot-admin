@@ -5,17 +5,21 @@ import { useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Disclosure, Transition } from '@headlessui/react';
 
-import { RepairHistory } from '@/types';
+import { MachineWithHistory, RepairHistory } from '@/types';
 
 type Props = {
-  history: RepairHistory[];
+  machine: MachineWithHistory;
 };
 
-export function HistoryTable({ history }: Props) {
-  const [filteredHistory, setFilteredHistory] = useState(history);
+export function HistoryTable({ machine }: Props) {
+  const [filteredHistory, setFilteredHistory] = useState(
+    machine.maintenances || []
+  );
   const [type, setType] = useState('all');
 
   const handleFilter = (type: string) => {
+    const history = machine.maintenances || [];
+
     if (type === 'all') {
       setFilteredHistory(history);
     } else {
@@ -30,7 +34,7 @@ export function HistoryTable({ history }: Props) {
   return (
     <div className="flex-1 py-4 space-y-5 overflow-hidden border rounded-md border-white/10 full-page">
       <div className="flex justify-between px-4">
-        <h1 className="text-2xl font-semibold">Machine repair history</h1>
+        <h1 className="text-2xl font-semibold">{`Machine ${machine.serialNumber} repair history`}</h1>
         <div className="space-x-5">
           <button
             onClick={() => handleFilter('all')}
@@ -69,9 +73,15 @@ export function HistoryTable({ history }: Props) {
       </div>
 
       <div className="h-full pb-10 overflow-y-auto table-scrollbar">
-        {filteredHistory.map((item) => (
-          <HistoryRow key={item.serialNumber} item={item} />
-        ))}
+        {filteredHistory.length === 0 ? (
+          <div className="pt-5 text-2xl text-center border-t text-slate-500 border-white/10">
+            We could not find any record of the service history.
+          </div>
+        ) : (
+          filteredHistory.map((item) => (
+            <HistoryRow key={item.serialNumber} item={item} />
+          ))
+        )}
       </div>
     </div>
   );

@@ -3,13 +3,11 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import { useOptimistic, useState } from 'react';
+import { useState } from 'react';
 
 import { Machine } from '@/types';
 import { updateMachine } from '@/app/actions';
-import { PriorityDialog } from './PriorityDialog';
 import { MACHINE_STATUSES } from '@/lib/constants';
-import { RaportDefectDialog } from './RaportDefectDialog';
 import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
@@ -18,10 +16,6 @@ type Props = {
 
 export function MachineStatusCard({ machine }: Props) {
   const [pending, setPending] = useState(false);
-  const [optimisticMachine, updateOptimistic] = useOptimistic(
-    machine,
-    (state, newState: Partial<Machine>) => ({ ...state, ...newState })
-  );
 
   const changeMachineStatus = async () => {
     setPending(true);
@@ -33,14 +27,13 @@ export function MachineStatusCard({ machine }: Props) {
           : MACHINE_STATUSES.IDLE,
     };
 
-    updateOptimistic(updatedStatus);
-    setPending(false);
-
     const response = await updateMachine(machine.serialNumber, updatedStatus);
 
     if (response.error) {
       toast.error('Error while updating machine status');
     }
+
+    setPending(false);
   };
 
   const hoursLabel = () => {
@@ -79,15 +72,6 @@ export function MachineStatusCard({ machine }: Props) {
           />
         </button>
         <p className="mt-3">{hoursLabel()}</p>
-      </div>
-
-      <div className="grid grid-cols-1 grid-rows-2 gap-4">
-        <RaportDefectDialog
-          disabled={!canUpdateStatus}
-          machine={optimisticMachine}
-          update={updateOptimistic}
-        />
-        <PriorityDialog machine={optimisticMachine} update={updateOptimistic} />
       </div>
     </section>
   );

@@ -8,6 +8,7 @@ import { MachineInfoCard } from './_components/MachineInfoCard';
 import { MachineEndpoints } from '@/lib/apis';
 import { MachineStatusCard } from './_components/MachineStatusCard';
 import { MachineProduction } from './_components/MachineProduction';
+import { MachineMaintenanceCard } from './_components/MachineMaintenanceCard';
 
 type Props = {
   params: {
@@ -49,6 +50,9 @@ export default async function Machines({ params }: Props) {
       <div className="flex flex-col items-center w-full h-full justify-evenly">
         <div className="flex w-full justify-evenly">
           <MachineInfoCard machine={machine.data} />
+
+          <MachineMaintenanceCard machine={machine.data} />
+
           <MachineStatusCard machine={machine.data} />
         </div>
 

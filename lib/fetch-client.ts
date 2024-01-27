@@ -68,6 +68,11 @@ async function fetchClient<TData>(
     body: body && JSON.stringify(body),
   });
 
+  // No Content
+  if (response.status === 204) {
+    return new RequestResponse<TData>(false, null);
+  }
+
   const responseJson = await response.json();
 
   if (!response.ok) {

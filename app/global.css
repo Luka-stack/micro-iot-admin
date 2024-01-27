@@ -179,7 +179,7 @@ input[type='number'] {
   );
 }
 
-.stripes-idle {
+.stripes-working {
   background: repeating-linear-gradient(
     45deg,
     transparent,

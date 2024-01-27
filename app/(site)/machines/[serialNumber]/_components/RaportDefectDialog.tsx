@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useTransition } from 'react';
 import { Dialog, Tab, Transition } from '@headlessui/react';
 import { BellAlertIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 import { MACHINE_STATUSES } from '@/lib/constants';
 import { Machine, MachineStatus } from '@/types';
-import { reportDefect, updateMachine } from '@/app/actions';
+import { addDefect, deleteDefect, updateMachine } from '@/app/actions';
 
 type Props = {
   disabled: boolean;
@@ -17,6 +17,7 @@ type Props = {
 export function RaportDefectDialog({ disabled, machine, update }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [defect, setDefect] = useState('');
+  const [pending, startTransaction] = useTransition();
 
   const closeModal = () => {
     setIsOpen(false);
@@ -26,25 +27,46 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
     setIsOpen(true);
   };
 
-  const addDefect = async () => {
+  const handleAddDefect = async () => {
     const updatedInfo = {
       maintainInfo: {
         ...machine.maintainInfo,
-        notes: [...machine.maintainInfo.notes, defect],
+        defects: [...machine.maintainInfo.defects, defect],
       },
     };
 
-    update(updatedInfo);
+    startTransaction(() => {
+      update(updatedInfo);
+    });
+
+    addDefect(machine.serialNumber, defect).then((response) => {
+      if (response.error) {
+        toast.error('Error while reporting defect');
+      }
+    });
+
     setDefect('');
+  };
 
-    const response = await reportDefect(machine.serialNumber, [
-      ...machine.maintainInfo.notes,
-      defect,
-    ]);
+  const handleDeleteDefect = async (defect: string) => {
+    const updatedInfo = {
+      maintainInfo: {
+        ...machine.maintainInfo,
+        defects: machine.maintainInfo.defects.filter(
+          (defects) => defects !== defect
+        ),
+      },
+    };
 
-    if (response.error) {
-      toast.error('Error while reporting defect');
-    }
+    startTransaction(() => {
+      update(updatedInfo);
+    });
+
+    deleteDefect(machine.serialNumber, defect).then((response) => {
+      if (response.error) {
+        toast.error('Error while reporting defect');
+      }
+    });
   };
 
   const requestService = async (newStatus: MachineStatus) => {
@@ -67,10 +89,12 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
       <button
         onClick={showModal}
         disabled={disabled}
-        className="flex flex-col items-center text-slate-500 hover:text-slate-300 transition-all duration-200 ease-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group my-auto py-4 active:scale-95 disabled:pointer-events-none"
+        className="space-y-2 flex flex-col items-center justify-center p-3 transition-all duration-300 ease-in-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group active:scale-95 disabled:pointer-events-none"
       >
-        <BellAlertIcon className="h-12" />
-        <p className="">Report defect</p>
+        <BellAlertIcon className="h-12 text-slate-500 group-hover:text-slate-300" />
+        <p className="text-slate-500 group-hover:text-slate-300">
+          Report defect
+        </p>
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>
@@ -131,22 +155,29 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
                         <main className="flex space-x-10">
                           <div className="w-1/2 mt-5">
                             <ul className="h-64 px-2 overflow-y-auto border rounded-md scrollbar-thin scrollbar-thumb-main-light border-white/10">
-                              {machine.maintainInfo.notes.length === 0 ? (
+                              {machine.maintainInfo.defects.length === 0 ? (
                                 <li className="py-2 text-center">
                                   No defects reported
                                 </li>
                               ) : (
-                                machine.maintainInfo.notes.map((note, id) => (
-                                  <li
-                                    key={id}
-                                    className="flex items-center justify-between px-3 py-2 border-b hover:bg-main-light group border-white/10"
-                                  >
-                                    <p className="text-slate-500">{note}</p>
-                                    <button className="hidden transition-transform duration-150 active:scale-95 group-hover:block">
-                                      <TrashIcon className="w-4 h-4 ml-2 text-slate-500 hover:text-slate-300" />
-                                    </button>
-                                  </li>
-                                ))
+                                machine.maintainInfo.defects.map(
+                                  (defect, id) => (
+                                    <li
+                                      key={id}
+                                      className="flex items-center justify-between px-3 py-2 border-b hover:bg-main-light group border-white/10"
+                                    >
+                                      <p className="text-slate-500">{defect}</p>
+                                      <button
+                                        onClick={() =>
+                                          handleDeleteDefect(defect)
+                                        }
+                                        className="hidden transition-transform duration-150 active:scale-95 group-hover:block"
+                                      >
+                                        <TrashIcon className="w-4 h-4 ml-2 text-slate-500 hover:text-slate-300" />
+                                      </button>
+                                    </li>
+                                  )
+                                )
                               )}
                             </ul>
                           </div>
@@ -161,8 +192,8 @@ export function RaportDefectDialog({ disabled, machine, update }: Props) {
                             />
 
                             <button
-                              onClick={addDefect}
-                              disabled={!defect.trim()}
+                              onClick={handleAddDefect}
+                              disabled={!defect.trim() || pending}
                               className="px-2 py-1 text-sm transition-all duration-300 ease-out border rounded-md border-slate-500 text-slate-500 hover:border-slate-300 hover:text-slate-300 active:scale-95 disabled:pointer-events-none"
                             >
                               Add defect

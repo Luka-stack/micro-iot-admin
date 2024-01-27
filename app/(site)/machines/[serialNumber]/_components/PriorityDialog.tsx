@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useTransition } from 'react';
 import {
   Bars2Icon,
   ChevronDoubleDownIcon,
@@ -17,6 +17,7 @@ type Props = {
 
 export function PriorityDialog({ machine, update }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [pending, startTransaction] = useTransition();
   const [priority, setPriority] = useState(
     machine.maintainInfo.priority.toLowerCase()
   );
@@ -37,7 +38,10 @@ export function PriorityDialog({ machine, update }: Props) {
       },
     };
 
-    update(updatedInfo);
+    startTransaction(() => {
+      update(updatedInfo);
+    });
+
     setPriority(priority);
 
     changePriority(machine.serialNumber, priority.toUpperCase());
@@ -122,7 +126,7 @@ function PriorityButton({
       <button
         onClick={onClick}
         className={clsx(
-          'flex flex-col items-center justify-center row-span-2 px-3 space-y-2 transition-all duration-300 ease-in-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group active:scale-95',
+          'flex flex-col items-center justify-center space-y-2 p-3 transition-all duration-300 ease-in-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group active:scale-95',
           variant === 'selected' && 'bg-[#22232f] shadow-sm'
         )}
       >
@@ -149,7 +153,7 @@ function PriorityButton({
       <button
         onClick={onClick}
         className={clsx(
-          'flex flex-col items-center justify-center p-4 space-y-2 transition-all duration-300 ease-in-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group active:scale-95',
+          'space-y-2 flex flex-col items-center justify-center p-3 transition-all duration-300 ease-in-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group active:scale-95',
           variant === 'selected' && 'bg-[#22232f] shadow-sm'
         )}
       >
@@ -175,7 +179,7 @@ function PriorityButton({
     <button
       onClick={onClick}
       className={clsx(
-        'flex flex-col items-center justify-center p-4 space-y-2 transition-all duration-300 ease-in-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group active:scale-95',
+        'flex flex-col items-center justify-center p-3 transition-all duration-300 ease-in-out rounded-md hover:bg-[#22232f] hover:shadow-sm shadow-black group active:scale-95 space-y-2',
         variant === 'selected' && 'bg-[#22232f] shadow-sm'
       )}
     >
