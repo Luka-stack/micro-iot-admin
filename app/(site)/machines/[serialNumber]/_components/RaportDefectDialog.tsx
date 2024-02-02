@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
-import { Fragment, useState, useTransition } from 'react';
 import { Dialog, Tab, Transition } from '@headlessui/react';
 import { BellAlertIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { Fragment, useState, useTransition } from 'react';
 
 import { MACHINE_STATUSES } from '@/lib/constants';
 import { Machine, MachineStatus } from '@/types';

@@ -1,44 +1,42 @@
 import { Filters, User } from '@/types';
 
+import { auth } from '@/auth';
+import { getRequest } from '@/lib/fetch-client';
 import { MachineAssignment } from './_components/MachineAssignment';
 import { AuthEndpoints, MiscEndpoints } from '@/lib/apis';
-import { auth } from '@/auth';
 
-async function fetchFilters(token?: string): Promise<{ data: Filters }> {
-  const response = await fetch(MiscEndpoints.filters, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+async function fetchFilters() {
+  const session = await auth();
+  const response = await getRequest<{ data: Filters }>(MiscEndpoints.filters, {
+    token: session?.accessToken,
   });
 
-  if (!response.ok) {
-    throw new Error("Couldn't load filters");
+  if (response.hasError) {
+    throw new Error("Couldn't fetch filters");
   }
 
-  return response.json();
+  return response.fetchedData!.data;
 }
 
-async function fetchEmployees(token?: string): Promise<User[]> {
-  const response = await fetch(AuthEndpoints.employees, {
+async function fetchEmployees(): Promise<User[]> {
+  const session = await auth();
+  const response = await getRequest<User[]>(AuthEndpoints.employees, {
+    token: session?.accessToken,
     next: { tags: ['users'] },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 
-  if (!response.ok) {
-    throw new Error("Couldn't load employees");
+  // TODO show unauthorized to see resources
+  if (response.hasError) {
+    throw new Error("Couldn't fetch employees");
   }
 
-  return response.json();
+  return response.fetchedData!;
 }
 
 export default async function AdminPage() {
-  const session = await auth();
-
   const [filters, employees] = await Promise.all([
-    fetchFilters(session?.accessToken),
-    fetchEmployees(session?.accessToken),
+    fetchFilters(),
+    fetchEmployees(),
   ]);
 
   const employeesWithNull: string[] = [
@@ -46,7 +44,5 @@ export default async function AdminPage() {
     ...employees.map((employees) => employees.email),
   ];
 
-  return (
-    <MachineAssignment filters={filters.data} employees={employeesWithNull} />
-  );
+  return <MachineAssignment filters={filters} employees={employeesWithNull} />;
 }

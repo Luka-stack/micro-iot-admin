@@ -1,15 +1,17 @@
 'use client';
 
-import { Filters, Machine, Pagination } from '@/types';
-import { MachinesSearchSidebar } from './MachinesSearchSidebar';
-import { createPaginationUrl } from '@/lib/helpers';
-import { MachineEndpoints } from '@/lib/apis';
+import { useSession } from 'next-auth/react';
 import { useCallback, useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
+import { getRequest } from '@/lib/fetch-client';
 import { MachinesTable } from './MachinesTable';
-import { BasePagination } from '@/components/ui/BasePagination';
 import { MachinePreview } from './MachinePreview';
-import { useSession } from 'next-auth/react';
+import { BasePagination } from '@/components/ui/BasePagination';
+import { MachineEndpoints } from '@/lib/apis';
+import { createPaginationUrl } from '@/lib/helpers';
+import { MachinesSearchSidebar } from './MachinesSearchSidebar';
+import { Filters, Machine, Pagination } from '@/types';
 
 type Props = {
   filters: Filters;
@@ -23,18 +25,18 @@ async function fetchMachines(
   const paginationUrl = createPaginationUrl(pageNumber, 10);
   const url = filterUrl ? `${filterUrl}&${paginationUrl}` : paginationUrl;
 
-  const response = await fetch(MachineEndpoints.filter(url), {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await getRequest<{ meta: Pagination; data: Machine[] }>(
+    MachineEndpoints.machines(url),
+    {
+      token,
+    }
+  );
 
-  if (!response.ok) {
-    throw new Error();
+  if (response.hasError) {
+    throw new Error("Couldn't fetch machines");
   }
 
-  return response.json();
+  return response.fetchedData!;
 }
 
 export function MachinesView({ filters }: Props) {
@@ -64,25 +66,24 @@ export function MachinesView({ filters }: Props) {
   return (
     <div className="flex flex-1 space-x-4 full-page">
       <MachinesSearchSidebar
-        pending={isPending}
         {...filters}
+        pending={isPending}
         setFilters={setFilterUrl}
       />
 
-      {isPending ? (
-        <div>Loading</div>
-      ) : (
-        <div className="flex flex-col flex-1 space-y-4">
-          <div className="flex flex-1 overflow-hidden">
-            <MachinesTable
-              machines={data!.data}
-              updatePreview={handleShowPreview}
-            />
-          </div>
-
-          <BasePagination pagination={data!.meta} changePage={setPageNumber} />
+      <div className="flex flex-col flex-1 space-y-4">
+        <div className="flex flex-1 overflow-hidden">
+          <MachinesTable
+            pending={isPending}
+            machines={data?.data}
+            updatePreview={handleShowPreview}
+          />
         </div>
-      )}
+
+        {data?.meta ? (
+          <BasePagination pagination={data.meta} changePage={setPageNumber} />
+        ) : null}
+      </div>
 
       <MachinePreview {...machinePreview} updatePreview={setMachinePreview} />
     </div>

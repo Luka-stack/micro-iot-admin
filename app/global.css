@@ -145,6 +145,14 @@ input[type='number'] {
   }
 }
 
+.error-title {
+  background: linear-gradient(90deg, #373b44, #4286f4);
+  text-shadow: none;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .bounce-loading.first-ball {
   animation: bounceIn 2s infinite 2s;
 }

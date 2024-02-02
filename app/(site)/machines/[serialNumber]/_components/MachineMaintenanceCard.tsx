@@ -1,11 +1,12 @@
 'use client';
 
 import { Machine } from '@/types';
+import { twMerge } from 'tailwind-merge';
 import { useMemo, useOptimistic } from 'react';
-import { RaportDefectDialog } from './RaportDefectDialog';
+
 import { PriorityDialog } from './PriorityDialog';
 import { differenceInDays } from '@/lib/helpers';
-import { twMerge } from 'tailwind-merge';
+import { RaportDefectDialog } from './RaportDefectDialog';
 
 type Props = {
   machine: Machine;

@@ -1,17 +1,20 @@
+import clsx from 'clsx';
 import Image from 'next/image';
 import { memo } from 'react';
+import { BeatLoader } from 'react-spinners';
 
-import { Machine, MachineStatus } from '@/types';
 import { TableData } from '@/components/ui/TableData';
 import { TableHeader } from '@/components/ui/TableHeader';
-import clsx from 'clsx';
+import { Machine, MachineStatus } from '@/types';
 
 type Props = {
+  pending: boolean;
+  machines?: Machine[];
   updatePreview: (machine: Machine) => void;
-  machines: Machine[];
 };
 
 export const MachinesTable = memo(function MachinesTable({
+  pending,
   machines,
   updatePreview,
 }: Props) {
@@ -34,36 +37,49 @@ export const MachinesTable = memo(function MachinesTable({
         </thead>
 
         <tbody>
-          {machines.map((machine) => (
-            <tr
-              key={machine.serialNumber}
-              onClick={() => updatePreview(machine)}
-              className="main-gradient-hover hover:cursor-pointer"
-            >
-              <TableData>
-                <Image
-                  alt={machine.serialNumber}
-                  src={`/${machine.type.imageUrl}`}
-                  width={56}
-                  height={56}
-                  className="mx-auto w-14 h-14"
-                />
-              </TableData>
-              <TableData>{machine.serialNumber}</TableData>
-              <TableData>{machine.producent}</TableData>
-              <TableData>{machine.type.name}</TableData>
-              <TableData>{machine.model.name}</TableData>
-              <TableData>{machine.productionRate}</TableData>
-              <TableData className="text-center">
-                {new Date(
-                  machine.maintainInfo.maintenance
-                ).toLocaleDateString()}
-              </TableData>
-              <TableData>
-                <StatusBadge status={machine.status} />
-              </TableData>
+          {pending ? (
+            <tr>
+              <td colSpan={8}>
+                <div className="flex flex-col items-center justify-center pt-20 space-y-5">
+                  <BeatLoader color="#64748b" speedMultiplier={0.5} size={24} />
+                  <h4 className="text-lg text-slate-500">
+                    Searching database for machines
+                  </h4>
+                </div>
+              </td>
             </tr>
-          ))}
+          ) : (
+            machines!.map((machine) => (
+              <tr
+                key={machine.serialNumber}
+                onClick={() => updatePreview(machine)}
+                className="main-gradient-hover hover:cursor-pointer"
+              >
+                <TableData>
+                  <Image
+                    alt={machine.serialNumber}
+                    src={`/${machine.type.imageUrl}`}
+                    width={56}
+                    height={56}
+                    className="mx-auto w-14 h-14"
+                  />
+                </TableData>
+                <TableData>{machine.serialNumber}</TableData>
+                <TableData>{machine.producent}</TableData>
+                <TableData>{machine.type.name}</TableData>
+                <TableData>{machine.model.name}</TableData>
+                <TableData>{machine.productionRate}</TableData>
+                <TableData className="text-center">
+                  {new Date(
+                    machine.maintainInfo.maintenance
+                  ).toLocaleDateString()}
+                </TableData>
+                <TableData>
+                  <StatusBadge status={machine.status} />
+                </TableData>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

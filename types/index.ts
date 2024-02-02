@@ -28,14 +28,12 @@ export type Machine = {
 };
 
 export type RepairHistory = {
-  serialNumber: string;
   maintainer: string;
   description: string;
-  type: RepairType;
-
   date: string;
-  nextSchedule: string;
-  lastSchedule: string;
+  type: RepairType;
+  scheduled: string;
+  nextMaintenance: string;
 };
 
 export type MachineWithHistory = Machine & {
@@ -118,3 +116,12 @@ export type User = {
 };
 
 export type RepairType = 'REPAIR' | 'MAINTENANCE';
+
+export type Statistics = {
+  total: number;
+  today: number;
+  lastWeek: number;
+  avgLastWeek: number;
+  lastMonth: number;
+  avgLastMonth: number;
+};

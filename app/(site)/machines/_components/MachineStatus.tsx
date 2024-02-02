@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { toast } from 'sonner';
 import { useState } from 'react';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { useQueryClient } from '@tanstack/react-query';
@@ -6,7 +7,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Machine } from '@/types';
 import { updateMachine } from '@/app/actions';
 import { differenceInHoursAndMin } from '@/lib/helpers';
-import { toast } from 'sonner';
 
 type Props = {
   machine: Machine;
@@ -30,9 +30,8 @@ export function MachineStatus({ machine, setPreviewMachine }: Props) {
       toast.error('Error while updating machine status');
     } else {
       setPreviewMachine(response.data!);
+      queryClient.invalidateQueries({ queryKey: ['machines'] });
     }
-
-    queryClient.invalidateQueries({ queryKey: ['machines'] });
 
     setPending(false);
   };

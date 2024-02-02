@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { auth } from '@/auth';
@@ -11,6 +12,10 @@ type Props = {
     serialNumber: string;
   };
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  return { title: params.serialNumber };
+}
 
 async function fetchHistory(serialNumber: string) {
   const session = await auth();
@@ -26,10 +31,14 @@ async function fetchHistory(serialNumber: string) {
   );
 
   if (response.hasError) {
+    if (response.code >= 500) {
+      throw new Error(response.messages.join(', '));
+    }
+
     return null;
   }
 
-  return response.fetchedData;
+  return response.fetchedData!.data;
 }
 
 export default async function ServiceHistoryPage({ params }: Props) {
@@ -39,5 +48,5 @@ export default async function ServiceHistoryPage({ params }: Props) {
     return notFound();
   }
 
-  return <HistoryTable machine={history.data} />;
+  return <HistoryTable machine={history} />;
 }

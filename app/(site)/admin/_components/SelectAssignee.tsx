@@ -1,13 +1,13 @@
 'use client';
 
 import clsx from 'clsx';
+import { toast } from 'sonner';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { Listbox, Transition } from '@headlessui/react';
 import { Fragment, useState, useTransition } from 'react';
 
-import { postRequestOld } from '@/lib/fetch-client';
-import { MachineEndpoints } from '@/lib/apis';
+import { assignEmployee } from '@/app/actions';
 
 type Props = {
   serialNumber: string;
@@ -21,13 +21,19 @@ export function SelectAssignee({ serialNumber, selectables, employee }: Props) {
     employee
   );
 
-  const handleAssignUser = (employee: string) => {
+  const assigningTransition = async (employee: string) => {
     setAssignedEmployee(employee === selectables[0] ? null : employee);
+    const response = await assignEmployee(serialNumber, employee);
 
+    if (response.error) {
+      toast.error('Failed to assign employee');
+      setAssignedEmployee(null);
+    }
+  };
+
+  const handleAssignUser = (employee: string) => {
     startTransition(() => {
-      postRequestOld(MachineEndpoints.assignEmployee(serialNumber), {
-        employee: employee === selectables[0] ? null : employee,
-      });
+      assigningTransition(employee);
     });
   };
 

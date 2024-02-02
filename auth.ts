@@ -9,7 +9,7 @@ import type {
   NextApiResponse,
 } from 'next';
 
-import { postRequestOld } from './lib/fetch-client';
+import { postRequest } from './lib/fetch-client';
 import { AuthEndpoints } from './lib/apis';
 
 export const config = {
@@ -30,20 +30,16 @@ export const config = {
           throw new Error('Wrong credentials');
         }
 
-        try {
-          const response = await postRequestOld<User>(
-            AuthEndpoints.login,
-            {
-              email: credentials.email,
-              password: credentials.password,
-            },
-            200
-          );
+        const response = await postRequest<User>(AuthEndpoints.login, {
+          email: credentials.email,
+          password: credentials.password,
+        });
 
-          return response;
-        } catch (error) {
-          throw new Error('Wrong credentials');
+        if (response.hasError) {
+          throw new Error(response.messages.join(',\n'));
         }
+
+        return response.fetchedData!;
       },
     }),
   ],
@@ -56,21 +52,20 @@ export const config = {
           name: user.name,
         };
 
-        try {
-          const response = await postRequestOld<User>(
-            AuthEndpoints.providerLogin('google'),
-            googleUser,
-            200
-          );
-          user.accessToken = response.accessToken;
-          user.user = response.user;
+        const { fetchedData, ...error } = await postRequest<User>(
+          AuthEndpoints.providerLogin('google'),
+          googleUser
+        );
 
-          if (response.newUser) {
-            revalidateTag('users');
-          }
-        } catch (error) {
-          console.log(error);
-          throw new Error("Couldn't authenticate with Google");
+        if (error.hasError) {
+          throw new Error(error.messages.join(',\n'));
+        }
+
+        user.accessToken = fetchedData!.accessToken;
+        user.user = fetchedData!.user;
+
+        if (fetchedData!.newUser) {
+          revalidateTag('users');
         }
       }
 

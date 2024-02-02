@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
+import { getRequest } from '@/lib/fetch-client';
+import { ClientError } from '@/components/ClientError';
 import { TableFilters } from './TableFilters';
 import { MachineTable } from './MachineTable';
 import { BasePagination } from '@/components/ui/BasePagination';
@@ -20,22 +22,22 @@ async function fetchMachines(
   pageNumber: number,
   filterUrl: string,
   token?: string
-): Promise<{ meta: Pagination; data: Machine[] }> {
+) {
   const paginationUrl = createPaginationUrl(pageNumber, 10);
   const url = filterUrl ? `${filterUrl}&${paginationUrl}` : paginationUrl;
 
-  const response = await fetch(MachineEndpoints.filter(url), {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await getRequest<{ meta: Pagination; data: Machine[] }>(
+    MachineEndpoints.machines(url),
+    { token }
+  );
 
-  if (!response.ok) {
-    throw new Error();
+  if (response.hasError) {
+    throw new Error('Failed to fetch machines', {
+      cause: response.code,
+    });
   }
 
-  return response.json();
+  return response.fetchedData!;
 }
 
 export function MachineAssignment({ filters, employees }: Props) {
@@ -43,7 +45,7 @@ export function MachineAssignment({ filters, employees }: Props) {
   const [pageNumber, setPageNumber] = useState(1);
   const [filterUrl, setFilterUrl] = useState('');
 
-  const { isPending, isFetching, data } = useQuery({
+  const { isPending, isError, data } = useQuery({
     queryKey: ['machines', pageNumber, filterUrl, session?.accessToken],
     queryFn: () => fetchMachines(pageNumber, filterUrl, session?.accessToken),
     enabled: !!session?.accessToken,
@@ -53,6 +55,10 @@ export function MachineAssignment({ filters, employees }: Props) {
     refetchOnReconnect: false,
   });
 
+  if (isError) {
+    return <ClientError />;
+  }
+
   return (
     <div className="flex flex-col flex-1 space-y-4">
       <TableFilters
@@ -60,20 +66,21 @@ export function MachineAssignment({ filters, employees }: Props) {
         types={filters.types}
         models={filters.models}
         employees={employees}
+        isPending={isPending}
         setFilters={setFilterUrl}
       />
 
-      {isPending ? (
-        <div>Loading</div>
-      ) : (
-        <>
-          <div className="flex flex-1 w-full overflow-hidden">
-            <MachineTable machines={data!.data} employees={employees} />
-          </div>
+      <div className="flex flex-1 w-full overflow-hidden">
+        <MachineTable
+          machines={data?.data}
+          employees={employees}
+          pending={isPending}
+        />
+      </div>
 
-          <BasePagination pagination={data!.meta} changePage={setPageNumber} />
-        </>
-      )}
+      {data?.meta ? (
+        <BasePagination pagination={data.meta} changePage={setPageNumber} />
+      ) : null}
     </div>
   );
 }

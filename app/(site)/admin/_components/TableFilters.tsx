@@ -14,6 +14,7 @@ type Props = {
   types: TypeFilter[];
   models: ModelFilter[];
   employees: string[];
+  isPending: boolean;
   setFilters: (filter: string) => void;
 };
 
@@ -22,6 +23,7 @@ export function TableFilters({
   types,
   models,
   employees,
+  isPending,
   setFilters,
 }: Props) {
   const {
@@ -137,6 +139,7 @@ export function TableFilters({
                     handleResetFilter();
                     close();
                   }}
+                  disabled={isPending}
                   className="px-3 py-1 text-sm bg-gray-800 rounded-md shadow-sm shadow-black"
                 >
                   Reset
@@ -146,6 +149,7 @@ export function TableFilters({
                     handleFilter();
                     close();
                   }}
+                  disabled={isPending}
                   className="px-3 py-1 text-sm bg-blue-900 rounded-md shadow-sm shadow-black"
                 >
                   Filter

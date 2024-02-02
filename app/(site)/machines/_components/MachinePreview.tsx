@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Machine } from '@/types';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
 import { MachineStatus } from './MachineStatus';
 import { MachineProduction } from './MachineProduction';
-import { Machine } from '@/types';
 
 type Props = {
   open: boolean;

@@ -1,19 +1,25 @@
+import { auth } from '@/auth';
 import { Filters } from '@/types';
-import { MiscEndpoints } from '@/lib/apis';
+import { getRequest } from '@/lib/fetch-client';
 import { MachinesView } from './machines/_components/MachinesView';
+import { MiscEndpoints } from '@/lib/apis';
 
-async function fetchFilters(): Promise<{ data: Filters }> {
-  const response = await fetch(MiscEndpoints.filters);
+async function fetchFilters(): Promise<Filters> {
+  const session = await auth();
 
-  if (!response.ok) {
-    throw new Error("Couldn't load filters");
+  const response = await getRequest<{ data: Filters }>(MiscEndpoints.filters, {
+    token: session?.accessToken,
+  });
+
+  if (response.hasError) {
+    throw new Error("Couldn't fetch filters");
   }
 
-  return response.json();
+  return response.fetchedData!.data;
 }
 
 export default async function Home() {
-  const { data } = await fetchFilters();
+  const filters = await fetchFilters();
 
-  return <MachinesView filters={data} />;
+  return <MachinesView filters={filters} />;
 }

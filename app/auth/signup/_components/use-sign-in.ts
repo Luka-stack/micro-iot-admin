@@ -3,7 +3,7 @@ import { ZodError, z } from 'zod';
 import { FormEvent, useCallback, useState } from 'react';
 
 import { AuthEndpoints } from '@/lib/apis';
-import { RequestError, postRequestOld } from '@/lib/fetch-client';
+import { postRequest } from '@/lib/fetch-client';
 import { revalidateTag } from 'next/cache';
 
 const schema = z
@@ -39,7 +39,13 @@ export function useSignIn() {
         role: 'employee',
       });
 
-      await postRequestOld(AuthEndpoints.signup, data, 201);
+      const response = await postRequest(AuthEndpoints.signup, data);
+
+      if (response.hasError) {
+        setErrors({ other: response.messages.join(',\n') });
+        setLoading(false);
+        return;
+      }
 
       await signIn('local-login', {
         email: data.email,
@@ -49,9 +55,7 @@ export function useSignIn() {
 
       revalidateTag('users');
     } catch (error) {
-      if (error instanceof RequestError) {
-        setErrors(error.cause);
-      } else if (error instanceof ZodError) {
+      if (error instanceof ZodError) {
         setErrors(error.formErrors.fieldErrors);
       } else {
         setErrors({ other: 'Unexpected error occured, try later' });

@@ -32,6 +32,10 @@ async function getMachine(serialNumber: string) {
   );
 
   if (response.hasError) {
+    if (response.code >= 500) {
+      throw new Error(response.messages.join(', '));
+    }
+
     return null;
   }
 

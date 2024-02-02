@@ -79,7 +79,7 @@ export function HistoryTable({ machine }: Props) {
           </div>
         ) : (
           filteredHistory.map((item) => (
-            <HistoryRow key={item.serialNumber} item={item} />
+            <HistoryRow key={item.date} item={item} />
           ))
         )}
       </div>
@@ -93,7 +93,7 @@ function HistoryRow({ item }: { item: RepairHistory }) {
       return '';
     }
 
-    return new Date(item.date) <= new Date(item.lastSchedule)
+    return new Date(item.date) <= new Date(item.scheduled)
       ? 'Done within the deadline'
       : 'Completed post-deadline';
   };
@@ -117,7 +117,9 @@ function HistoryRow({ item }: { item: RepairHistory }) {
             <div>Done: {new Date(item.date).toLocaleDateString()}</div>
 
             <div>{doneColumn()}</div>
-            <div>Next: {new Date(item.nextSchedule).toLocaleDateString()}</div>
+            <div>
+              Next: {new Date(item.nextMaintenance).toLocaleDateString()}
+            </div>
             <div>Maintainer: {item.maintainer}</div>
             <ChevronRightIcon
               className={clsx(

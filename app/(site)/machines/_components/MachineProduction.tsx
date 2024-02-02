@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
@@ -32,11 +33,16 @@ export function MachineProduction({ machine, setPreviewMachine }: Props) {
   const changeProductionRate = async (productionRate: number) => {
     setPending(true);
 
-    const response = await updateMachine(machine.serialNumber, {
+    const response = await updateMachine<Machine>(machine.serialNumber, {
       productionRate,
     });
-    queryClient.invalidateQueries({ queryKey: ['machines'] });
-    setPreviewMachine(response.data);
+
+    if (response.error) {
+      toast.error('Error while updating machine production rate');
+    } else {
+      setPreviewMachine(response.data!);
+      queryClient.invalidateQueries({ queryKey: ['machines'] });
+    }
 
     setPending(false);
   };
