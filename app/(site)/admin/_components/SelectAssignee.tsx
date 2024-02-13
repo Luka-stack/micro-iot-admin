@@ -22,12 +22,16 @@ export function SelectAssignee({ serialNumber, selectables, employee }: Props) {
   );
 
   const assigningTransition = async (employee: string) => {
-    setAssignedEmployee(employee === selectables[0] ? null : employee);
-    const response = await assignEmployee(serialNumber, employee);
+    const response = await assignEmployee(
+      serialNumber,
+      employee === selectables[0] ? undefined : employee
+    );
 
     if (response.error) {
       toast.error('Failed to assign employee');
-      setAssignedEmployee(null);
+      console.log(response.messages);
+    } else {
+      setAssignedEmployee(employee === selectables[0] ? null : employee);
     }
   };
 

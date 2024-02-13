@@ -22,14 +22,20 @@ export function MachineStatus({ machine, setPreviewMachine }: Props) {
   const changeMachineStatus = async () => {
     setPending(true);
 
-    const response = await updateMachine<Machine>(machine.serialNumber, {
-      status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
-    });
+    const response = await updateMachine<{ data: Machine }>(
+      machine.serialNumber,
+      {
+        status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
+      }
+    );
 
     if (response.error) {
       toast.error('Error while updating machine status');
     } else {
-      setPreviewMachine(response.data!);
+      setPreviewMachine({
+        ...machine,
+        status: response.data!.data.status,
+      });
       queryClient.invalidateQueries({ queryKey: ['machines'] });
     }
 

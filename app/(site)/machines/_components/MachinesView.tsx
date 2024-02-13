@@ -54,9 +54,9 @@ export function MachinesView({ filters }: Props) {
     queryFn: () => fetchMachines(pageNumber, filterUrl, session?.accessToken),
     enabled: !!session?.accessToken,
     placeholderData: keepPreviousData,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const handleShowPreview = useCallback((machine: Machine) => {

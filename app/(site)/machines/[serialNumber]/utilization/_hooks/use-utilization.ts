@@ -23,7 +23,9 @@ async function getUtilization(
   );
 
   if (response.hasError) {
-    throw new Error("Couldn't fetch utilization");
+    throw new Error(response.messages.join(', '), {
+      cause: response.code,
+    });
   }
 
   return response.fetchedData!.data;

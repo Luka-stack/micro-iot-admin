@@ -13,7 +13,7 @@ export function DetailsNavigation({ serialNumber }: Props) {
   const segment = useSelectedLayoutSegment();
 
   return (
-    <nav className="border rounded-md w-72 main-gradient border-white/10">
+    <nav className="flex-shrink-0 border rounded-md w-72 main-gradient border-white/10">
       <ul className="p-4 space-y-4">
         <LinkListItem
           href={`/machines/${serialNumber}`}

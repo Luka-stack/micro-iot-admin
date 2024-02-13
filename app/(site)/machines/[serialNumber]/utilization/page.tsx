@@ -8,6 +8,7 @@ import { LoadingGraph } from './_components/LoadingGraph';
 import { useUtilization } from './_hooks/use-utilization';
 import { MachineUtilizationGraph } from '@/components/graphs/MachineUtilizationGraph';
 import { calculateHoursAndMinutes } from '@/lib/date-helpers';
+import { notFound } from 'next/navigation';
 
 type Props = {
   params: { serialNumber: string };
@@ -24,7 +25,7 @@ export default function MachineUtilizationPage({ params }: Props) {
     };
   });
 
-  const { data, isError, isPending } = useUtilization(
+  const { data, error, isError, isPending } = useUtilization(
     params.serialNumber,
     searchDate
   );
@@ -47,6 +48,10 @@ export default function MachineUtilizationPage({ params }: Props) {
   }, []);
 
   if (isError) {
+    if (error?.cause === 404 || error?.cause === 401) {
+      return notFound();
+    }
+
     return <ClientError />;
   }
 

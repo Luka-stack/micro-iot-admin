@@ -38,16 +38,9 @@ export const MachinesTable = memo(function MachinesTable({
 
         <tbody>
           {pending ? (
-            <tr>
-              <td colSpan={8}>
-                <div className="flex flex-col items-center justify-center pt-20 space-y-5">
-                  <BeatLoader color="#64748b" speedMultiplier={0.5} size={24} />
-                  <h4 className="text-lg text-slate-500">
-                    Searching database for machines
-                  </h4>
-                </div>
-              </td>
-            </tr>
+            <LoadingInformation />
+          ) : machines?.length === 0 ? (
+            <MachinesNotFound />
           ) : (
             machines!.map((machine) => (
               <tr
@@ -99,5 +92,34 @@ function StatusBadge({ status }: { status: MachineStatus }) {
     >
       {status}
     </div>
+  );
+}
+
+function LoadingInformation() {
+  return (
+    <tr>
+      <td colSpan={8}>
+        <div className="flex flex-col items-center justify-center pt-20 space-y-5">
+          <BeatLoader color="#64748b" speedMultiplier={0.5} size={24} />
+          <h4 className="text-lg text-slate-500">
+            Searching database for machines
+          </h4>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+function MachinesNotFound() {
+  return (
+    <tr>
+      <td colSpan={8}>
+        <div className="flex flex-col items-center justify-center pt-20 space-y-5">
+          <h4 className="text-lg text-slate-500">
+            No machines found in the database
+          </h4>
+        </div>
+      </td>
+    </tr>
   );
 }

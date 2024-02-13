@@ -33,14 +33,20 @@ export function MachineProduction({ machine, setPreviewMachine }: Props) {
   const changeProductionRate = async (productionRate: number) => {
     setPending(true);
 
-    const response = await updateMachine<Machine>(machine.serialNumber, {
-      productionRate,
-    });
+    const response = await updateMachine<{ data: Machine }>(
+      machine.serialNumber,
+      {
+        productionRate,
+      }
+    );
 
     if (response.error) {
       toast.error('Error while updating machine production rate');
     } else {
-      setPreviewMachine(response.data!);
+      setPreviewMachine({
+        ...machine,
+        productionRate: response.data!.data.productionRate,
+      });
       queryClient.invalidateQueries({ queryKey: ['machines'] });
     }
 

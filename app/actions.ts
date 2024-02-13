@@ -66,7 +66,7 @@ export async function changePriority(serialNumber: string, priority: string) {
 }
 
 // Admin
-export async function assignEmployee(serialNumber: string, employee: string) {
+export async function assignEmployee(serialNumber: string, employee?: string) {
   const session = await auth();
 
   const response = await postRequest(
