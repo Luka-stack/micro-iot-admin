@@ -3,7 +3,7 @@
 import { revalidateTag } from 'next/cache';
 
 import { auth } from '@/auth';
-import { MachineEndpoints } from '@/lib/apis';
+import { AuthEndpoints, MachineEndpoints } from '@/lib/apis';
 import { patchRequest, postRequest } from '@/lib/fetch-client';
 
 export async function updateMachine<TData>(
@@ -74,6 +74,25 @@ export async function assignEmployee(serialNumber: string, employee?: string) {
     { employee },
     session?.accessToken
   );
+
+  return response.toPlainObject();
+}
+
+// Auth
+
+export async function signUp(formData: {
+  email: string;
+  password: string;
+  displayName: string;
+}) {
+  const response = await postRequest(AuthEndpoints.signup, {
+    ...formData,
+    appKey: process.env.APP_KEY,
+  });
+
+  if (!response.hasError) {
+    revalidateTag('users');
+  }
 
   return response.toPlainObject();
 }

@@ -33,6 +33,7 @@ export const config = {
         const response = await postRequest<User>(AuthEndpoints.login, {
           email: credentials.email,
           password: credentials.password,
+          appKey: process.env.APP_KEY,
         });
 
         if (response.hasError) {
@@ -50,6 +51,7 @@ export const config = {
           idToken: account.id_token,
           email: user.email,
           name: user.name,
+          appKey: process.env.APP_KEY,
         };
 
         const { fetchedData, ...error } = await postRequest<User>(
@@ -76,6 +78,7 @@ export const config = {
       if (user) {
         return {
           ...token,
+          appKey: user.appKey,
           accessToken: user.accessToken,
           user: user.user,
         };
