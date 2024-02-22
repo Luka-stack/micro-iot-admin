@@ -8,10 +8,9 @@ import { ZodError, z } from 'zod';
 import { signUp } from '@/app/actions';
 import { ClientSubmitButton } from '@/components/SubmitButton';
 
-const signInSchema = z
+const signUpSchema = z
   .object({
     email: z.string().email('Must be a valid email'),
-    role: z.string().min(1),
     displayName: z.string().min(3, 'Name must contain at least 3 characters'),
     password: z.string().min(1, 'Password is required'),
     confirmPassword: z.string().min(1, 'Confirm Password is required'),
@@ -34,9 +33,8 @@ export function SignUp() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const data = signInSchema.parse({
+      const data = signUpSchema.parse({
         email: formData.get('email'),
-        role: 'employee',
         displayName: formData.get('displayName'),
         password: formData.get('password'),
         confirmPassword: formData.get('confirmPassword'),

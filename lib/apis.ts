@@ -20,7 +20,7 @@ export const MachineEndpoints = {
   machines: (query?: string) => `${MACHINE_SERVER}/machines?${query}`,
 
   machineHistory: (serialNumber: string) =>
-    `${MACHINE_SERVER}/machines/${serialNumber}/history`,
+    `${MACHINE_SERVER}/machines/${serialNumber}/with-history`,
 
   machine: (serialNumber: string) =>
     `${MACHINE_SERVER}/machines/${serialNumber}`,
