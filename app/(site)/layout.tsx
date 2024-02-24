@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { GlobalNavigation } from '@/app/(site)/_components/GlobalNavigation';
 import SessionProvider from '@/components/SessionProvider';
 import { TanstackProvider } from '@/components/providers/TanstackProvider';
+import { Toaster } from 'sonner';
 
 const roboto = Roboto({ weight: '400', subsets: ['latin'], display: 'swap' });
 
@@ -35,6 +36,8 @@ export default async function RootLayout({
 
             <main className="flex flex-1 p-4">{children}</main>
           </TanstackProvider>
+
+          <Toaster toastOptions={{ duration: 1500 }} theme="dark" />
         </SessionProvider>
       </body>
     </html>

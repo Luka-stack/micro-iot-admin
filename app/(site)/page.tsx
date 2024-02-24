@@ -1,19 +1,25 @@
-import { MachinesView } from '@/features/machines';
-import { MachinesProvider } from '@/features/machines/context';
+import { auth } from '@/auth';
+import { Filters } from '@/types';
+import { getRequest } from '@/lib/fetch-client';
+import { MachinesView } from './machines/_components/MachinesView';
+import { MiscEndpoints } from '@/lib/apis';
 
-async function getFilters() {
-  const res = await fetch('http://localhost:5000/api/misc/filters');
-  return res.json();
+async function fetchFilters(): Promise<Filters> {
+  const session = await auth();
+
+  const response = await getRequest<{ data: Filters }>(MiscEndpoints.filters, {
+    token: session?.accessToken,
+  });
+
+  if (response.hasError) {
+    throw new Error("Couldn't fetch filters");
+  }
+
+  return response.fetchedData!.data;
 }
 
 export default async function Home() {
-  const { data } = await getFilters();
+  const filters = await fetchFilters();
 
-  return (
-    <MachinesProvider filters={data}>
-      <main className="flex w-full xxl:overflow-x-hidden full-page">
-        <MachinesView />
-      </main>
-    </MachinesProvider>
-  );
+  return <MachinesView filters={filters} />;
 }

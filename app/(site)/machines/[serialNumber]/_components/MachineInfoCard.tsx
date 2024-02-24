@@ -5,7 +5,7 @@ type Props = {
   machine: Machine;
 };
 
-export function MachineInfo({ machine }: Props) {
+export function MachineInfoCard({ machine }: Props) {
   return (
     <section className="p-4 border rounded-md shadow-md w-96 border-white/10 shadow-black">
       <h3 className="mb-5 text-lg font-semibold tracking-wider text-center">

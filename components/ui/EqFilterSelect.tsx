@@ -22,7 +22,7 @@ export const EqFilterSelect = ({
   return (
     <Listbox value={selected} onChange={setSelected}>
       <div className="relative">
-        <Listbox.Button className="relative w-10 px-2 py-2 text-sm text-center rounded-l-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 bg-slate-800 shadow-black hover:bg-slate-700">
+        <Listbox.Button className="relative w-10 px-2 py-2 text-sm text-center rounded-l-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 bg-slate-800 shadow-black hover:bg-slate-700/20">
           <span className="block truncate">{selected.name}</span>
         </Listbox.Button>
 

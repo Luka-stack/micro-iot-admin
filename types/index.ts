@@ -19,6 +19,25 @@ export type Machine = {
   status: MachineStatus;
   lastStatusUpdate: string;
   productionRate: number;
+  assignedEmployee: string | null;
+  maintainInfo: {
+    defects: string[];
+    priority: string;
+    maintenance: string;
+  };
+};
+
+export type RepairHistory = {
+  maintainer: string;
+  description: string;
+  date: string;
+  type: RepairType;
+  scheduled: string;
+  nextMaintenance: string;
+};
+
+export type MachineWithHistory = Machine & {
+  maintenances: RepairHistory[] | null;
 };
 
 export type Filters = {
@@ -52,11 +71,12 @@ export type SelectedFilters = {
   types?: SelectedFilter;
   models?: SelectedFilter;
   status?: SelectedFilter;
-  rate: {
+  employee?: string;
+  rate?: {
     filter: string;
-    value?: number;
+    value?: string;
   };
-  startDate: {
+  startDate?: {
     filter: string;
     value?: Date;
   };
@@ -84,8 +104,24 @@ export type MachineWork = {
   work: number;
 };
 
-export type User = {
+export type AuthUser = {
   email: string;
   displayName: string;
   role: string;
+};
+
+export type User = {
+  email: string;
+  displayName: string;
+};
+
+export type RepairType = 'REPAIR' | 'MAINTENANCE';
+
+export type Statistics = {
+  total: number;
+  today: number;
+  lastWeek: number;
+  avgLastWeek: number;
+  lastMonth: number;
+  avgLastMonth: number;
 };

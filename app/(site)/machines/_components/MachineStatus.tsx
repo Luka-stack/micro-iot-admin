@@ -1,31 +1,43 @@
 import clsx from 'clsx';
+import { toast } from 'sonner';
 import { useState } from 'react';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { Machine } from '@/types';
 import { updateMachine } from '@/app/actions';
-import { useMachinesActions } from '../context';
 import { differenceInHoursAndMin } from '@/lib/helpers';
 
 type Props = {
   machine: Machine;
+  setPreviewMachine: (machine: Machine) => void;
 };
 
-export function MachineStatus({ machine }: Props) {
-  const dispatch = useMachinesActions();
+export function MachineStatus({ machine, setPreviewMachine }: Props) {
   const queryClient = useQueryClient();
-
   const [pending, setPending] = useState(false);
+
+  const canUpdate = machine.status === 'IDLE' || machine.status === 'WORKING';
 
   const changeMachineStatus = async () => {
     setPending(true);
 
-    const response = await updateMachine(machine.serialNumber, {
-      status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
-    });
-    queryClient.invalidateQueries({ queryKey: ['machines'] });
-    dispatch('UPDATE', response.data);
+    const response = await updateMachine<{ data: Machine }>(
+      machine.serialNumber,
+      {
+        status: machine.status === 'IDLE' ? 'WORKING' : 'IDLE',
+      }
+    );
+
+    if (response.error) {
+      toast.error('Error while updating machine status');
+    } else {
+      setPreviewMachine({
+        ...machine,
+        status: response.data!.data.status,
+      });
+      queryClient.invalidateQueries({ queryKey: ['machines'] });
+    }
 
     setPending(false);
   };
@@ -45,14 +57,15 @@ export function MachineStatus({ machine }: Props) {
       <h3 className="mb-2 font-semibold tracking-wider text-center">
         Machine Status
       </h3>
-      <button onClick={changeMachineStatus} disabled={pending}>
+      <button onClick={changeMachineStatus} disabled={pending || !canUpdate}>
         <PowerIcon
           className={clsx(
             'h-20 hover:scale-105',
-            pending && '!text-yellow-700',
-            machine.status === 'WORKING'
-              ? 'text-green-500 animate-pulse'
-              : 'text-slate-500'
+            pending && '!text-slate-500',
+            machine.status === 'WORKING' && 'text-green-500 animate-pulse',
+            machine.status === 'IDLE' && 'text-slate-500',
+            machine.status === 'BROKEN' && 'text-red-500 animate-pulse',
+            machine.status === 'MAINTENANCE' && 'text-orange-500'
           )}
         />
       </button>

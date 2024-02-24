@@ -1,36 +1,98 @@
 'use server';
 
-import { MACHINE_API } from '@/lib/apis';
 import { revalidateTag } from 'next/cache';
 
-const machineUrl = 'http://localhost:5000/api/machines';
+import { auth } from '@/auth';
+import { AuthEndpoints, MachineEndpoints } from '@/lib/apis';
+import { patchRequest, postRequest } from '@/lib/fetch-client';
 
-export async function updateMachine(
+export async function updateMachine<TData>(
   serialNumber: string,
   data: {
     productionRate?: number;
     status?: string;
   }
 ) {
-  const response = await fetch(`${MACHINE_API}/${serialNumber}`, {
-    cache: 'no-store',
-    method: 'PATCH',
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-    body: JSON.stringify(data),
-  });
+  const session = await auth();
 
-  if (!response.ok) {
-    throw new Error(`Couln't update machine ${serialNumber}`);
-  }
+  const response = await patchRequest<TData>(
+    MachineEndpoints.updateMachine(serialNumber),
+    data,
+    session?.accessToken
+  );
 
   revalidateTag(serialNumber);
-  return await response.json();
+  return response.toPlainObject();
 }
 
-export async function filterMachines(queryParam = '') {
-  return fetch(`${machineUrl}?${queryParam}`, {
-    next: { revalidate: 3600 },
-  }).then((response) => response.json());
+export async function addDefect(serialNumber: string, defect: string) {
+  const session = await auth();
+
+  const response = await postRequest(
+    MachineEndpoints.addDefect(serialNumber),
+    { defect },
+    session?.accessToken
+  );
+
+  revalidateTag(serialNumber);
+  return response.toPlainObject();
+}
+
+// Move to delete
+export async function deleteDefect(serialNumber: string, defect: string) {
+  const session = await auth();
+
+  const response = await postRequest(
+    MachineEndpoints.deleteDefect(serialNumber),
+    { defect },
+    session?.accessToken
+  );
+
+  revalidateTag(serialNumber);
+  return response.toPlainObject();
+}
+
+export async function changePriority(serialNumber: string, priority: string) {
+  const session = await auth();
+
+  const response = await postRequest(
+    MachineEndpoints.changePriority(serialNumber),
+    { priority },
+    session?.accessToken
+  );
+
+  revalidateTag(serialNumber);
+  return response.toPlainObject();
+}
+
+// Admin
+export async function assignEmployee(serialNumber: string, employee?: string) {
+  const session = await auth();
+
+  const response = await postRequest(
+    MachineEndpoints.assignEmployee(serialNumber),
+    { employee },
+    session?.accessToken
+  );
+
+  return response.toPlainObject();
+}
+
+// Auth
+
+export async function signUp(formData: {
+  email: string;
+  password: string;
+  displayName: string;
+}) {
+  const response = await postRequest(AuthEndpoints.signup, {
+    ...formData,
+    appKey: process.env.APP_KEY,
+  });
+
+  if (!response.hasError) {
+    revalidateTag('users');
+  }
+
+  return response.toPlainObject();
 }

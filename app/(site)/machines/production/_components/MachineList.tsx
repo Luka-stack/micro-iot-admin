@@ -3,12 +3,14 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
 import { useDebounce } from 'use-debounce';
 import { useEffect, useState } from 'react';
 
-import { MACHINE_API } from '@/lib/apis';
+import { getRequest } from '@/lib/fetch-client';
 import { BasePagination } from '@/components/ui/BasePagination';
 import { LoadingIndicator } from '@/components/ui/LoadingIndicator';
+import { MachineEndpoints } from '@/lib/apis';
 import { Machine, Pagination } from '@/types';
 import { createPaginationUrl } from '@/lib/helpers';
 import { useProductionContext } from './ProductionProvider';
@@ -19,19 +21,31 @@ type Props = {
 
 async function getData(
   pageNumber: number,
-  serialNumber: string
+  serialNumber: string,
+  token?: string
 ): Promise<{ data: Machine[]; meta: Pagination }> {
   const paginationUrl = createPaginationUrl(pageNumber, 10);
-  const filter = `serialNumber=${serialNumber}&`;
+  const query = serialNumber
+    ? `serialNumber=${serialNumber}&${paginationUrl}`
+    : paginationUrl;
 
-  const response = await fetch(
-    `${MACHINE_API}?${serialNumber ? filter : ''}${paginationUrl}`
+  const response = await getRequest<{ data: Machine[]; meta: Pagination }>(
+    MachineEndpoints.machines(query),
+    {
+      token,
+    }
   );
 
-  return await response.json();
+  if (response.hasError) {
+    throw new Error("Couldn't fetch machines");
+  }
+
+  return response.fetchedData!;
 }
 
 export function MachineList({ machines }: Props) {
+  const { data: session } = useSession();
+
   const [_, setState] = useProductionContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [input, setInput] = useState('');
@@ -39,9 +53,12 @@ export function MachineList({ machines }: Props) {
 
   const { isPending, data } = useQuery({
     queryKey: ['machines', currentPage, filter],
-    queryFn: () => getData(currentPage, filter),
+    queryFn: () => getData(currentPage, filter, session?.accessToken),
     initialData: machines,
+    refetchOnMount: false,
     refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    // refetchInterval: 10000,
   });
 
   useEffect(() => {

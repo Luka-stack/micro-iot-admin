@@ -42,7 +42,7 @@ input[type='number'] {
 }
 
 .react-datepicker__input-container input {
-  @apply px-2 py-2 text-sm bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-700;
+  @apply px-2 py-2 text-sm bg-slate-800 placeholder:text-slate-500 focus:outline-none hover:bg-slate-800/20;
 }
 
 .react-datepicker__month-container {
@@ -145,6 +145,14 @@ input[type='number'] {
   }
 }
 
+.error-title {
+  background: linear-gradient(90deg, #373b44, #4286f4);
+  text-shadow: none;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .bounce-loading.first-ball {
   animation: bounceIn 2s infinite 2s;
 }
@@ -157,4 +165,64 @@ input[type='number'] {
 .bounce-loading.third-ball {
   animation: bounceIn 2s infinite 2s;
   animation-delay: 0.2s;
+}
+
+.stripes-broken {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.7176 0.221 22.18 / 0.5) 13px,
+    oklch(0.7176 0.221 22.18 / 0.5) 13px
+  );
+}
+
+.stripes-idle {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.4455 0.037 257.28 / 0.5) 13px,
+    oklch(0.4455 0.037 257.28 / 0.5) 13px
+  );
+}
+
+.stripes-working {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.6271 0.17 149.21 / 0.5) 13px,
+    oklch(0.6271 0.17 149.21 / 0.5) 13px
+  );
+}
+
+.stripes-main {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    oklch(0.8471 0.199 83.87 / 0.5) 13px,
+    oklch(0.8471 0.199 83.87 / 0.5) 13px
+  );
+}
+
+@layer base {
+  .bg-main-hover {
+    @apply bg-[#22232f];
+  }
+}
+
+@layer utilities {
+  .table-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .table-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent rounded-lg;
+  }
+
+  .table-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-b-lg rounded-tr-lg bg-gradient-to-t from-[#21222D] to-[#232B54];
+  }
 }

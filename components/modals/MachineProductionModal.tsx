@@ -61,7 +61,7 @@ export function MachineProductionModal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-opacity-50 bg-slate-900" />
+          <div className="fixed inset-0 bg-opacity-50 bg-black/25" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -75,10 +75,10 @@ export function MachineProductionModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-md bg-slate-800 rounded-2xl shadow-black">
+              <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-md bg-main rounded-2xl shadow-black">
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 text-gray-200"
+                  className="text-lg font-medium leading-6 text-gray-300"
                 >
                   Production Rate Levels
                 </Dialog.Title>
@@ -110,14 +110,14 @@ export function MachineProductionModal({
                 <div className="flex justify-end mt-4 space-x-5">
                   <button
                     type="button"
-                    className="inline-flex justify-center px-4 py-2 text-sm font-medium border border-transparent rounded-md bg-slate-700 text-slate-200 hover:bg-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="inline-flex justify-center px-4 py-2 text-sm font-medium transition-all duration-150 ease-out border border-transparent rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 active:scale-95"
                     onClick={close}
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
-                    className="inline-flex justify-center px-4 py-2 text-sm font-medium bg-blue-900 border border-transparent rounded-md text-slate-200 hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="inline-flex justify-center px-4 py-2 text-sm font-medium transition-all duration-150 ease-out bg-blue-900 border border-transparent rounded-md text-slate-300 hover:bg-blue-800 active:scale-95 "
                     onClick={onRateChange}
                   >
                     Change
@@ -164,11 +164,13 @@ function LevelZero({
       onClick={() => setLevel(0)}
       className={clsx(
         'relative flex items-center justify-between w-full p-3 tracking-widest uppercase border-2 rounded-md shadow-md hover:opacity-100',
-        level === 0 ? 'border-slate-200' : 'border-slate-600 opacity-40'
+        level === 0
+          ? 'border-slate-400 text-slate-400'
+          : 'border-slate-500 opacity-40 text-slate-500'
       )}
     >
       Level 0
-      <ShieldExclamationIcon className="absolute h-8 text-slate-200 right-3" />
+      <ShieldExclamationIcon className="absolute h-8 text-slate-400 right-3" />
     </button>
   );
 }
@@ -184,12 +186,21 @@ function LevelOne({
     <button
       onClick={() => setLevel(1)}
       className={clsx(
-        'relative flex items-center w-full p-3 tracking-widest uppercase border-2 rounded-md shadow-md hover:opacity-100',
-        level === 1 ? 'border-green-600' : 'border-slate-600 opacity-40'
+        'relative flex items-center w-full p-3 tracking-widest uppercase border-2 rounded-md shadow-md group transition-colors duration-200 ease-out',
+        level === 1
+          ? 'border-green-700 text-green-600 opacity-100'
+          : 'border-slate-500 opacity-40 text-slate-500 hover:border-green-500 hover:text-green-500'
       )}
     >
       Level 1
-      <ExclamationCircleIcon className="absolute h-8 text-green-600 right-3" />
+      <ExclamationCircleIcon
+        className={clsx(
+          'absolute h-8 right-3 transition-colors duration-200 ease-out',
+          level === 1
+            ? 'text-green-700'
+            : 'text-slate-500 group-hover:text-green-500'
+        )}
+      />
     </button>
   );
 }
@@ -211,12 +222,21 @@ function LevelTwo({
     <button
       onClick={() => setLevel(2)}
       className={clsx(
-        'relative flex items-center w-full p-3 tracking-widest uppercase border-2 rounded-md shadow-md hover:opacity-100',
-        level === 2 ? 'border-amber-600' : 'border-slate-600 opacity-40'
+        'relative flex items-center w-full p-3 tracking-widest uppercase border-2 rounded-md shadow-md group transition-colors duration-200 ease-out',
+        level === 2
+          ? 'border-amber-700 text-amber-600 opacity-100'
+          : 'border-slate-500 opacity-40 text-slate-500 hover:border-amber-500 hover:text-amber-500'
       )}
     >
       Level 2
-      <ExclamationTriangleIcon className="absolute h-8 text-amber-600 right-3" />
+      <ExclamationTriangleIcon
+        className={clsx(
+          'absolute h-8 right-3 transition-colors duration-200 ease-out',
+          level === 2
+            ? 'text-amber-700'
+            : 'text-amber-500 group-hover:text-amber-500'
+        )}
+      />
     </button>
   );
 }
@@ -255,12 +275,19 @@ function LevelThree({
     <button
       onClick={() => setLevel(3)}
       className={clsx(
-        'relative flex items-center w-full p-3 tracking-widest uppercase border-2 rounded-md shadow-md hover:opacity-100',
-        level === 3 ? 'border-red-600' : 'border-slate-600 opacity-40'
+        'relative flex items-center w-full p-3 tracking-widest uppercase border-2 rounded-md shadow-md transition-colors duration-200 ease-out',
+        level === 3
+          ? 'border-red-700 text-red-600 opacity-100'
+          : 'border-slate-500 opacity-40 text-slate-500 hover:border-red-500 hover:text-red-500'
       )}
     >
       Level 3
-      <ExclamationTriangleIcon className="absolute h-8 text-red-600 right-3" />
+      <ExclamationTriangleIcon
+        className={clsx(
+          'absolute h-8 right-3  transition-colors duration-200 ease-out',
+          level === 3 ? 'text-red-700' : 'text-red-500 group-hover:text-red-500'
+        )}
+      />
     </button>
   );
 }

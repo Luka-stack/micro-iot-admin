@@ -8,8 +8,11 @@ export default async function middleware(
 ) {
   const token = await getToken({ req });
   const isAuthenticated = Boolean(token?.accessToken);
+  const canAccessThisApp =
+    token?.appKey === process.env.APP_KEY ||
+    token?.appKey === process.env.ADMIN_APP_KEY;
 
-  if (isAuthenticated) {
+  if (isAuthenticated && canAccessThisApp) {
     if (
       req.nextUrl.pathname.startsWith('/auth/signin') ||
       req.nextUrl.pathname.startsWith('/auth/signup')
